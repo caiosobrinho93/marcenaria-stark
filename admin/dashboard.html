@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stark Admin | Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Inter:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .admin-nav {
+            background-color: #0d0d0e;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 40px;
+        }
+
+        .admin-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+        }
+
+        .manage-card {
+            background-color: #1a1b1e;
+            padding: 30px;
+            border-radius: 8px;
+            height: fit-content;
+        }
+
+        .gallery-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .preview-item {
+            position: relative;
+            aspect-ratio: 1/1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logout-btn {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            color: var(--primary);
+        }
+
+        /* Dashboard Responsiveness */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-header img {
+                height: 25px !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="admin-nav">
+        <div class="admin-container admin-header">
+            <img src="../imgs/stark-white.png" alt="Stark" style="height: 35px;">
+            <div class="logout-btn" id="logout">Sair <i class="fa-solid fa-right-from-bracket"></i></div>
+        </div>
+    </nav>
+
+    <div class="admin-container">
+        <div>
+            <h1 style="margin-bottom: 10px;">Gerenciar Galeria</h1>
+            <p style="color: var(--text-muted); margin-bottom: 40px;">Adicione ou remova projetos exibidos na página
+                principal.</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="manage-card">
+                <h3>Novo Projeto</h3>
+                <form id="add-project-form" style="margin-top: 20px;">
+                    <div class="form-group">
+                        <label>Imagem do Projeto</label>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <input type="url" id="img-url" placeholder="URL da Imagem (Ex: https://...)">
+                            <span style="font-size: 0.8rem; color: var(--text-muted); text-align: center;">-- OU
+                                --</span>
+                            <div class="upload-wrapper" style="position: relative;">
+                                <input type="file" id="img-file" accept="image/*" style="display: none;">
+                                <button type="button" class="btn btn-secondary btn-block"
+                                    onclick="document.getElementById('img-file').click()">
+                                    <i class="fa-solid fa-upload"></i> Escolher Foto do Computador
+                                </button>
+                                <div id="file-name"
+                                    style="font-size: 0.75rem; color: var(--primary); margin-top: 5px; text-align: center;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label>Título do Projeto</label>
+                        <input type="text" id="img-title" placeholder="Ex: Cozinha Gourmet" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição Curta</label>
+                        <input type="text" id="img-desc" placeholder="Ex: Linha Titanium" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Adicionar à Galeria</button>
+                </form>
+            </div>
+
+            <div>
+                <h3 style="margin-bottom: 20px;">Fotos Atuais</h3>
+                <div class="gallery-preview-grid" id="admin-gallery">
+                    <!-- Loaded via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Security check
+        if (localStorage.getItem('stark_admin_session') !== 'active') {
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('logout').addEventListener('click', () => {
+            localStorage.removeItem('stark_admin_session');
+            window.location.href = 'login.html';
+        });
+
+        const galleryEl = document.getElementById('admin-gallery');
+        const form = document.getElementById('add-project-form');
+        const fileInput = document.getElementById('img-file');
+        const fileNameEl = document.getElementById('file-name');
+        let selectedBase64 = null;
+
+        fileInput.addEventListener('change', function () {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                fileNameEl.textContent = this.files[0].name;
+
+                reader.onload = function (e) {
+                    selectedBase64 = e.target.result;
+                    document.getElementById('img-url').value = ''; // Clear URL if file selected
+                }
+                reader.readAsDataURL(this.files[0]);
+            } else {
+                fileNameEl.textContent = '';
+                selectedBase64 = null;
+            }
+        });
+
+        document.getElementById('img-url').addEventListener('input', function () {
+            if (this.value) {
+                fileInput.value = '';
+                fileNameEl.textContent = '';
+                selectedBase64 = null;
+            }
+        });
+
+        // Initial default gallery items (if local storage is empty)
+        const defaultGallery = [
+            { url: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=2670', title: 'Cozinha Gourmet', desc: 'Linha Titanium' },
+            { url: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2600', title: 'Living Integrado', desc: 'Iluminação Smart LED' },
+            { url: 'https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?q=80&w=2670', title: 'Dormitório Casal', desc: 'Closet Elegance' },
+            { url: 'https://images.unsplash.com/photo-1588854337236-6889d631faa8?q=80&w=2670', title: 'Home Theater Smart', desc: 'Integração Alexa' }
+        ];
+
+        function getGallery() {
+            const stored = localStorage.getItem('stark_gallery');
+            return stored ? JSON.parse(stored) : defaultGallery;
+        }
+
+        function saveGallery(items) {
+            localStorage.setItem('stark_gallery', JSON.stringify(items));
+            renderAdminGallery();
+        }
+
+        function renderAdminGallery() {
+            const items = getGallery();
+            galleryEl.innerHTML = '';
+            items.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'preview-item';
+                div.innerHTML = `
+                    <img src="${item.url}" alt="${item.title}">
+                    <button class="delete-btn" onclick="deleteItem(${index})"><i class="fa-solid fa-trash"></i></button>
+                `;
+                galleryEl.appendChild(div);
+            });
+        }
+
+        window.deleteItem = (index) => {
+            if (confirm('Deseja remover esta imagem?')) {
+                const items = getGallery();
+                items.splice(index, 1);
+                saveGallery(items);
+            }
+        };
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const urlInput = document.getElementById('img-url').value;
+            const finalImg = selectedBase64 || urlInput;
+
+            if (!finalImg) {
+                alert('Por favor, insira uma URL ou escolha uma foto do computador.');
+                return;
+            }
+
+            const newItem = {
+                url: finalImg,
+                title: document.getElementById('img-title').value,
+                desc: document.getElementById('img-desc').value
+            };
+
+            const items = getGallery();
+            items.push(newItem);
+            saveGallery(items);
+
+            // Reset
+            form.reset();
+            selectedBase64 = null;
+            fileNameEl.textContent = '';
+        });
+
+        renderAdminGallery();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stark Marcenaria | Móveis Planejados de Alto Padrão</title>
+    <!-- Google Fonts: Inter, Outfit, and Montserrat for the Stark logo feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;700;800;900&family=Montserrat:wght@800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <img src="imgs/stark-white.png" alt="Stark Marcenaria" id="nav-logo">
+            </a>
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#inicio" class="nav-link active">Início</a></li>
+                <li><a href="#quem-somos" class="nav-link">Quem Somos</a></li>
+                <li><a href="#servicos" class="nav-link">Especialidades</a></li>
+                <li><a href="#galeria" class="nav-link">Galeria</a></li>
+                <li><a href="admin/login.html" class="nav-link">Painel Adm</a></li>
+                <li><a href="#" id="open-popup-btn" class="btn btn-primary nav-btn">Orçamento</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero">
+        <!-- Overlay for darker background over image -->
+        <div class="hero-overlay"></div>
+        <div class="container hero-container">
+            <div class="hero-content">
+                <div class="hero-text reveal-left">
+                    <span class="accent-text">MARCENARIA DE ALTO PADRÃO</span>
+                    <h1>A Arte da <br><span class="highlight">Excelência</span> em Cada Detalhe</h1>
+                    <p>Projetos exclusivos que unem design impecável e tecnologia inteligente para transformar seu
+                        ambiente.</p>
+
+                    <div class="hero-stats">
+                        <div class="stat-box">
+                            <h3>10+</h3>
+                            <p>Anos de<br>Experiência</p>
+                        </div>
+                        <div class="stat-box accent-box">
+                            <h3>100%</h3>
+                            <p>Projetos<br>Personalizados</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quote-form-card">
+                    <h3>Solicite um orçamento</h3>
+                    <p>Informe seu nome e fale conosco no WhatsApp</p>
+                    <form id="quote-form">
+                        <div class="form-group">
+                            <label for="name">Seu Nome</label>
+                            <input type="text" id="name" placeholder="Como podemos te chamar?" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Chamar no WhatsApp <i
+                                class="fa-brands fa-whatsapp"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quem Somos -->
+    <section id="quem-somos" class="about section-padding">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-images reveal-left">
+                    <!-- Putting the reference image here as requested -->
+                    <img src="https://images.unsplash.com/photo-1620626011761-9963d7b59675?q=80&w=2574&auto=format&fit=crop"
+                        alt="Stark Marcenaria - Design de Interiores" class="img-main reference-img">
+                    <div class="decorative-square"></div>
+                </div>
+                <div class="about-content reveal-right">
+                    <div class="section-badge">
+                        <i class="fa-regular fa-star"></i> Excelência & Tecnologia
+                    </div>
+                    <h2>Nós Trabalhamos Para Você com <span class="highlight">Impecabilidade</span></h2>
+                    <p class="lead-text">
+                        Na Stark Marcenaria, transformamos madeira em arte e funcionalidade. Nosso compromisso é com a
+                        qualidade absoluta, criando ambientes que refletem a sua visão.
+                    </p>
+                    <p>
+                        Acreditamos que cada projeto é único. Por isso, aliamos técnicas tradicionais de marcenaria com
+                        as tendências mais modernas, garantindo durabilidade e um acabamento impecável em cada peça.
+                    </p>
+                    <p>
+                        <strong>Conforto e Tecnologia:</strong> Estamos atentos às inovações do morar contemporâneo.
+                        Nossos móveis podem ser preparados para integrar sistemas de automação como
+                        <strong>Alexa</strong>, facilitando o seu dia a dia com iluminação planejada e soluções
+                        inteligentes.
+                    </p>
+
+                    <div class="about-features">
+                        <div class="feature">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Acabamento<br>Premium</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Integração<br>com Alexa</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Ferragens<br>Importadas</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Design<br>Exclusivo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Logo Banner -->
+    <div class="logo-banner">
+        <div class="container logo-banner-container">
+            <!-- FontAwesome icons as placeholders for partner brands/materials -->
+            <i class="fa-brands fa-aws"></i>
+            <i class="fa-brands fa-houzz"></i>
+            <i class="fa-solid fa-leaf"></i>
+            <i class="fa-solid fa-house-signal"></i>
+            <i class="fa-solid fa-microchip"></i>
+        </div>
+    </div>
+
+    <!-- Especialidades -->
+    <section id="servicos" class="services section-padding bg-darker">
+        <div class="container">
+            <div class="services-header reveal-up">
+                <div class="section-badge">Nossas Especializações</div>
+                <h2>O que oferecemos</h2>
+            </div>
+
+            <div class="services-grid">
+                <div class="service-card reveal-up" style="transition-delay: 0.1s;">
+                    <i class="fa-solid fa-couch service-icon"></i>
+                    <h3>Salas e Livings</h3>
+                    <p>Painéis majestosos, racks com fiação oculta e prateleiras iluminadas. Espaços pensados para
+                        receber com elegância milimétrica.</p>
+                </div>
+                <div class="service-card reveal-up" style="transition-delay: 0.2s;">
+                    <i class="fa-solid fa-utensils service-icon"></i>
+                    <h3>Cozinhas Gourmet</h3>
+                    <p>Funcionalidade extrema aliada a frentes sofisticadas, gavetas com amortecimento total e
+                        organização interna inteligente.</p>
+                </div>
+                <div class="service-card reveal-up" style="transition-delay: 0.3s;">
+                    <i class="fa-solid fa-bed service-icon"></i>
+                    <h3>Dormitórios e Closets</h3>
+                    <p>Armários luxuosos, iluminação em LED nos cabideiros, portas deslizantes com toque suave e
+                        divisórias personalizadas.</p>
+                </div>
+                <div class="service-card reveal-up" style="transition-delay: 0.4s;">
+                    <i class="fa-brands fa-amazon service-icon highlight"></i>
+                    <h3>Móveis Smart (Alexa)</h3>
+                    <p>Projetos desenvolvidos para automação: nichos para assistentes, iluminação controlável por voz e
+                        sistemas motorizados integrados.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="galeria" class="gallery section-padding">
+        <div class="container">
+            <div class="section-badge reveal-up">Inspirações</div>
+            <h2 class="reveal-up">Projetos Executados</h2>
+
+            <div class="gallery-grid">
+                <!-- Using Unsplash luxury interior images -->
+                <div class="gallery-item reveal-up" style="transition-delay: 0.1s;">
+                    <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=2670&auto=format&fit=crop"
+                        alt="Cozinha de Alto Padrão">
+                    <div class="gallery-overlay">
+                        <h4>Cozinha Gourmet</h4>
+                        <p>Linha Titanium</p>
+                    </div>
+                </div>
+                <div class="gallery-item reveal-up" style="transition-delay: 0.2s;">
+                    <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2600&auto=format&fit=crop"
+                        alt="Sala de Estar">
+                    <div class="gallery-overlay">
+                        <h4>Living Integrado</h4>
+                        <p>Iluminação Smart LED</p>
+                    </div>
+                </div>
+                <div class="gallery-item reveal-up" style="transition-delay: 0.3s;">
+                    <img src="https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?q=80&w=2670&auto=format&fit=crop"
+                        alt="Quarto Casal">
+                    <div class="gallery-overlay">
+                        <h4>Dormitório Casal</h4>
+                        <p>Closet Elegance</p>
+                    </div>
+                </div>
+                <div class="gallery-item large reveal-up" style="transition-delay: 0.4s;">
+                    <img src="https://images.unsplash.com/photo-1588854337236-6889d631faa8?q=80&w=2670&auto=format&fit=crop"
+                        alt="Home Theater Smart">
+                    <div class="gallery-overlay">
+                        <h4>Home Theater Smart</h4>
+                        <p>Totalmente integrado com Alexa</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <img src="imgs/stark-white.png" alt="Stark Marcenaria Logo Branco" class="footer-logo">
+                    <p>Excelência e perfeição em cada detalhe. Transformando a madeira em obras de arte funcionais para
+                        sua casa.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#"><i class="fa-brands fa-pinterest-p"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h3>Navegação</h3>
+                    <ul>
+                        <li><a href="#inicio">Início</a></li>
+                        <li><a href="#quem-somos">Quem Somos</a></li>
+                        <li><a href="#servicos">Especialidades</a></li>
+                        <li><a href="#galeria">Galeria</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-contact" id="contato">
+                    <h3>Contato</h3>
+                    <ul>
+                        <li><i class="fa-solid fa-phone"></i> +55 (17) 99744-8213</li>
+                        <li><i class="fa-solid fa-envelope"></i> contato@starkmarcenaria.com</li>
+                        <li><i class="fa-solid fa-location-dot"></i> Av. Principal, 1000 - Centro, Cidade - UF</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 Stark Marcenaria. Todos os direitos reservados. Design Exclusivo.</p>
+                <div class="admin-access" style="margin-top: 10px;">
+                    <a href="admin/login.html"
+                        style="color: rgba(255,255,255,0.3); text-decoration: none; font-size: 0.8rem;">Acesso
+                        Administrativo</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Popup Modal -->
+    <div id="quote-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="quote-form-card modal-form">
+                <h3>Orçamento Rápido</h3>
+                <p>Informe seu nome e iniciaremos o atendimento via WhatsApp.</p>
+                <form id="modal-quote-form">
+                    <div class="form-group">
+                        <label for="modal-name">Seu Nome</label>
+                        <input type="text" id="modal-name" placeholder="Como podemos te chamar?" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Iniciar Conversa <i
+                            class="fa-brands fa-whatsapp"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery Lightbox Modal -->
+    <div id="gallery-lightbox" class="lightbox-modal">
+        <span class="close-lightbox">&times;</span>
+        <div class="lightbox-content-wrapper">
+            <img class="lightbox-img" id="lightbox-img" src="" alt="Projeto">
+            <div id="lightbox-caption" class="lightbox-caption"></div>
+        </div>
+    </div>
+
+    <!-- Floating WhatsApp CTA and Magic Spark -->
+    <a href="https://wa.me/5517997448213" target="_blank" class="floating-whatsapp"
+        aria-label="Fale conosco no WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+        <span class="whatsapp-tooltip">Fale Comigo Agora</span>
+    </a>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
