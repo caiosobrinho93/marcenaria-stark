@@ -2,26 +2,23 @@
    VARIABLES & DESIGN SYSTEM
    ========================================= */
 :root {
-    /* Colors based on Stark Logo and Reference */
-    --bg-dark: #121214;
-    /* Deep dark background */
-    --bg-darker: #0d0d0e;
-    /* Slightly darker for sections */
-    --bg-panel: #1a1b1e;
-    /* Panel backgrounds */
-    --bg-card: #202024;
-    /* Lighter for cards */
+    /* Colors based on Stecks Logo */
+    --bg-dark: #0a0a0b;
+    /* Deeper dark background */
+    --bg-darker: #050506;
+    /* Even deeper for contrast */
+    --bg-panel: rgba(26, 27, 30, 0.4);
+    /* Translucent for glassmorphism */
+    --bg-card: rgba(32, 32, 36, 0.3);
+    /* Translucent for cards */
 
-    --primary: #f2c94c;
-    /* Golden yellow accent from logo/reference */
-    --primary-hover: #d4ae36;
+    --primary: #eab308;
+    /* Professional Gold from logo */
+    --primary-hover: #ca8a04;
 
-    --text-main: #f8f9fa;
-    /* Off-white readable text */
-    --text-muted: #a1a1aa;
-    /* Gray for secondary text */
-    --text-dark: #121214;
-    /* Dark text for buttons/yellow bg */
+    --text-main: #fdfdfd;
+    --text-muted: #94a3b8;
+    --text-dark: #0f172a;
 
     /* Typography */
     --font-heading: 'Montserrat', 'Outfit', sans-serif;
@@ -71,15 +68,18 @@ h6 {
     color: var(--text-main);
     line-height: 1.2;
     text-transform: uppercase;
-    /* Stark logo uses all caps, giving it a strong feel */
+    letter-spacing: 1px;
 }
 
 h2 {
-    font-size: 2.5rem;
+    font-size: 3rem;
     margin-bottom: 24px;
     font-weight: 800;
-    /* Bolder to match STARK */
-    letter-spacing: -0.5px;
+    letter-spacing: -1.5px;
+    background: linear-gradient(to bottom, #fff, #94a3b8);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 a {
@@ -308,12 +308,11 @@ img {
 }
 
 .hero-text h1 {
-    font-size: 4.5rem;
+    font-size: 5rem;
     margin-bottom: 24px;
-    line-height: 1.05;
+    line-height: 1.0;
     font-weight: 900;
-    /* Extra bold for STARK */
-    letter-spacing: -1px;
+    letter-spacing: -2px;
 }
 
 .hero-text p {
@@ -354,11 +353,13 @@ img {
 
 /* Quote Form */
 .quote-form-card {
-    background-color: var(--bg-panel);
+    background: rgba(13, 13, 15, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     padding: 40px;
     border-radius: var(--border-radius);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 1);
+    border: 1px solid rgba(234, 179, 8, 0.2);
     position: relative;
 }
 
@@ -464,16 +465,23 @@ img {
     border-radius: var(--border-radius-sm);
     position: relative;
     z-index: 2;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+    filter: contrast(1.1) brightness(0.9);
 }
 
 .reference-img {
-    object-position: top center;
-    max-height: 600px;
-    object-fit: contain;
+    object-position: center;
+    max-height: 550px;
+    object-fit: cover;
     background-color: var(--bg-darker);
     padding: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(234, 179, 8, 0.3);
+    border-radius: var(--border-radius);
+    transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.reference-img:hover {
+    transform: scale(1.02);
 }
 
 .decorative-square {
@@ -553,11 +561,13 @@ img {
 }
 
 .service-card {
-    background-color: var(--bg-panel);
+    background: rgba(20, 20, 22, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     padding: 40px 30px;
     border-radius: var(--border-radius);
-    border: 1px solid rgba(255, 255, 255, 0.03);
-    transition: var(--transition);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
     position: relative;
     overflow: hidden;
 }

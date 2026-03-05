@@ -185,7 +185,7 @@ function loadMainGallery() {
         { url: 'https://images.unsplash.com/photo-1588854337236-6889d631faa8?q=80&w=2670&auto=format&fit=crop', title: 'Home Theater Smart', desc: 'Integração Alexa' }
     ];
 
-    const stored = localStorage.getItem('stark_gallery');
+    const stored = localStorage.getItem('stecks_gallery');
     const items = stored ? JSON.parse(stored) : defaultGallery;
 
     galleryGrid.innerHTML = '';
