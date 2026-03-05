@@ -225,7 +225,7 @@ function openLightbox(src, title, desc) {
 
 // Gallery Lightbox Logic (Legacy/Cleanup)
 const lightbox = document.getElementById('gallery-lightbox');
-const closeLightbox = document.querySelector('.close-lightbox');
+const closeLightbox = document.querySelector('.clos e-lightbox');
 
 if (lightbox) {
     closeLightbox.addEventListener('click', () => {
