@@ -86,7 +86,7 @@ function handleFormSubmit(formId) {
             // Prepare WhatsApp message
             const name = nameEl.value;
             const waPhone = '5517997448213';
-            const waText = `Olá, me chamo ${name}, gostaria de um orçamento..`;
+            const waText = `Olá, me chamo ${name}. Gostaria de agendar uma análise técnica para o meu projeto com a STATE MARCENARIA.`;
             const waUrl = `https://wa.me/${waPhone}?text=${encodeURIComponent(waText)}`;
 
             // Open WhatsApp
@@ -98,11 +98,11 @@ function handleFormSubmit(formId) {
 
             formContainer.innerHTML = `
                 <div class="success-message-container" style="text-align: center; padding: 40px 20px;">
-                    <div style="font-size: 60px; color: #4ade80; margin-bottom: 20px;">
+                    <div style="font-size: 60px; color: #eab308; margin-bottom: 20px;">
                         <i class="fa-solid fa-circle-check"></i>
                     </div>
-                    <h3 style="margin-bottom: 15px;">Solicitação Enviada!</h3>
-                    <p style="margin-bottom: 30px; color: #a1a1aa;">Obrigado, ${name}. Já abrimos seu WhatsApp para conversarmos.</p>
+                    <h3 style="margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px;">Consultoria Iniciada</h3>
+                    <p style="margin-bottom: 30px; color: #a1a1aa;">Obrigado pela confiança, ${name}. Nossa equipe técnica já está disponível no seu WhatsApp.</p>
                     <button class="btn btn-primary" id="success-ok-btn" style="width: 100px;">OK</button>
                 </div>
             `;

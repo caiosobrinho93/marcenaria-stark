@@ -2,7 +2,7 @@
    VARIABLES & DESIGN SYSTEM
    ========================================= */
 :root {
-    /* Colors based on Stecks Logo */
+    /* Colors based on STATE MARCENARIA Logo */
     --bg-dark: #0a0a0b;
     /* Deeper dark background */
     --bg-darker: #050506;
@@ -22,7 +22,7 @@
 
     /* Typography */
     --font-heading: 'Montserrat', 'Outfit', sans-serif;
-    /* Montserrat is heavier, closer to Stecks */
+    /* Montserrat is heavier, closer to STATE MARCENARIA */
     --font-heading-secondary: 'Outfit', sans-serif;
     --font-body: 'Inter', sans-serif;
 
