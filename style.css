@@ -2,38 +2,47 @@
    VARIABLES & DESIGN SYSTEM
    ========================================= */
 :root {
-    /* Colors based on STATE MARCENARIA Logo */
-    --bg-dark: #0a0a0b;
-    /* Deeper dark background */
-    --bg-darker: #050506;
-    /* Even deeper for contrast */
-    --bg-panel: rgba(26, 27, 30, 0.4);
-    /* Translucent for glassmorphism */
-    --bg-card: rgba(32, 32, 36, 0.3);
-    /* Translucent for cards */
+    /* Color System */
+    --bg-primary: #0B0F1A;
+    --bg-secondary: #121826;
+    --primary-accent: #1E90FF;
+    --secondary-accent: #00E5FF;
+    --highlight-accent: #FF7A18;
 
-    --primary: #eab308;
-    /* Professional Gold from logo */
-    --primary-hover: #ca8a04;
+    --text-primary: #F1F5F9;
+    --text-secondary: #94A3B8;
 
-    --text-main: #fdfdfd;
-    --text-muted: #94a3b8;
-    --text-dark: #0f172a;
+    /* Semantic Aliases */
+    --bg-dark: var(--bg-primary);
+    --bg-darker: var(--bg-secondary);
+    --bg-panel: rgba(18, 24, 38, 0.6);
+    --bg-card: rgba(30, 144, 255, 0.05);
+
+    --primary: var(--primary-accent);
+    --primary-hover: #3b9eff;
+
+    --text-main: var(--text-primary);
+    --text-muted: var(--text-secondary);
+    --text-dark: #FFFFFF;
+    /* High contrast text for buttons */
 
     /* Typography */
-    --font-heading: 'Montserrat', 'Outfit', sans-serif;
-    /* Montserrat is heavier, closer to STATE MARCENARIA */
-    --font-heading-secondary: 'Outfit', sans-serif;
+    --font-heading: 'Outfit', sans-serif;
     --font-body: 'Inter', sans-serif;
 
-    /* Spacing & Layout */
+    /* Layout & Geometry */
     --max-width: 1200px;
     --section-gap: 120px;
-    --border-radius-sm: 4px;
-    --border-radius: 8px;
+    --border-radius-sm: 8px;
+    --border-radius: 16px;
+
+    /* Effects */
+    --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --glow-primary: 0 0 20px rgba(30, 144, 255, 0.3);
+    --glow-secondary: 0 0 20px rgba(0, 229, 255, 0.3);
 
     /* Transitions */
-    --transition: all 0.3s ease;
+    --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 /* =========================================
@@ -67,19 +76,14 @@ h6 {
     font-family: var(--font-heading);
     color: var(--text-main);
     line-height: 1.2;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: -0.5px;
 }
 
 h2 {
-    font-size: 3rem;
+    font-size: 3.5rem;
     margin-bottom: 24px;
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: -1.5px;
-    background: linear-gradient(to bottom, #fff, #94a3b8);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 a {
@@ -146,6 +150,7 @@ img {
     font-size: 1.25rem;
     color: var(--text-muted);
     margin-bottom: 24px;
+    font-weight: 300;
 }
 
 /* Buttons */
@@ -162,14 +167,15 @@ img {
 }
 
 .btn-primary {
-    background-color: var(--primary);
+    background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent));
     color: var(--text-dark);
+    font-weight: 600;
 }
 
 .btn-primary:hover {
-    background-color: var(--primary-hover);
+    background: linear-gradient(135deg, var(--primary-hover), var(--secondary-accent));
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(242, 201, 76, 0.2);
+    box-shadow: var(--glow-primary);
 }
 
 .btn-block {
@@ -187,14 +193,16 @@ img {
     width: 100%;
     z-index: 1000;
     transition: var(--transition);
-    padding: 20px 0;
+    padding: 24px 0;
     background: transparent;
 }
 
 .navbar.scrolled {
-    background-color: rgba(18, 18, 20, 0.95);
-    backdrop-filter: blur(10px);
-    padding: 15px 0;
+    background-color: rgba(11, 15, 26, 0.85);
+    /* Uses var(--bg-primary) roughly */
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    padding: 16px 0;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -227,12 +235,13 @@ img {
 .nav-link::after {
     content: '';
     position: absolute;
-    bottom: 0;
+    bottom: -4px;
     left: 0;
     width: 0;
-    height: 1px;
-    background-color: var(--primary);
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary-accent), var(--secondary-accent));
     transition: var(--transition);
+    border-radius: 2px;
 }
 
 .nav-link:hover::after,
@@ -279,7 +288,7 @@ img {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, rgba(13, 13, 14, 0.95) 0%, rgba(13, 13, 14, 0.7) 50%, rgba(13, 13, 14, 0.4) 100%);
+    background: linear-gradient(90deg, rgba(11, 15, 26, 0.95) 0%, rgba(11, 15, 26, 0.8) 50%, rgba(11, 15, 26, 0.4) 100%);
 }
 
 .hero-container {
@@ -308,18 +317,23 @@ img {
 }
 
 .hero-text h1 {
-    font-size: 5rem;
+    font-size: 5.5rem;
     margin-bottom: 24px;
-    line-height: 1.0;
-    font-weight: 900;
-    letter-spacing: -2px;
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -2.5px;
+    background: linear-gradient(180deg, #FFFFFF 0%, #A1B2C8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .hero-text p {
-    font-size: 1.125rem;
-    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.25rem;
+    color: var(--text-muted);
     max-width: 500px;
     margin-bottom: 40px;
+    font-weight: 300;
     font-family: var(--font-body);
 }
 
@@ -353,25 +367,25 @@ img {
 
 /* Quote Form */
 .quote-form-card {
-    background: rgba(13, 13, 15, 0.6);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(18, 24, 38, 0.5);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     padding: 40px;
     border-radius: var(--border-radius);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 1);
-    border: 1px solid rgba(234, 179, 8, 0.2);
+    box-shadow: var(--shadow-soft), var(--glow-primary);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     position: relative;
+    overflow: hidden;
 }
 
 .quote-form-card::before {
     content: '';
     position: absolute;
-    top: -2px;
-    left: -2px;
-    width: 60px;
-    height: 60px;
-    border-top: 2px solid var(--primary);
-    border-left: 2px solid var(--primary);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-accent), var(--secondary-accent));
 }
 
 .quote-form-card h3 {
@@ -474,10 +488,11 @@ img {
     max-height: 550px;
     object-fit: cover;
     background-color: var(--bg-darker);
-    padding: 10px;
-    border: 1px solid rgba(234, 179, 8, 0.3);
+    padding: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--border-radius);
     transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: var(--shadow-soft);
 }
 
 .reference-img:hover {
@@ -490,7 +505,9 @@ img {
     left: 0;
     width: 40%;
     height: 60%;
-    border: 2px solid var(--primary);
+    border: 2px solid var(--primary-accent);
+    box-shadow: var(--glow-primary);
+    border-radius: var(--border-radius);
     z-index: 1;
 }
 
@@ -561,15 +578,16 @@ img {
 }
 
 .service-card {
-    background: rgba(20, 20, 22, 0.4);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(18, 24, 38, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     padding: 40px 30px;
     border-radius: var(--border-radius);
     border: 1px solid rgba(255, 255, 255, 0.05);
     transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
     position: relative;
     overflow: hidden;
+    box-shadow: var(--shadow-soft);
 }
 
 .service-card::before {
@@ -580,19 +598,19 @@ img {
     right: 20px;
     font-family: var(--font-heading);
     font-size: 3rem;
-    font-weight: 800;
+    font-weight: 700;
     color: rgba(255, 255, 255, 0.03);
     transition: var(--transition);
 }
 
 .service-card:hover {
     transform: translateY(-10px);
-    border-color: rgba(242, 201, 76, 0.2);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    border-color: rgba(30, 144, 255, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), var(--glow-primary);
 }
 
 .service-card:hover::before {
-    color: rgba(242, 201, 76, 0.1);
+    color: rgba(30, 144, 255, 0.1);
 }
 
 .service-icon {
@@ -603,17 +621,17 @@ img {
 }
 
 .service-card:hover .service-icon {
-    color: var(--primary);
+    color: var(--secondary-accent);
 }
 
 .service-icon.highlight {
-    color: var(--primary);
+    color: var(--highlight-accent);
 }
 
 .service-card:active {
     transform: scale(0.98);
-    border-color: var(--primary);
-    box-shadow: 0 0 30px var(--primary), 0 0 60px rgba(242, 201, 76, 0.6);
+    border-color: var(--secondary-accent);
+    box-shadow: 0 0 30px var(--secondary-accent), var(--glow-secondary);
     filter: brightness(1.2);
     z-index: 5;
     transition: all 0.1s ease;
@@ -663,7 +681,7 @@ img {
     left: 0;
     width: 100%;
     padding: 30px;
-    background: linear-gradient(to top, rgba(18, 18, 20, 1), rgba(18, 18, 20, 0.6), transparent);
+    background: linear-gradient(to top, rgba(11, 15, 26, 1), rgba(11, 15, 26, 0.7), transparent);
 }
 
 .gallery-item:hover img {
@@ -685,7 +703,7 @@ img {
    FOOTER
    ========================================= */
 .footer {
-    background-color: #080809;
+    background-color: var(--bg-primary);
     padding: 80px 0 30px;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -852,6 +870,7 @@ img {
     max-width: 500px;
     position: relative;
     animation: slideIn 0.3s ease;
+    border-radius: var(--border-radius);
 }
 
 @keyframes slideIn {
@@ -885,8 +904,13 @@ img {
 }
 
 .modal-form {
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-    border: 1px solid rgba(242, 201, 76, 0.3);
+    box-shadow: var(--shadow-soft), var(--glow-primary);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    /* Replaces old gold color */
+    border-radius: var(--border-radius);
+    background: rgba(18, 24, 38, 0.8);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
 }
 
 .modal-form h3 {
