@@ -1,21 +1,22 @@
 // Mobile Navbar Toggle
 const mobileMenu = document.getElementById('mobile-menu');
-const navMenu = document.querySelector('.nav-menu');
+const navLinksContainer = document.querySelector('.nav-links');
+const navLinks = document.querySelectorAll('.n-link');
 
-mobileMenu.addEventListener('click', () => {
-    mobileMenu.classList.toggle('active');
-    navMenu.classList.toggle('active');
-});
+if (mobileMenu && navLinksContainer) {
+    mobileMenu.addEventListener('click', () => {
+        navLinksContainer.classList.toggle('active');
+    });
 
-// Close mobile menu when clicking on a link
-document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
-    mobileMenu.classList.remove('active');
-    navMenu.classList.remove('active');
-}));
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            navLinksContainer.classList.remove('active');
+        });
+    });
+}
 
 // Navbar Scroll Effect
 const navbar = document.getElementById('navbar');
-
 window.addEventListener('scroll', () => {
     if (window.scrollY > 50) {
         navbar.classList.add('scrolled');
@@ -24,18 +25,13 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// Active Link Highlight on Scroll
+// Active Link Highlight
 const sections = document.querySelectorAll('section');
-const navLinks = document.querySelectorAll('.nav-link');
 
 window.addEventListener('scroll', () => {
     let current = '';
-
     sections.forEach(section => {
         const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-
-        // Adjust for navbar height
         if (pageYOffset >= (sectionTop - 200)) {
             current = section.getAttribute('id');
         }
@@ -49,8 +45,7 @@ window.addEventListener('scroll', () => {
     });
 });
 
-// CSS Classes for Reveal Animations
-// Managed via IntersectionObserver for performance
+// Reveal Animations
 const observerOptions = {
     root: null,
     rootMargin: '0px',
@@ -61,7 +56,7 @@ const revealObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('active');
-            observer.unobserve(entry.target); // Stop observing once revealed
+            observer.unobserve(entry.target);
         }
     });
 }, observerOptions);
@@ -71,106 +66,24 @@ function initReveals() {
     reveals.forEach(el => revealObserver.observe(el));
 }
 
-// Trigger initial observe
 document.addEventListener('DOMContentLoaded', initReveals);
-// Fallback for dynamic content loaded later
 setTimeout(initReveals, 300);
 
-// Simple Form Handling (Prevent Default and Validate)
-function handleFormSubmit(formId) {
-    const form = document.getElementById(formId);
-    if (form) {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
+// Modal Logic
+const modal = document.getElementById('tech-modal');
+const openModalBtn = document.getElementById('consultation-btn');
+const closeBtn = document.querySelector('.close-modal');
 
-            let phoneEl, emailEl;
-            if (formId === 'quote-form') {
-                nameEl = document.getElementById('name');
-            } else {
-                nameEl = document.getElementById('modal-name');
-            }
-
-            // Prepare WhatsApp message
-            const name = nameEl.value;
-            const waPhone = '5517997448213';
-            const waText = `Olá, me chamo ${name}. Gostaria de agendar uma análise técnica para o meu projeto com a STATE MARCENARIA.`;
-            const waUrl = `https://wa.me/${waPhone}?text=${encodeURIComponent(waText)}`;
-
-            // Open WhatsApp
-            window.open(waUrl, '_blank');
-
-            // Success State UI
-            const formContainer = form.parentElement;
-            const originalContent = formContainer.innerHTML;
-
-            formContainer.innerHTML = `
-                <div class="success-message-container" style="text-align: center; padding: 40px 20px;">
-                    <div style="font-size: 60px; color: #eab308; margin-bottom: 20px;">
-                        <i class="fa-solid fa-circle-check"></i>
-                    </div>
-                    <h3 style="margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px;">Consultoria Iniciada</h3>
-                    <p style="margin-bottom: 30px; color: #a1a1aa;">Obrigado pela confiança, ${name}. Nossa equipe técnica já está disponível no seu WhatsApp.</p>
-                    <button class="btn btn-primary" id="success-ok-btn" style="width: 100px;">OK</button>
-                </div>
-            `;
-
-            document.getElementById('success-ok-btn').addEventListener('click', () => {
-                formContainer.innerHTML = originalContent;
-                // Re-attach the event listener to the new form
-                handleFormSubmit(formId);
-
-                // If modal, close it
-                if (formId === 'modal-quote-form') {
-                    const modal = document.getElementById('quote-modal');
-                    modal.classList.remove('show');
-                }
-            });
-        });
-    }
-}
-
-handleFormSubmit('quote-form');
-handleFormSubmit('modal-quote-form');
-
-// Popup Modal Logic
-const modal = document.getElementById('quote-modal');
-const openModalBtn = document.getElementById('open-popup-btn');
-const closeModalBtn = document.querySelector('.close-modal');
-
-if (openModalBtn && modal && closeModalBtn) {
-    // Open modal or scroll if mobile
+if (openModalBtn && modal && closeBtn) {
     openModalBtn.addEventListener('click', (e) => {
         e.preventDefault();
-
-        if (window.innerWidth <= 768) {
-            // Scroll to form on mobile
-            const heroForm = document.querySelector('.quote-form-card');
-            if (heroForm) {
-                const y = heroForm.getBoundingClientRect().top + window.pageYOffset - 100;
-                window.scrollTo({ top: y, behavior: 'smooth' });
-            }
-
-            // Close mobile menu with a slight delay so user sees the scroll start
-            setTimeout(() => {
-                const mobileMenu = document.getElementById('mobile-menu');
-                const navMenu = document.querySelector('.nav-menu');
-                if (mobileMenu && navMenu) {
-                    mobileMenu.classList.remove('active');
-                    navMenu.classList.remove('active');
-                }
-            }, 400);
-        } else {
-            // Open modal on desktop
-            modal.classList.add('show');
-        }
+        modal.classList.add('show');
     });
 
-    // Close modal on X click
-    closeModalBtn.addEventListener('click', () => {
+    closeBtn.addEventListener('click', () => {
         modal.classList.remove('show');
     });
 
-    // Close modal on outside click
     window.addEventListener('click', (e) => {
         if (e.target === modal) {
             modal.classList.remove('show');
@@ -178,11 +91,25 @@ if (openModalBtn && modal && closeModalBtn) {
     });
 }
 
-// =========================================
-// DYNAMIC GALLERY LOADING (MASONRY)
-// =========================================
+// Form Handling
+const consultationForm = document.getElementById('consultation-form');
+if (consultationForm) {
+    consultationForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('client-name').value;
+        const waPhone = '5517997448213';
+        const waText = `PROTOCOLO INICIADO: Olá, chamo-me ${name}. Solicito análise técnica de área para projeto estrutural com a STATE MARCENARIA.`;
+        const waUrl = `https://wa.me/${waPhone}?text=${encodeURIComponent(waText)}`;
+        window.open(waUrl, '_blank');
+        if (modal) {
+            modal.classList.remove('show');
+        }
+    });
+}
+
+// Gallery Loading
 function loadMainGallery() {
-    const galleryGrid = document.querySelector('.gallery-grid');
+    const galleryGrid = document.getElementById('portfolio-grid');
     if (!galleryGrid) return;
 
     const defaultGallery = [
@@ -190,41 +117,37 @@ function loadMainGallery() {
         { url: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800&auto=format&fit=crop', title: 'Living Integrado', desc: 'Iluminação Smart LED' },
         { url: 'https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?q=80&w=800&auto=format&fit=crop', title: 'Dormitório Casal', desc: 'Closet Elegance' },
         { url: 'https://images.unsplash.com/photo-1588854337236-6889d631faa8?q=80&w=1400&auto=format&fit=crop', title: 'Home Theater', desc: 'Integração Alexa' },
-        { url: 'https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=800&auto=format&fit=crop', title: 'Escritório Executivo', desc: 'Design Corporativo' }
+        { url: 'https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=800&auto=format&fit=crop', title: 'Escritório Executivo', desc: 'Design Corporativo' },
+        { url: 'https://images.unsplash.com/photo-1593696140826-c58b021acf8b?q=80&w=800&auto=format&fit=crop', title: 'Painel Acústico', desc: 'Módulos Fonoabsorventes' }
     ];
 
-    const stored = localStorage.getItem('state_gallery');
-    const items = stored ? JSON.parse(stored) : defaultGallery;
-
     galleryGrid.innerHTML = '';
-    items.forEach((item, index) => {
+    defaultGallery.forEach((item, index) => {
         const div = document.createElement('div');
-        // Determine masonry spans (some images take 2 rows, some 1, some span columns)
-        // Just an alternating pattern for high-end feel
         let masonryClass = 'gallery-item reveal-up';
+        
+        // Stagger logic
         if (index === 0) masonryClass += ' span-col-2 span-row-2';
         else if (index === 3) masonryClass += ' span-col-2';
-        else if (index === 4) masonryClass += ' span-row-2';
 
         div.className = masonryClass;
-        div.style.transitionDelay = `${(index % 3 + 1) * 0.1}s`;
+        div.style.transitionDelay = `${(index % 3) * 0.1}s`;
         div.innerHTML = `
             <img src="${item.url}" alt="${item.title}" loading="lazy">
             <div class="gallery-overlay">
                 <h4>${item.title}</h4>
-                <p>${item.desc}</p>
+                <p>SYS.DESC // ${item.desc}</p>
             </div>
         `;
-        galleryGrid.appendChild(div);
-
-        // Re-attach lightbox listener to new element
+        
         div.addEventListener('click', () => openLightbox(item.url, item.title, item.desc));
+        galleryGrid.appendChild(div);
     });
-
-    // Trigger reveals for new items dynamically loaded
+    
     setTimeout(initReveals, 100);
 }
 
+// Lightbox logic
 function openLightbox(src, title, desc) {
     const lightbox = document.getElementById('gallery-lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
@@ -233,16 +156,15 @@ function openLightbox(src, title, desc) {
     if (lightbox && lightboxImg && lightboxCaption) {
         lightboxImg.src = src;
         lightboxImg.alt = title;
-        lightboxCaption.innerHTML = `<strong>${title}</strong><br><small>${desc}</small>`;
+        lightboxCaption.innerHTML = `<strong>${title}</strong><small>SYS.DESC // ${desc}</small>`;
         lightbox.classList.add('show');
     }
 }
 
-// Gallery Lightbox Logic (Legacy/Cleanup)
 const lightbox = document.getElementById('gallery-lightbox');
 const closeLightbox = document.querySelector('.close-lightbox');
 
-if (lightbox) {
+if (lightbox && closeLightbox) {
     closeLightbox.addEventListener('click', () => {
         lightbox.classList.remove('show');
     });
@@ -252,58 +174,14 @@ if (lightbox) {
             lightbox.classList.remove('show');
         }
     });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === "Escape" && lightbox.classList.contains('show')) {
+            lightbox.classList.remove('show');
+        }
+    });
 }
 
-// Initial Gallery Load
 loadMainGallery();
 
-// =========================================
-// CINEMATIC PARALLAX & SCROLL STORYTELLING
-// =========================================
-
-// Hero Parallax on Mouse Move
-const heroSection = document.getElementById('inicio');
-const parallaxBg = document.getElementById('parallax-bg');
-const parallaxMid = document.getElementById('parallax-mid');
-const parallaxFg = document.getElementById('parallax-fg');
-
-if (heroSection && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-    heroSection.addEventListener('mousemove', (e) => {
-        const x = (e.clientX / window.innerWidth - 0.5) * 2;
-        const y = (e.clientY / window.innerHeight - 0.5) * 2;
-
-        requestAnimationFrame(() => {
-            if (parallaxBg) parallaxBg.style.transform = `translate3d(${x * 8}px, ${y * 8}px, 0)`;
-            if (parallaxMid) parallaxMid.style.transform = `translate3d(${x * 15}px, ${y * 15}px, 0)`;
-            if (parallaxFg) parallaxFg.style.transform = `translate3d(${x * -10}px, ${y * -10}px, 0)`;
-        });
-    });
-
-    heroSection.addEventListener('mouseleave', () => {
-        requestAnimationFrame(() => {
-            if (parallaxBg) parallaxBg.style.transform = `translate3d(0, 0, 0)`;
-            if (parallaxMid) parallaxMid.style.transform = `translate3d(0, 0, 0)`;
-            if (parallaxFg) parallaxFg.style.transform = `translate3d(0, 0, 0)`;
-        });
-    });
-}
-
-// Section Storytelling (Scale down on scroll out)
-window.addEventListener('scroll', () => {
-    if (window.innerWidth <= 768) return;
-
-    const scrollY = window.scrollY;
-    if (heroSection && scrollY < window.innerHeight) {
-        const progress = scrollY / window.innerHeight;
-        const scaleBg = 1 - (progress * 0.05); // Scale down to 0.95
-        const opacityMid = 1 - (progress * 1.5);
-
-        requestAnimationFrame(() => {
-            if (parallaxBg) parallaxBg.style.transform = `scale(${scaleBg})`;
-            if (parallaxMid) parallaxMid.style.opacity = Math.max(0, opacityMid);
-            if (parallaxFg) parallaxFg.style.transform = `translate3d(0, ${scrollY * 0.15}px, 0)`;
-        });
-    }
-}, { passive: true });
-
-
+// Mouse parallax effect completely removed as per spec.

@@ -1,262 +1,220 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>State Marcenaria | Móveis Planejados de Alto Padrão</title>
-    <!-- Google Fonts: Inter and Outfit -->
+    <title>State Marcenaria | Alta Engenharia Moveleira</title>
+    <!-- Google Fonts: Inter, Outfit, JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+<body class="theme-dark">
+    <!-- Technical Overlays -->
+    <div class="tech-grid-overlay"></div>
+    <div class="tech-lines-overlay"></div>
 
-<body>
     <!-- Navbar -->
-    <nav class="navbar" id="navbar">
-        <div class="container nav-container">
-            <a href="#" class="logo">
-                <img src="imgs/logo-state.png" alt="STATE MARCENARIA" id="nav-logo">
+    <nav class="navbar-modern" id="navbar">
+        <div class="container nav-content">
+            <a href="#" class="nav-brand">
+                <span class="brand-text">STATE</span><span class="brand-sub">MARCENARIA</span>
             </a>
             <div class="menu-toggle" id="mobile-menu">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
             </div>
-            <ul class="nav-menu">
-                <li><a href="#inicio" class="nav-link active">Início</a></li>
-                <li><a href="#quem-somos" class="nav-link">Quem Somos</a></li>
-                <li><a href="#servicos" class="nav-link">Especialidades</a></li>
-                <li><a href="#galeria" class="nav-link">Galeria</a></li>
-                <li><a href="#" id="open-popup-btn" class="btn btn-primary nav-btn">Orçamento</a></li>
-            </ul>
+            <div class="nav-links">
+                <a href="#hero" class="n-link active">01. INÍCIO</a>
+                <a href="#methodology" class="n-link">02. METODOLOGIA</a>
+                <a href="#systems" class="n-link">03. SISTEMAS</a>
+                <a href="#projects" class="n-link">04. PROJETOS</a>
+            </div>
+            <div class="nav-action nav-action-desktop">
+                <a href="#" id="consultation-btn" class="btn-tech">INICIAR PROJETO <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="inicio" class="hero section-scroll-layer">
-        <!-- Parallax Background Layers -->
-        <div class="hero-bg" id="parallax-bg"></div>
-        <div class="hero-mid" id="parallax-mid"></div>
-        <!-- Overlay for darker background over image -->
-        <div class="hero-overlay"></div>
-        <div class="container hero-container" id="parallax-fg">
-            <div class="hero-content">
-                <div class="hero-text reveal-left">
-                    <span class="accent-text">ALTA ENGENHARIA MOVELEIRA</span>
-                    <h1>A Autoridade em <br><span class="highlight">Performance</span> e Design</h1>
-                    <p>Projetos exclusivos desenvolvidos com rigor técnico e precisão cirúrgica para ambientes que
-                        exigem o extraordinário.</p>
-
-                    <div class="hero-stats">
-                        <div class="stat-box">
-                            <h3>Alta Escala</h3>
-                            <p>Produção Industrial<br>sob Medida</p>
-                        </div>
-                        <div class="stat-box accent-box">
-                            <h3>Rigor Técnico</h3>
-                            <p>Detalhamento em<br>Nível de Engenharia</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="quote-form-card">
-                    <h3>Inicie seu Projeto</h3>
-                    <p>Agende uma análise técnica para o seu ambiente via WhatsApp.</p>
-                    <form id="quote-form">
-                        <div class="form-group">
-                            <label for="name">Seu Nome</label>
-                            <input type="text" id="name" placeholder="Informe seu nome" required>
-                        </div>
-                        <div class="form-group-row btn-container">
-                            <button type="submit" class="btn btn-primary btn-block">Agendar Consultoria <i
-                                    class="fa-brands fa-whatsapp"></i></button>
-                            <a href="#galeria" class="btn btn-secondary btn-block">Ver Portfólio</a>
-                        </div>
-                    </form>
-                </div>
+    <main>
+        <!-- Cinematic Hero -->
+        <section id="hero" class="hero-cinematic">
+            <div class="hero-bg-media">
+               <img src="imgs/background.jpg" alt="Background" class="hero-img">
+               <div class="hero-vignette"></div>
             </div>
-        </div>
-    </section>
+            
+            <div class="hero-data left-data">
+                <span class="data-text">SYS.ON // V1.0.4</span>
+                <span class="data-text">COORD: -20.41, -49.97</span>
+                <div class="data-line"></div>
+            </div>
+            <div class="hero-data right-data">
+                <span class="data-text">STATUS: OPERACIONAL</span>
+                <div class="data-line"></div>
+            </div>
 
-    <!-- Quem Somos -->
-    <section id="quem-somos" class="about section-padding">
-        <div class="container">
-            <div class="about-grid">
-                <div class="about-images reveal-left">
-                    <!-- Updated with the carpenter image as requested -->
-                    <img src="imgs/marceneiro.jpg" alt="State Marcenaria - Marceneiro em ação"
-                        class="img-main reference-img" loading="lazy">
-                    <div class="decorative-square"></div>
-                </div>
-                <div class="about-content reveal-right">
-                    <div class="section-badge">
-                        <i class="fa-regular fa-star"></i> Consultoria & Execução de Elite
+            <div class="container hero-content-wrapper">
+                <div class="hero-typography reveal-up">
+                    <div class="tech-badge">ALTA ENGENHARIA MOVELEIRA</div>
+                    <h1 class="glitch-title" data-text="STATE">STATE</h1>
+                    <h2 class="sub-title">PRECISÃO MILIMÉTRICA.<br>PERFORMANCE ABSOLUTA.</h2>
+                    <p class="hero-desc">Projetos estruturais focados em durabilidade extrema e integração tecnológica. Não fazemos móveis, construímos sistemas habitáveis.</p>
+                    
+                    <div class="hero-actions">
+                        <a href="https://wa.me/5517997448213" target="_blank" class="btn-solid-yellow">
+                            AGENDAR ANÁLISE TÉCNICA
+                        </a>
+                        <a href="#methodology" class="btn-outline-tech">
+                            EXPLORAR ESPECIFICAÇÕES
+                        </a>
                     </div>
-                    <h2>Onde a Tecnologia Encontra o <span class="highlight">Vanguarda</span></h2>
-                    <p class="lead-text">
-                        A STATE MARCENARIA não entrega apenas móveis; entregamos soluções de engenharia moveleira
-                        focadas em resultados impecáveis e durabilidade extrema.
-                    </p>
-                    <p>
-                        Operamos em um modelo de produção inteligente, utilizando parques industriais parceiros
-                        equipados com tecnologia de ponta. Isso nos garante uma capacidade de execução ilimitada,
-                        mantendo o foco total no rigor técnico do projeto e no acompanhamento minucioso de cada detalhe.
-                    </p>
-                    <p>
-                        <strong>Infraestrutura e Precisão:</strong> Entendemos o morar contemporâneo como um sistema.
-                        Nossos projetos são estruturados para integrar automação residencial de última geração,
-                        garantindo que a tecnologia e o mobiliário funcionem em perfeita harmonia.
-                    </p>
-
-                    <div class="about-features">
-                        <div class="feature">
-                            <i class="fa-solid fa-plus"></i>
-                            <span>Acabamento<br>Premium</span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa-solid fa-plus"></i>
-                            <span>Integração<br>com Alexa</span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa-solid fa-plus"></i>
-                            <span>Ferragens<br>Importadas</span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa-solid fa-plus"></i>
-                            <span>Design<br>Exclusivo</span>
+                </div>
+                
+                <div class="hero-technical-drawing reveal-right">
+                    <div class="cad-box">
+                        <div class="cad-corner tl"></div>
+                        <div class="cad-corner tr"></div>
+                        <div class="cad-corner bl"></div>
+                        <div class="cad-corner br"></div>
+                        <div class="cad-center">
+                            <i class="fa-solid fa-compass-drafting cad-icon"></i>
+                            <span class="cad-label">PROJETO ESTRUTURAL 3D</span>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Logo Banner -->
-    <div class="logo-banner">
-        <div class="container logo-banner-container">
-            <!-- FontAwesome icons as placeholders for partner brands/materials -->
-            <i class="fa-brands fa-aws"></i>
-            <i class="fa-brands fa-houzz"></i>
-            <i class="fa-solid fa-leaf"></i>
-            <i class="fa-solid fa-house-signal"></i>
-            <i class="fa-solid fa-microchip"></i>
-        </div>
-    </div>
+        <!-- Methodology Section (Quem Somos replaced) -->
+        <section id="methodology" class="section-methodology">
+            <div class="container">
+                <div class="section-header reveal-up">
+                    <span class="tech-number">02</span>
+                    <h2 class="section-title">METODOLOGIA DE EXECUÇÃO</h2>
+                    <div class="header-line"></div>
+                </div>
 
-    <!-- Especialidades -->
-    <section id="servicos" class="services section-padding bg-darker">
-        <div class="container">
-            <div class="services-header reveal-up">
-                <div class="section-badge">Nossas Especializações</div>
-                <h2>O que oferecemos</h2>
-            </div>
-
-            <div class="services-grid">
-                <div class="service-card reveal-up" style="transition-delay: 0.1s;">
-                    <i class="fa-solid fa-couch service-icon"></i>
-                    <h3>Mobiliário Técnico Residencial</h3>
-                    <p>Sistemas modulares e peças sob medida com ferragens de alta performance e acabamento industrial
-                        de precisão.</p>
-                </div>
-                <div class="service-card reveal-up" style="transition-delay: 0.2s;">
-                    <i class="fa-solid fa-utensils service-icon"></i>
-                    <h3>Engenharia de Cozinhas</h3>
-                    <p>Ergonomia avançada aliada a materiais resistentes e soluções de armazenamento inteligente para
-                        chefs e entusiastas.</p>
-                </div>
-                <div class="service-card reveal-up" style="transition-delay: 0.3s;">
-                    <i class="fa-solid fa-bed service-icon"></i>
-                    <h3>Sistemas de Dormitórios</h3>
-                    <p>Otimização de fluxo e curadoria de materiais nobres para criar closets e quartos de alto impacto
-                        visual e funcional.</p>
-                </div>
-                <div class="service-card reveal-up" style="transition-delay: 0.4s;">
-                    <i class="fa-solid fa-briefcase service-icon"></i>
-                    <h3>Mobiliário Corporativo</h3>
-                    <p>Ambientes produtivos com design de vanguarda, focados em máxima durabilidade e performance
-                        profissional.</p>
+                <div class="methodology-grid">
+                    <div class="method-content reveal-left">
+                        <h3 class="method-heading">Produção Industrial de Haute Couture</h3>
+                        <p class="method-text">A <strong>STATE MARCENARIA</strong> transcende o padrão convencional através de parques industriais parceiros. Cada milímetro é calculado por software e executado com maquinário CNC de última geração, garantindo encaixes perfeitos e zero margem de erro.</p>
+                        
+                        <ul class="tech-list">
+                            <li><i class="fa-solid fa-check-double"></i> <span>Usinagem Computadorizada (CNC)</span></li>
+                            <li><i class="fa-solid fa-check-double"></i> <span>Ferragens de Alta Performance (Blum / Hettich)</span></li>
+                            <li><i class="fa-solid fa-check-double"></i> <span>Compatibilização com Automação Residencial</span></li>
+                            <li><i class="fa-solid fa-check-double"></i> <span>Materiais de Resistência Nível Comercial</span></li>
+                        </ul>
+                    </div>
+                    <div class="method-visual reveal-right">
+                        <div class="image-wrapper">
+                            <img src="imgs/marceneiro.jpg" alt="Marceneiro e Engenharia Moveleira">
+                            <div class="tech-borders"></div>
+                            <div class="scanning-line"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Gallery Section -->
-    <section id="galeria" class="gallery section-padding">
-        <div class="container">
-            <div class="section-badge reveal-up">Inspirações</div>
-            <h2 class="reveal-up">Projetos Executados</h2>
+        <!-- Systems Section (Especialidades replaced) -->
+        <section id="systems" class="section-systems">
+            <div class="container">
+                <div class="section-header reveal-up">
+                    <span class="tech-number">03</span>
+                    <h2 class="section-title">SISTEMAS MODULARES</h2>
+                    <div class="header-line"></div>
+                </div>
 
-            <div class="gallery-grid" id="main-gallery">
-                <!-- Javascript will load masonry items here to maintain uniform structure and lazy loading -->
+                <div class="systems-cards">
+                    <div class="sys-card reveal-up">
+                        <div class="sys-id">M.01</div>
+                        <i class="fa-solid fa-fire-burner sys-icon"></i>
+                        <h3>Engenharia Gourmet</h3>
+                        <p>Estruturas de alta resistência ao calor e umidade, sistemas de corrediças pesadas e integração com eletrodomésticos de embutir de última geração.</p>
+                        <div class="sys-bar"></div>
+                    </div>
+                    
+                    <div class="sys-card reveal-up" style="transition-delay: 0.1s;">
+                        <div class="sys-id">M.02</div>
+                        <i class="fa-solid fa-server sys-icon"></i>
+                        <h3>Armazenamento Inteligente</h3>
+                        <p>Dormitórios e closets projetados como hubs de organização. Iluminação embutida ativada por sensor e modulação otimizada sob medida.</p>
+                        <div class="sys-bar"></div>
+                    </div>
+
+                    <div class="sys-card reveal-up" style="transition-delay: 0.2s;">
+                        <div class="sys-id">M.03</div>
+                        <i class="fa-solid fa-network-wired sys-icon"></i>
+                        <h3>Home & Corporate</h3>
+                        <p>Arquitetura de interiores focada em produtividade. Passagem oculta de cabeamento, painéis acústicos e ergonomia de nível executivo.</p>
+                        <div class="sys-bar"></div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- Projects Section (Galeria replaced) -->
+        <section id="projects" class="section-projects">
+            <div class="container">
+                <div class="section-header reveal-up">
+                    <span class="tech-number">04</span>
+                    <h2 class="section-title">DADOS DO PORTFÓLIO</h2>
+                    <div class="header-line"></div>
+                </div>
+
+                <div class="projects-grid" id="portfolio-grid">
+                    <!-- Javascript will load the masonry grid elements here -->
+                </div>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="tech-footer">
         <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <img src="imgs/logo-state.png" alt="STATE MARCENARIA Logo" class="footer-logo">
-                    <p>Autoridade em engenharia moveleira e design de alta performance. Entregamos a perfeição técnica
-                        necessária para projetos extraordinários.</p>
-                    <div class="social-links">
-                        <a href="https://www.instagram.com/statemarcenariavotu/" target="_blank"><i
-                                class="fa-brands fa-instagram"></i></a>
-                    </div>
+            <div class="footer-top">
+                <div class="brand-mark">
+                    <span class="brand-text">STATE</span><span class="brand-sub">MARCENARIA</span>
+                    <p class="footer-desc">Soluções de alta precisão para arquitetura de interiores. Entregamos a rigidez técnica que o seu ambiente de alto padrão exige.</p>
                 </div>
-
-                <div class="footer-links">
-                    <h3>Navegação</h3>
-                    <ul>
-                        <li><a href="#inicio">Início</a></li>
-                        <li><a href="#quem-somos">Quem Somos</a></li>
-                        <li><a href="#servicos">Especialidades</a></li>
-                        <li><a href="#galeria">Galeria</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-contact" id="contato">
-                    <h3>Contato Profissional</h3>
-                    <ul>
-                        <li><i class="fa-solid fa-phone"></i> +55 (17) 99744-8213</li>
-                        <li><i class="fa-solid fa-envelope"></i> statemarcenaria@hotmail.com</li>
-                    </ul>
+                <div class="footer-contact">
+                    <a href="https://wa.me/5517997448213" target="_blank" class="contact-link"><i class="fa-brands fa-whatsapp"></i> +55 (17) 99744-8213</a>
+                    <a href="mailto:statemarcenaria@hotmail.com" class="contact-link"><i class="fa-solid fa-envelope"></i> statemarcenaria@hotmail.com</a>
+                    <a href="https://www.instagram.com/statemarcenariavotu/" target="_blank" class="contact-link"><i class="fa-brands fa-instagram"></i> @statemarcenariavotu</a>
                 </div>
             </div>
-
             <div class="footer-bottom">
-                <p>&copy; 2026 STATE MARCENARIA. Todos os direitos reservados. Engenharia & Design.</p>
+                <span>&copy; 2026 STATE MARCENARIA // ALL SYSTEMS NOMINAL</span>
+                <span>ENG. & DESIGN.</span>
             </div>
         </div>
     </footer>
 
-    <!-- Popup Modal -->
-    <div id="quote-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <div class="quote-form-card modal-form">
-                <h3>Análise Técnica</h3>
-                <p>Informe seu nome para iniciarmos o agendamento da consultoria.</p>
-                <form id="modal-quote-form">
-                    <div class="form-group">
-                        <label for="modal-name">Seu Nome</label>
-                        <input type="text" id="modal-name" placeholder="Informe seu nome" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Agendar Consultoria <i
-                            class="fa-brands fa-whatsapp"></i></button>
-                </form>
+    <!-- Consultation Modal -->
+    <div id="tech-modal" class="tech-modal-overlay">
+        <div class="tech-modal-box">
+            <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-header">
+                <h3>INICIAR PROTOCOLO</h3>
+                <p>Insira a identificação do contratante para agendar a análise estrutural da STATE.</p>
             </div>
+            <form id="consultation-form">
+                <div class="input-group">
+                    <label>IDENTIFICAÇÃO (NOME)</label>
+                    <input type="text" id="client-name" required placeholder="Seu nome completo">
+                </div>
+                <button type="submit" class="btn-solid-yellow w-100">CONECTAR AO WHATSAPP <i class="fa-brands fa-whatsapp"></i></button>
+            </form>
         </div>
     </div>
 
-    <!-- Gallery Lightbox Modal -->
+    <!-- Gallery Lightbox -->
     <div id="gallery-lightbox" class="lightbox-modal">
         <span class="close-lightbox">&times;</span>
         <div class="lightbox-content-wrapper">
@@ -265,14 +223,12 @@
         </div>
     </div>
 
-    <!-- Floating WhatsApp CTA and Magic Spark -->
-    <a href="https://wa.me/5517997448213" target="_blank" class="floating-whatsapp"
-        aria-label="Fale conosco no WhatsApp">
+    <!-- Floating WhatsApp CTA -->
+    <a href="https://wa.me/5517997448213" target="_blank" class="floating-whatsapp" aria-label="Fale conosco no WhatsApp">
         <i class="fa-brands fa-whatsapp"></i>
-        <span class="whatsapp-tooltip">Fale Comigo Agora</span>
     </a>
 
+    <!-- Scripts -->
     <script src="script.js"></script>
 </body>
-
 </html>
