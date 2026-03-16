@@ -123,13 +123,14 @@ function loadMainGallery() {
 
     galleryGrid.innerHTML = '';
     defaultGallery.forEach((item, index) => {
-        const div = document.createElement('div');
         let masonryClass = 'gallery-item reveal-up';
         
-        // Stagger logic
+        // Asymmetric grid logic (Masonry effect elements)
         if (index === 0) masonryClass += ' span-col-2 span-row-2';
         else if (index === 3) masonryClass += ' span-col-2';
+        else if (index === 4) masonryClass += ' span-row-2';
 
+        const div = document.createElement('div');
         div.className = masonryClass;
         div.style.transitionDelay = `${(index % 3) * 0.1}s`;
         div.innerHTML = `
