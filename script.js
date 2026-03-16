@@ -98,7 +98,7 @@ if (consultationForm) {
         e.preventDefault();
         const name = document.getElementById('client-name').value;
         const waPhone = '5517997448213';
-        const waText = `PROTOCOLO INICIADO: Olá, chamo-me ${name}. Solicito análise técnica de área para projeto estrutural com a STATE MARCENARIA.`;
+        const waText = `Olá, chamo-me ${name}. Gostaria de conversar sobre um projeto com a STATE MARCENARIA.`;
         const waUrl = `https://wa.me/${waPhone}?text=${encodeURIComponent(waText)}`;
         window.open(waUrl, '_blank');
         if (modal) {
@@ -136,7 +136,7 @@ function loadMainGallery() {
             <img src="${item.url}" alt="${item.title}" loading="lazy">
             <div class="gallery-overlay">
                 <h4>${item.title}</h4>
-                <p>SYS.DESC // ${item.desc}</p>
+                <p>${item.desc}</p>
             </div>
         `;
         
@@ -156,7 +156,7 @@ function openLightbox(src, title, desc) {
     if (lightbox && lightboxImg && lightboxCaption) {
         lightboxImg.src = src;
         lightboxImg.alt = title;
-        lightboxCaption.innerHTML = `<strong>${title}</strong><small>SYS.DESC // ${desc}</small>`;
+        lightboxCaption.innerHTML = `<strong>${title}</strong><small>${desc}</small>`;
         lightbox.classList.add('show');
     }
 }
