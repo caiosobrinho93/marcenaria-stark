@@ -134,6 +134,13 @@ input, button, textarea {
     background: none;
 }
 
+/* Global Image rules */
+img {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
 /* Floating WhatsApp */
 .floating-whatsapp {
     position: fixed;
@@ -276,6 +283,7 @@ input, button, textarea {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap; /* crucial for squeezing */
 }
 
 .nav-brand {
@@ -484,9 +492,9 @@ input, button, textarea {
 }
 
 .cinematic-title {
-    font-size: clamp(4rem, 8vw, 7rem);
+    font-size: clamp(3rem, 7vw, 7rem);
     font-weight: 900;
-    line-height: 1;
+    line-height: 1.1;
     margin-bottom: 15px;
     letter-spacing: -1px;
     color: var(--text-primary);
@@ -910,7 +918,7 @@ input, button, textarea {
 }
 
 /* Systems Cards Modern */
-.systems-grid-modern {
+.systems-grid-modern,
 .systems-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
@@ -1470,28 +1478,6 @@ input, button, textarea {
     .reveal-left { transform: translateX(-10px); transition: all 1s cubic-bezier(0.25, 1, 0.5, 1); }
     .reveal-right { transform: translateX(10px); transition: all 1s cubic-bezier(0.25, 1, 0.5, 1); }
 
-    .nav-links {
-        display: none;
-    }
-    
-    .nav-links.active {
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background: rgba(3, 3, 3, 0.95);
-        backdrop-filter: blur(12px);
-        padding: 20px;
-        gap: 20px;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-    
-    .menu-toggle {
-        display: flex;
-    }
-    
     .nav-action-desktop {
         display: none;
     }
@@ -1728,7 +1714,61 @@ input, button, textarea {
 
 /* Phase 7 Media Queries */
 @media (max-width: 1024px) {
-    .about-grid { grid-template-columns: 1fr; gap: 40px; }
-    .materials-flex, .why-custom-grid { grid-template-columns: 1fr; }
+    .about-grid, .materials-flex, .why-custom-grid, .systems-grid-modern { 
+        grid-template-columns: 1fr; 
+        gap: 40px; 
+    }
+    
     .floating-badge { right: 20px; bottom: 20px; }
+    .projects-grid { display: flex; flex-direction: column; gap: 20px; }
+    
+    /* Navigation Fixes (Tablet/Mobile) */
+    .nav-links {
+        display: none !important;
+    }
+    
+    .nav-links.active {
+        display: flex !important;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: rgba(13, 11, 10, 0.98);
+        backdrop-filter: blur(12px);
+        padding: 30px 20px;
+        gap: 20px;
+        border-bottom: 1px solid rgba(234, 179, 8, 0.1);
+        z-index: 1000;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    
+    .navbar-modern .nav-content .menu-toggle {
+        display: flex !important;
+        flex-direction: column;
+        gap: 6px;
+        cursor: pointer;
+        z-index: 1001;
+    }
+
+    .navbar-modern .nav-content .menu-toggle .bar,
+    .menu-toggle span {
+        width: 25px;
+        height: 2px;
+        background: var(--brand-yellow) !important;
+        transition: var(--transition-smooth);
+    }
+    
+    .nav-action-desktop {
+        display: none !important;
+    }
+}
+
+@media (max-width: 375px) {
+    .nav-logo { height: 32px; }
+}
+
+html, body {
+    overflow-x: hidden;
+    width: 100vw;
 }
