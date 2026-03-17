@@ -71,13 +71,16 @@ setTimeout(initReveals, 300);
 
 // Modal Logic
 const modal = document.getElementById('tech-modal');
-const openModalBtn = document.getElementById('consultation-btn');
 const closeBtn = document.querySelector('.close-modal');
 
-if (openModalBtn && modal && closeBtn) {
-    openModalBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        modal.classList.add('show');
+if (modal && closeBtn) {
+    // Event Delegation: listen for any click and check if it's an open-modal button
+    document.addEventListener('click', (e) => {
+        const trigger = e.target.closest('.open-modal-btn');
+        if (trigger) {
+            e.preventDefault();
+            modal.classList.add('show');
+        }
     });
 
     closeBtn.addEventListener('click', () => {
