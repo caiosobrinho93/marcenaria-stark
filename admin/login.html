@@ -4,67 +4,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>State Marcenaria | Login</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Inter:wght@400;500&display=swap"
-        rel="stylesheet">
+    <title>State Marcenaria | Login Administrativo</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #0d0d0e;
+            overflow: hidden;
+            background-color: var(--bg-base);
+            margin: 0;
         }
 
         .login-card {
+            background: var(--bg-surface-light);
+            border: 1px solid var(--brand-yellow);
+            padding: 50px;
             width: 100%;
-            max-width: 400px;
-            padding: 40px;
-            background-color: #1a1b1e;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            max-width: 450px;
+            position: relative;
+            box-shadow: 0 0 40px rgba(234, 179, 8, 0.15);
+            animation: card-appear 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 10;
+        }
+
+        @keyframes card-appear {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-card::before {
+            content: 'ADMIN_ACCESS_V2.0';
+            position: absolute;
+            top: -25px;
+            left: 0;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--brand-yellow);
+            letter-spacing: 2px;
+            opacity: 0.6;
+        }
+
+        .login-logo {
+            display: block;
+            margin: 0 auto 40px;
+            height: 45px;
+            filter: drop-shadow(0 0 10px rgba(234, 179, 8, 0.2));
+            width: auto;
         }
 
         .login-card h2 {
             text-align: center;
             margin-bottom: 30px;
             font-size: 1.5rem;
-        }
-
-        .login-card .logo {
-            display: block;
-            margin: 0 auto 30px;
-            height: 50px;
+            color: var(--text-primary);
+            font-family: var(--font-head);
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         .error-msg {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid #ef4444;
             color: #ef4444;
-            font-size: 0.875rem;
+            padding: 12px;
+            font-size: 0.85rem;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             display: none;
+            font-family: var(--font-mono);
+        }
+
+        /* Decorative Technical Elements */
+        .corner-decoration {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border: 1px solid var(--brand-yellow);
+            opacity: 0.5;
+        }
+        .top-left { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+        .bottom-right { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .form-group input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 14px 16px;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: var(--transition-smooth);
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--brand-yellow);
+            background: rgba(234, 179, 8, 0.03);
+            box-shadow: 0 0 15px rgba(234, 179, 8, 0.1);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            background: var(--brand-yellow);
+            color: var(--text-dark);
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-login:hover {
+            background: #FDE047;
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(234, 179, 8, 0.4);
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            transition: var(--transition-smooth);
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            color: var(--brand-yellow);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
     </style>
 </head>
 
-<body>
+<body class="theme-dark">
+    <!-- Background Technical Overlays -->
+    <div class="tech-grid-overlay"></div>
+    <div class="tech-lines-overlay"></div>
+
     <div class="login-card">
-        <img src="../imgs/logo-state.png" alt="STATE MARCENARIA" class="logo">
-        <h2>Área Administrativa</h2>
-        <div id="error" class="error-msg">Usuário ou senha incorretos.</div>
+        <div class="corner-decoration top-left"></div>
+        <div class="corner-decoration bottom-right"></div>
+        
+        <img src="../imgs/logo-state.png" alt="STATE MARCENARIA" class="login-logo">
+        <h2>Acesso Restrito</h2>
+        
+        <div id="error" class="error-msg"> <i class="fa-solid fa-triangle-exclamation"></i> CREDENCIAIS INVÁLIDAS</div>
+        
         <form id="login-form">
             <div class="form-group">
-                <label for="username">Usuário</label>
-                <input type="text" id="username" placeholder="Seu nome" required>
+                <label for="username">Identificação do Operador</label>
+                <input type="text" id="username" placeholder="Digite seu usuário" required autocomplete="username">
             </div>
             <div class="form-group">
-                <label for="password">Senha</label>
-                <input type="password" id="password" placeholder="Sua senha" required>
+                <label for="password">Código de Acesso</label>
+                <input type="password" id="password" placeholder="Digite sua senha" required autocomplete="current-password">
             </div>
-            <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+            <button type="submit" class="btn-login">VALIDAR ACESSO <i class="fa-solid fa-shield-halved"></i></button>
         </form>
+
+        <a href="../index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> VOLTAR AO SITE PRINCIPAL</a>
     </div>
 
     <script>
@@ -78,10 +216,13 @@
                 localStorage.setItem('state_admin_session', 'active');
                 window.location.href = 'dashboard.html';
             } else {
-                document.getElementById('error').style.display = 'block';
+                const errorEl = document.getElementById('error');
+                errorEl.style.display = 'block';
+                errorEl.style.animation = 'shake 0.4s ease-in-out';
+                setTimeout(() => { errorEl.style.animation = ''; }, 400);
             }
         });
     </script>
 </body>
 
-</html>
+</html>
