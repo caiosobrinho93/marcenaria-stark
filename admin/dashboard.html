@@ -7,7 +7,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Styles -->
@@ -17,11 +17,11 @@
             window.location.href = 'login.html';
         }
     </script>
-    <!-- Flatpickr -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
 </head>
 <body>
+    <div class="tech-grid"></div>
     <div id="toast-container"></div>
     
     <div class="app-container">
@@ -33,33 +33,33 @@
             </div>
             
             <nav class="nav-list">
-                <div class="nav-link active" data-mod="home"><i class="fa-solid fa-grid-2"></i> <span>Dashboard</span></div>
-                <div class="nav-link" data-mod="clients"><i class="fa-solid fa-users"></i> <span>Clientes</span></div>
-                <div class="nav-link" data-mod="projects"><i class="fa-solid fa-folder-tree"></i> <span>Projetos</span></div>
-                <div class="nav-link" data-mod="inventory"><i class="fa-solid fa-box-archive"></i> <span>Estoque</span></div>
-                <div class="nav-link" data-mod="finance"><i class="fa-solid fa-wallet"></i> <span>Financeiro</span></div>
+                <div class="nav-link active" data-mod="home"><i class="fa-solid fa-house-chimney-window"></i> <span>Início</span></div>
+                <div class="nav-link" data-mod="clients"><i class="fa-solid fa-user-tie"></i> <span>Clientes</span></div>
+                <div class="nav-link" data-mod="projects"><i class="fa-solid fa-diagram-project"></i> <span>Projetos</span></div>
+                <div class="nav-link" data-mod="inventory"><i class="fa-solid fa-boxes-stacked"></i> <span>Estoque</span></div>
+                <div class="nav-link" data-mod="finance"><i class="fa-solid fa-vault"></i> <span>Pagar/Receber</span></div>
                 <div class="nav-link" data-mod="providers"><i class="fa-solid fa-handshake"></i> <span>Parceiros</span></div>
-                <div class="nav-link" data-mod="gallery"><i class="fa-solid fa-image"></i> <span>Galeria Web</span></div>
+                <div class="nav-link" data-mod="notifications"><i class="fa-solid fa-bell"></i> <span>Alertas</span></div>
+                <div class="nav-link" data-mod="gallery"><i class="fa-solid fa-images"></i> <span>Galeria Web</span></div>
             </nav>
 
             <div style="padding: 16px;">
-                <div id="logout-trigger" class="nav-link" style="color: var(--danger);"><i class="fa-solid fa-right-from-bracket"></i> <span>Sair</span></div>
+                <div id="logout-trigger" class="nav-link" style="color: #ff4d4d;"><i class="fa-solid fa-power-off"></i> <span>Sair</span></div>
             </div>
         </aside>
 
         <!-- Main Content -->
         <main class="main-content">
             <header class="topbar">
-                <div style="display: flex; align-items: center; gap: 16px;">
-                    <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <button class="menu-toggle" id="menu-toggle" style="background:none; border:none; color:var(--brand-yellow); font-size:1.5rem; cursor:pointer;"><i class="fa-solid fa-bars-staggered"></i></button>
                     <h1 class="topbar-title" id="current-mod-name">Visão Geral</h1>
                 </div>
 
                 <div class="topbar-right">
-                    <div class="user-profile" id="user-menu-trigger">
-                        <div class="avatar">S</div>
-                        <span style="font-weight: 600; font-size: 0.85rem;" class="hide-mobile">Admin</span>
-                        <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem;"></i>
+                    <div class="user-profile" id="user-menu-trigger" style="display:flex; align-items:center; gap:12px; cursor:pointer;">
+                        <span style="font-weight: 700; color:var(--text-secondary); font-size:0.8rem;" class="hide-mobile">DIRETORIA STATE</span>
+                        <div class="avatar">ADM</div>
                     </div>
                 </div>
             </header>
@@ -70,70 +70,61 @@
                 <section id="mod-home" class="module-section active">
                     <div class="card-grid">
                         <div class="card">
-                            <div class="stat-header">
+                            <div style="display:flex; justify-content:space-between;">
                                 <div class="stat-label">Projetos Ativos</div>
-                                <div class="stat-icon"><i class="fa-solid fa-briefcase"></i></div>
+                                <div class="stat-icon"><i class="fa-solid fa-microchip"></i></div>
                             </div>
                             <div class="stat-val" id="st-projects">0</div>
-                            <div style="font-size: 0.75rem; color: var(--success);"><i class="fa-solid fa-arrow-up"></i> Em dia</div>
+                            <div style="font-size: 0.7rem; color: var(--brand-yellow); font-family:var(--font-mono)">SYSTEM_STABLE</div>
                         </div>
                         <div class="card">
-                            <div class="stat-header">
-                                <div class="stat-label">Total de Clientes</div>
-                                <div class="stat-icon" style="color: var(--accent);"><i class="fa-solid fa-users"></i></div>
+                            <div style="display:flex; justify-content:space-between;">
+                                <div class="stat-label">Clientes Base</div>
+                                <div class="stat-icon"><i class="fa-solid fa-id-card-clip"></i></div>
                             </div>
                             <div class="stat-val" id="st-clients">0</div>
-                            <div style="font-size: 0.75rem; color: var(--text-secondary);">Base atualizada</div>
+                            <div style="font-size: 0.7rem; color: var(--text-muted);">Sync 100%</div>
                         </div>
                         <div class="card" style="grid-column: span 2;">
-                            <div class="stat-header">
-                                <div class="stat-label">Receita Mensal</div>
-                                <div class="stat-icon" style="color: var(--success);"><i class="fa-solid fa-chart-line"></i></div>
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div class="stat-label">Fluxo de Caixa Mensal</div>
+                                <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
                             </div>
-                            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-                                <div class="stat-val" id="st-income" style="color: var(--success);">R$ 0</div>
-                                <!-- Sparkline SVG -->
-                                <svg width="120" height="40" viewBox="0 0 120 40" style="margin-bottom: 10px;">
-                                    <path d="M0,35 Q10,10 20,30 T40,15 T60,25 T80,5 T100,20 T120,10" fill="none" stroke="var(--success)" stroke-width="2" />
-                                </svg>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top:10px;">
+                                <div class="stat-val" id="st-income" style="color: var(--brand-yellow); font-size:2.5rem;">R$ 0,00</div>
+                                <div id="income-chart-mini" style="width:150px; height:40px;">
+                                    <svg width="100%" height="100%" viewBox="0 0 120 40">
+                                        <path d="M0,38 Q10,10 20,30 T40,15 T60,35 T80,5 T100,20 T120,5" fill="none" stroke="var(--brand-yellow)" stroke-width="2" />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="card-grid" style="margin-top: 24px;">
-                        <!-- Quick Actions -->
-                        <div class="card">
-                            <h3 style="font-size: 1rem; margin-bottom: 20px;">Ações Rápidas</h3>
-                            <div style="display: grid; gap: 12px;">
-                                <button class="btn btn-ghost" onclick="switchModule('clients', true)" style="justify-content: flex-start; width: 100%;"><i class="fa-solid fa-user-plus"></i> Novo Cliente</button>
-                                <button class="btn btn-ghost" onclick="switchModule('projects', true)" style="justify-content: flex-start; width: 100%;"><i class="fa-solid fa-plus"></i> Novo Projeto</button>
-                                <button class="btn btn-ghost" onclick="switchModule('finance', true)" style="justify-content: flex-start; width: 100%;"><i class="fa-solid fa-dollar-sign"></i> Lançar Valor</button>
-                            </div>
-                        </div>
-
-                        <!-- Mini Calculator -->
-                        <div class="card">
-                            <h3 style="font-size: 1rem; margin-bottom: 20px;">Calculadora Rápida</h3>
-                            <div style="display: grid; gap: 12px;">
-                                <select id="calc-type" style="padding: 10px; border-radius: 8px;">
-                                    <option value="1200">Cozinha (M. Linear)</option>
-                                    <option value="1500">Guarda-Roupa (M²)</option>
-                                    <option value="800">Painéis/Home (M²)</option>
-                                </select>
-                                <input type="number" id="calc-val" placeholder="Medida (M ou M²)" style="padding: 10px; border-radius: 8px;">
-                                <button class="btn btn-primary" onclick="calculateQuote()" style="width: 100%;">Calcular</button>
-                                <div id="calc-result" style="display:none; text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                                    <span style="font-size: 0.8rem; color: var(--text-secondary);">Estimativa:</span>
-                                    <div id="calc-price" style="font-size: 1.2rem; font-weight: 700; color: var(--accent);">R$ 0,00</div>
-                                </div>
-                            </div>
+                        <!-- Price Engine Action -->
+                        <div class="card" style="display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; border: 2px dashed var(--border-yellow);">
+                            <i class="fa-solid fa-calculator" style="font-size:2.5rem; color:var(--brand-yellow); margin-bottom:15px;"></i>
+                            <h3 style="font-family:var(--font-head); font-size:1rem; margin-bottom:10px;">ENGENHARIA DE PREÇO</h3>
+                            <button class="btn btn-primary" onclick="openPriceModal()"><i class="fa-solid fa-play"></i> INICIAR CÁLCULO</button>
                         </div>
 
                         <!-- System Status -->
                         <div class="card" style="grid-column: span 2;">
-                            <h3 style="font-size: 1rem; margin-bottom: 20px;">Logs do Sistema</h3>
-                            <div id="recent-logs" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); max-height: 150px; overflow-y: auto;">
-                                <!-- Logs here -->
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                                <h3 style="font-family:var(--font-head); font-size:0.9rem; letter-spacing:1px;">CONSOLE_LOGS</h3>
+                                <div style="width:8px; height:8px; border-radius:50%; background:var(--brand-yellow); box-shadow: 0 0 10px var(--brand-yellow);"></div>
+                            </div>
+                            <div id="recent-logs" style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-secondary); max-height: 180px; overflow-y: auto; background:#000; padding:15px; border:1px solid var(--border);">
+                            </div>
+                        </div>
+
+                        <!-- Partners Future -->
+                        <div class="card">
+                            <h3 style="font-family:var(--font-head); font-size:0.9rem; margin-bottom:15px;">OFERTAS DE PARCEIROS</h3>
+                            <div class="prod-placeholder">
+                                <i class="fa-solid fa-lock" style="display:block; margin-bottom:10px;"></i>
+                                Implementação Futura
                             </div>
                         </div>
                     </div>
@@ -142,46 +133,51 @@
                 <!-- CLIENTS MODULE -->
                 <section id="mod-clients" class="module-section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                        <h2 class="topbar-title">Clientes</h2>
-                        <button class="btn btn-primary" id="btn-add-client-toggle"><i class="fa-solid fa-plus"></i> Novo Cadastro</button>
+                        <h2 class="topbar-title">BASE DE CLIENTES</h2>
+                        <button class="btn btn-primary" id="btn-add-client-toggle"><i class="fa-solid fa-plus"></i> NOVO CADASTRO</button>
                     </div>
 
-                    <div class="form-card" id="form-client" style="display: none;">
-                        <h3 id="client-form-title" style="margin-bottom: 24px;">Adicionar Novo Cliente</h3>
+                    <div class="form-card" id="form-client" style="display: none; background:var(--bg-surface); padding:30px; border:1px solid var(--border-yellow); margin-bottom:30px;">
+                        <h3 id="client-form-title" style="margin-bottom: 24px; font-family:var(--font-head);">EDITAR REGISTRO</h3>
                         <form id="client-form-el">
                             <input type="hidden" id="client-id">
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px;">
                                 <div class="group">
-                                    <label>Foto / Logo</label>
-                                    <input type="file" id="client-photo" accept="image/*">
+                                    <label>FOTO / LOGO</label>
+                                    <div id="photo-preview" style="width:100px; height:100px; border:1px dashed var(--border); margin-bottom:10px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                                        <i class="fa-solid fa-image" style="opacity:0.2; font-size:2rem;"></i>
+                                    </div>
+                                    <input type="file" id="client-photo" accept="image/*" onchange="previewImage(this, 'photo-preview')">
                                 </div>
                                 <div class="group">
-                                    <label>Nome Completo</label>
-                                    <input type="text" id="client-name" required placeholder="João Silva">
+                                    <label>NOME COMPLETO</label>
+                                    <input type="text" id="client-name" required>
                                 </div>
                                 <div class="group">
-                                    <label>Email</label>
-                                    <input type="email" id="client-email" placeholder="email@exemplo.com">
+                                    <label>WHATSAPP (COM DDD)</label>
+                                    <input type="tel" id="client-phone" required placeholder="17999887766">
                                 </div>
                                 <div class="group">
-                                    <label>Telefone</label>
-                                    <input type="tel" id="client-phone" required placeholder="(00) 00000-0000">
+                                    <label>INSTAGRAM URL</label>
+                                    <input type="text" id="client-instagram" placeholder="https://instagram.com/perfildocliente">
                                 </div>
                                 <div class="group" style="grid-column: 1 / -1;">
-                                    <label>Endereço da Obra</label>
-                                    <input type="text" id="client-address" placeholder="Rua exemplo, 123">
+                                    <label>ENDEREÇO DA OBRA (PARA MAPS)</label>
+                                    <input type="text" id="client-address" placeholder="Rua, Número, Bairro, Cidade">
                                 </div>
                             </div>
                             <div style="display: flex; gap: 12px; margin-top: 12px;">
-                                <button type="submit" class="btn btn-primary">Salvar Registro</button>
-                                <button type="button" class="btn btn-ghost" id="btn-client-cancel">Voltar</button>
+                                <button type="submit" class="btn btn-primary">SALVAR CLIENTE</button>
+                                <button type="button" class="btn btn-ghost" onclick="toggleForm('form-client', false)">CANCELAR</button>
                             </div>
                         </form>
                     </div>
 
-                    <div class="search-container" style="margin-bottom: 20px;">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" placeholder="Buscar cliente..." id="search-clients">
+                    <div class="card" style="margin-bottom:24px; padding:15px;">
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <i class="fa-solid fa-magnifying-glass" style="color:var(--brand-yellow)"></i>
+                            <input type="text" placeholder="Filtrar por nome ou contato..." id="search-clients" style="border:none; background:transparent;">
+                        </div>
                     </div>
 
                     <div class="table-wrapper">
@@ -189,10 +185,10 @@
                             <table id="table-clients">
                                 <thead>
                                     <tr>
-                                        <th>Ref</th>
-                                        <th>Nome</th>
-                                        <th>Contato</th>
-                                        <th>Ações</th>
+                                        <th>ID_REF</th>
+                                        <th>IDENTIFICAÇÃO</th>
+                                        <th>CONTATO_REDE</th>
+                                        <th style="text-align:right">AÇÕES</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -204,42 +200,57 @@
                 <!-- PROJECTS MODULE -->
                 <section id="mod-projects" class="module-section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                        <h2 class="topbar-title">Projetos</h2>
-                        <button class="btn btn-primary" id="btn-add-project-toggle"><i class="fa-solid fa-plus"></i> Novo Projeto</button>
+                        <h2 class="topbar-title">SISTEMAS E PROJETOS</h2>
+                        <button class="btn btn-primary" id="btn-add-project-toggle"><i class="fa-solid fa-plus"></i> NOVO PROJETO</button>
                     </div>
 
-                    <div class="form-card" id="form-project" style="display: none;">
-                        <h3 id="project-form-title" style="margin-bottom: 24px;">Configurar Novo Projeto</h3>
+                    <div class="form-card" id="form-project" style="display: none; background:var(--bg-surface); padding:30px; border:1px solid var(--border-yellow); margin-bottom:30px;">
+                        <h3 id="project-form-title" style="margin-bottom:24px;">CONFIG_PROJECT_INIT</h3>
                         <form id="project-form-el">
                             <input type="hidden" id="project-id">
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px;">
                                 <div class="group" style="grid-column: 1 / -1;">
-                                    <label>Título do Projeto</label>
-                                    <input type="text" id="project-title" required placeholder="Cozinha Planejada">
+                                    <label>TÍTULO DO SISTEMA MOVELEIRO</label>
+                                    <input type="text" id="project-title" required placeholder="Cozinha Gourmet Linear">
                                 </div>
                                 <div class="group">
-                                    <label>Cliente</label>
+                                    <label>VINCULAR CLIENTE</label>
                                     <select id="project-client-select" required></select>
                                 </div>
                                 <div class="group">
-                                    <label>Status</label>
+                                    <label>PARCEIRO RESPONSÁVEL</label>
+                                    <select id="project-provider-select"></select>
+                                </div>
+                                <div class="group">
+                                    <label>STATUS OPERACIONAL</label>
                                     <select id="project-status">
-                                        <option value="planning">Planejamento</option>
-                                        <option value="production">Produção</option>
-                                        <option value="installation">Instalação</option>
-                                        <option value="done">Concluído</option>
+                                        <option value="planejamento">PLANEJAMENTO</option>
+                                        <option value="producao">EM PRODUÇÃO</option>
+                                        <option value="montagem">EM MONTAGEM</option>
+                                        <option value="finalizado">ENTREGUE</option>
                                     </select>
                                 </div>
                                 <div class="group">
-                                    <label>Percentual de Conclusão (%)</label>
+                                    <label>PROGRESSO (%)</label>
                                     <input type="number" id="project-progress" value="0" min="0" max="100">
+                                </div>
+                                <div class="group">
+                                    <label>DATA DE ENTREGA PROMETIDA</label>
+                                    <input type="text" id="project-deadline" class="datepicker">
                                 </div>
                             </div>
                             <div style="display: flex; gap: 12px; margin-top: 12px;">
-                                <button type="submit" class="btn btn-primary">Iniciar Projeto</button>
-                                <button type="button" class="btn btn-ghost" id="btn-project-cancel">Voltar</button>
+                                <button type="submit" class="btn btn-primary">EXECUTAR INÍCIO</button>
+                                <button type="button" class="btn btn-ghost" onclick="toggleForm('form-project', false)">FECHAR</button>
                             </div>
                         </form>
+                    </div>
+
+                    <div class="card" style="margin-bottom:24px; padding:15px;">
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <i class="fa-solid fa-magnifying-glass" style="color:var(--brand-yellow)"></i>
+                            <input type="text" placeholder="Buscar projeto ou cliente..." id="search-projects" style="border:none; background:transparent;">
+                        </div>
                     </div>
 
                     <div class="table-wrapper">
@@ -247,10 +258,10 @@
                             <table id="table-projects">
                                 <thead>
                                     <tr>
-                                        <th>Projeto</th>
-                                        <th>Cliente</th>
-                                        <th>Status / Progresso</th>
-                                        <th>Ações</th>
+                                        <th>SISTEMA_REF</th>
+                                        <th>CLIENTE_OBRA</th>
+                                        <th>STATUS_WORKFLOW</th>
+                                        <th style="text-align:right">AÇÕES</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -262,33 +273,56 @@
                 <!-- INVENTORY MODULE -->
                 <section id="mod-inventory" class="module-section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                        <h2 class="topbar-title">Estoque</h2>
-                        <button class="btn btn-primary" id="btn-add-item-toggle"><i class="fa-solid fa-box"></i> Novo Item</button>
+                        <h2 class="topbar-title">ESTOQUE TÉCNICO</h2>
+                        <button class="btn btn-primary" id="btn-add-item-toggle"><i class="fa-solid fa-plus"></i> ADICIONAR ITEM</button>
                     </div>
 
-                    <div class="form-card" id="form-inventory" style="display: none;">
-                        <h3 id="inventory-form-title">Adicionar Material</h3>
-                        <form id="inventory-form-el" style="margin-top: 24px;">
+                    <div class="form-card" id="form-inventory" style="display: none; background:var(--bg-surface); padding:30px; border:1px solid var(--border-yellow); margin-bottom:30px;">
+                        <h3>GERENCIAR MATERIAL</h3>
+                        <form id="inventory-form-el" style="margin-top:24px;">
                             <input type="hidden" id="item-id">
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px;">
                                 <div class="group">
-                                    <label>Material</label>
-                                    <input type="text" id="item-name" required placeholder="MDF Branco 15mm">
+                                    <label>FOTO DO PRODUTO</label>
+                                    <div id="item-photo-preview" style="width:80px; height:80px; border:1px dashed var(--border); margin-bottom:10px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                                        <i class="fa-solid fa-box-open" style="opacity:0.2;"></i>
+                                    </div>
+                                    <input type="file" id="item-photo" accept="image/*" onchange="previewImage(this, 'item-photo-preview')">
                                 </div>
                                 <div class="group">
-                                    <label>Quantidade</label>
-                                    <input type="number" id="item-qty" required value="1">
+                                    <label>ESPECIFICAÇÃO</label>
+                                    <input type="text" id="item-name" required placeholder="MDF Branco TX">
                                 </div>
                                 <div class="group">
-                                    <label>Mínimo em Estoque</label>
-                                    <input type="number" id="item-min" required value="5">
+                                    <label>QTD ATUAL</label>
+                                    <input type="number" id="item-qty" required value="0">
+                                </div>
+                                <div class="group">
+                                    <label>NÍVEL CRÍTICO</label>
+                                    <select id="item-type-val" onchange="setInvDefaults(this.value)">
+                                        <option value="">Personalizado</option>
+                                        <option value="mdf3">MDF 3mm</option>
+                                        <option value="mdf6">MDF 6mm</option>
+                                        <option value="mdf15">MDF 15mm</option>
+                                        <option value="mdf18">MDF 18mm</option>
+                                        <option value="fita22">Fita 22mm</option>
+                                        <option value="fita35">Fita 35mm</option>
+                                        <option value="fita60">Fita 60mm</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div style="display: flex; gap: 12px; margin-top: 12px;">
-                                <button type="submit" class="btn btn-primary">Salvar</button>
-                                <button type="button" class="btn btn-ghost" id="btn-item-cancel">Cancelar</button>
+                            <div style="display: flex; gap: 12px;">
+                                <button type="submit" class="btn btn-primary">SALVAR NO SISTEMA</button>
+                                <button type="button" class="btn btn-ghost" onclick="toggleForm('form-inventory', false)">CANCELAR</button>
                             </div>
                         </form>
+                    </div>
+
+                    <div class="card" style="margin-bottom:24px; padding:15px;">
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <i class="fa-solid fa-magnifying-glass" style="color:var(--brand-yellow)"></i>
+                            <input type="text" placeholder="Filtrar materiais..." id="search-inventory" style="border:none; background:transparent;">
+                        </div>
                     </div>
 
                     <div class="table-wrapper">
@@ -296,10 +330,10 @@
                             <table id="table-inventory">
                                 <thead>
                                     <tr>
-                                        <th>Material</th>
-                                        <th>Quantidade</th>
-                                        <th>Status</th>
-                                        <th>Ações</th>
+                                        <th>MATERIAL</th>
+                                        <th>QUANTIDADE</th>
+                                        <th>STATUS_CRÍTICO</th>
+                                        <th>AÇÕES</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -311,87 +345,99 @@
                 <!-- FINANCE MODULE -->
                 <section id="mod-finance" class="module-section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                        <h2 class="topbar-title">Financeiro</h2>
-                        <button class="btn btn-primary" id="btn-add-trans-toggle"><i class="fa-solid fa-plus-circle"></i> Novo Lançamento</button>
+                        <h2 class="topbar-title">PAGAR / RECEBER</h2>
+                        <button class="btn btn-primary" id="btn-add-trans-toggle"><i class="fa-solid fa-plus-circle"></i> NOVO LANÇAMENTO</button>
                     </div>
 
-                    <div class="form-card" id="form-finance" style="display: none;">
-                        <h3 id="finance-form-title">Lançar Movimentação</h3>
+                    <div class="form-card" id="form-finance" style="display: none; background:var(--bg-surface); padding:30px; border:1px solid var(--border-yellow); margin-bottom:30px;">
+                        <h3>LANÇAR FLUXO</h3>
                         <form id="finance-form-el" style="margin-top: 24px;">
                             <input type="hidden" id="trans-id">
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 24px;">
                                 <div class="group">
-                                    <label>Tipo</label>
+                                    <label>OPERAÇÃO</label>
                                     <select id="trans-type">
-                                        <option value="income">Receita (+)</option>
-                                        <option value="expense">Despesa (-)</option>
+                                        <option value="income">RECEBER (+)</option>
+                                        <option value="expense">PAGAR (-)</option>
                                     </select>
                                 </div>
                                 <div class="group">
-                                    <label>Valor (R$)</label>
-                                    <input type="number" step="0.01" id="trans-val" required placeholder="0,00">
+                                    <label>MONTANTE (R$)</label>
+                                    <input type="text" id="trans-val" required placeholder="0,00" onkeyup="formatBRL(this)">
                                 </div>
                                 <div class="group" style="grid-column: 1 / -1;">
-                                    <label>Descrição</label>
-                                    <input type="text" id="trans-desc" required placeholder="Ex: Entrada cozinha fulano">
+                                    <label>DESCRIÇÃO DO LANÇAMENTO</label>
+                                    <input type="text" id="trans-desc" required placeholder="Ex: Parcela 2/3 - Cozinha João">
                                 </div>
                                 <div class="group">
-                                    <label>Data</label>
+                                    <label>DATA DE VENCIMENTO</label>
                                     <input type="text" id="trans-date" class="datepicker" required>
                                 </div>
                             </div>
-                            <div style="display: flex; gap: 12px; margin-top: 12px;">
-                                <button type="submit" class="btn btn-primary">Confirmar</button>
-                                <button type="button" class="btn btn-ghost" id="btn-trans-cancel">Cancelar</button>
+                            <div style="display: flex; gap: 12px;">
+                                <button type="submit" class="btn btn-primary">CONFIRMAR REGISTRO</button>
+                                <button type="button" class="btn btn-ghost" onclick="toggleForm('form-finance', false)">FECHAR</button>
                             </div>
                         </form>
                     </div>
 
-                    <div class="table-wrapper">
-                        <div class="table-scroll">
-                            <table id="table-finance">
-                                <thead>
-                                    <tr>
-                                        <th>Data</th>
-                                        <th>Descrição</th>
-                                        <th>Valor</th>
-                                        <th>Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
+                    <div class="card" style="margin-bottom:24px; padding:15px;">
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <i class="fa-solid fa-magnifying-glass" style="color:var(--brand-yellow)"></i>
+                            <input type="text" placeholder="Filtrar por descrição..." id="search-finance" style="border:none; background:transparent;">
                         </div>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table id="table-finance">
+                            <thead>
+                                <tr>
+                                    <th>VENCIMENTO</th>
+                                    <th>DESCRIÇÃO_DE_FLUXO</th>
+                                    <th>VALOR_BRL</th>
+                                    <th>AÇÕES</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
                 </section>
 
                 <!-- PROVIDERS MODULE -->
                 <section id="mod-providers" class="module-section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                        <h2 class="topbar-title">Parceiros</h2>
-                        <button class="btn btn-primary" id="btn-add-prov-toggle"><i class="fa-solid fa-user-plus"></i> Adicionar Parceiro</button>
+                        <h2 class="topbar-title">REDE DE PARCEIROS</h2>
+                        <button class="btn btn-primary" id="btn-add-prov-toggle"><i class="fa-solid fa-user-plus"></i> ADICIONAR</button>
                     </div>
 
-                    <div class="form-card" id="form-provider" style="display: none;">
-                        <h3>Cadastrar Parceiro</h3>
+                    <div class="form-card" id="form-provider" style="display: none; background:var(--bg-surface); border:1px solid var(--border-yellow); padding:30px; margin-bottom:30px;">
+                        <h3>CADASTRAR PARCEIRO</h3>
                         <form id="provider-form-el" style="margin-top: 24px;">
                             <input type="hidden" id="prov-id">
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px;">
                                 <div class="group">
-                                    <label>Nome / Empresa</label>
-                                    <input type="text" id="prov-name" required placeholder="Ex: Marmoraria State">
+                                    <label>IDENTIDADE VISUAL</label>
+                                    <div id="prov-photo-preview" style="width:80px; height:80px; border:1px dashed var(--border); margin-bottom:10px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                                        <i class="fa-solid fa-users"></i>
+                                    </div>
+                                    <input type="file" id="prov-photo" accept="image/*" onchange="previewImage(this, 'prov-photo-preview')">
                                 </div>
                                 <div class="group">
-                                    <label>Especialidade</label>
-                                    <input type="text" id="prov-skill" required placeholder="Ex: Granitos, Ferragens">
+                                    <label>EMPRESA / PROFISSIONAL</label>
+                                    <input type="text" id="prov-name" required>
                                 </div>
                                 <div class="group">
-                                    <label>Contato</label>
-                                    <input type="text" id="prov-email" placeholder="email@exemplo.com">
+                                    <label>ESPECIALIDADE</label>
+                                    <input type="text" id="prov-skill" required placeholder="Ex: Marmoraria">
+                                </div>
+                                <div class="group">
+                                    <label>WHATSAPP</label>
+                                    <input type="tel" id="prov-phone" placeholder="17999887766">
                                 </div>
                             </div>
-                            <div style="display: flex; gap: 12px; margin-top: 12px;">
-                                <button type="submit" class="btn btn-primary">Salvar</button>
-                                <button type="button" class="btn btn-ghost" id="btn-prov-cancel">Cancelar</button>
+                            <div style="display: flex; gap: 12px;">
+                                <button type="submit" class="btn btn-primary">SALVAR PARCEIRO</button>
+                                <button type="button" class="btn btn-ghost" onclick="toggleForm('form-provider', false)">FECHAR</button>
                             </div>
                         </form>
                     </div>
@@ -399,34 +445,44 @@
                     <div id="providers-grid" class="card-grid"></div>
                 </section>
 
+                <!-- NOTIFICATIONS MODULE -->
+                <section id="mod-notifications" class="module-section">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                        <h2 class="topbar-title">ALERTAS E VENCIMENTOS</h2>
+                    </div>
+                    <div id="notifications-list" style="display:grid; gap:16px;">
+                        <!-- Alerts rendered here -->
+                    </div>
+                </section>
+
                 <!-- GALLERY MODULE -->
                 <section id="mod-gallery" class="module-section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                        <h2 class="topbar-title">Galeria Web</h2>
-                        <button class="btn btn-primary" id="btn-add-gallery-toggle"><i class="fa-solid fa-plus"></i> Nova Foto</button>
+                        <h2 class="topbar-title">GALERIA WEB</h2>
+                        <button class="btn btn-primary" id="btn-add-gallery-toggle"><i class="fa-solid fa-plus"></i> PUBLICAR FOTO</button>
                     </div>
 
-                    <div class="form-card" id="form-gallery" style="display: none;">
-                        <h3>Vincular à Galeria</h3>
+                    <div class="form-card" id="form-gallery" style="display: none; background:var(--bg-surface); padding:30px; border:1px solid var(--border-yellow); margin-bottom:30px;">
+                        <h3>SINC_GALERIA_TÉCNICA</h3>
                         <form id="gallery-form-el" style="margin-top: 24px;">
                             <input type="hidden" id="gal-id">
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px;">
                                 <div class="group">
-                                    <label>Título</label>
-                                    <input type="text" id="gal-title" required placeholder="Ex: Cozinha Industrial">
+                                    <label>TÍTULO DO PROJETO</label>
+                                    <input type="text" id="gal-title" required placeholder="Cozinha Executive">
                                 </div>
                                 <div class="group">
-                                    <label>Imagem</label>
+                                    <label>SUBTÍTULO / DESCRIÇÃO</label>
+                                    <input type="text" id="gal-sub" required placeholder="Linha Premium MDF">
+                                </div>
+                                <div class="group">
+                                    <label>UPLOAD DE IMAGEM</label>
                                     <input type="file" id="gal-file" accept="image/*">
                                 </div>
-                                <div class="group">
-                                    <label>Atribuir a Parceiro</label>
-                                    <select id="gal-prov-select"></select>
-                                </div>
                             </div>
-                            <div style="display: flex; gap: 12px; margin-top: 12px;">
-                                <button type="submit" class="btn btn-primary">Publicar</button>
-                                <button type="button" class="btn btn-ghost" id="btn-gallery-cancel">Cancelar</button>
+                            <div style="display: flex; gap: 12px;">
+                                <button type="submit" class="btn btn-primary">PUBLICAR AGORA</button>
+                                <button type="button" class="btn btn-ghost" onclick="toggleForm('form-gallery', false)">CANCELAR</button>
                             </div>
                         </form>
                     </div>
@@ -438,16 +494,47 @@
         </main>
     </div>
 
-    <!-- Modals -->
-    <div class="modal-overlay" id="generic-modal">
+    <!-- ADVANCED CALCULATOR MODAL -->
+    <div class="modal-overlay" id="modal-calculator">
         <div class="modal-box">
-            <button id="modal-close" style="position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 1.5rem; color: #fff; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
-            <div id="modal-content"></div>
+            <span class="modal-close" onclick="closeAllModals()">&times;</span>
+            <h3 style="font-family:var(--font-head); margin-bottom:30px; color:var(--brand-yellow); border-bottom:1px solid var(--border); padding-bottom:15px;">ENGENHARIA DE PRECIFICAÇÃO</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+                <div class="group">
+                    <label>CUSTO DE MATERIAL (R$)</label>
+                    <input type="text" id="calc-material" placeholder="0,00" onkeyup="formatBRL(this)">
+                </div>
+                <div class="group">
+                    <label>LOGÍSTICA / ENTREGA (R$)</label>
+                    <input type="text" id="calc-logistics" placeholder="0,00" onkeyup="formatBRL(this)">
+                </div>
+                <div class="group">
+                    <label>INSUMOS EXTRAS (R$)</label>
+                    <input type="text" id="calc-extras" placeholder="0,00" onkeyup="formatBRL(this)">
+                </div>
+                <div class="group">
+                    <label>MULTIPLICADOR DE LUCRO (K)</label>
+                    <input type="number" id="calc-multiplier" value="2.7" step="0.1">
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="runAdvancedCalc()" style="width:100%; margin:20px 0;">GERAR ORÇAMENTO TÉCNICO</button>
+            <div id="calc-adv-result" style="display:none; background:#000; padding:24px; border:1px solid var(--brand-yellow); text-align:center;">
+                <span style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase;">VALOR ESTIMADO PARA O CLIENTE</span>
+                <div id="calc-final-price" style="font-size:2.5rem; font-weight:900; color:var(--brand-yellow); font-family:var(--font-head);">R$ 0,00</div>
+                <div id="calc-profit" style="font-size:0.9rem; margin-top:10px; color:var(--text-secondary);"></div>
+            </div>
         </div>
     </div>
 
-    <!-- Sidebar Overlay (mobile) -->
-    <div id="sidebar-overlay" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 999; display: none;"></div>
+    <!-- CLIENT DETAIL MODAL -->
+    <div class="modal-overlay" id="modal-client-detail">
+        <div class="modal-box" id="client-detail-content"></div>
+    </div>
+
+    <!-- PROJECT DETAIL MODAL -->
+    <div class="modal-overlay" id="modal-project-detail">
+        <div class="modal-box" id="project-detail-content"></div>
+    </div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
