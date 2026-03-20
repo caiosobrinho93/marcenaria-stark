@@ -316,7 +316,7 @@
                                 </div>
                             </div>
                             <div style="display: flex; gap: 12px;">
-                                <button type="submit" class="btn btn-primary">SALVAR NO SISTEMA</button>
+                                <button type="submit" class="btn btn-primary">SALVAR MATERIAL</button>
                                 <button type="button" class="btn btn-ghost" onclick="toggleForm('form-inventory', false)">CANCELAR</button>
                             </div>
                         </form>
@@ -336,8 +336,8 @@
                                     <tr>
                                         <th>MATERIAL</th>
                                         <th>QUANTIDADE</th>
-                                        <th>STATUS_CRÍTICO</th>
-                                        <th>AÇÕES</th>
+                                        <th>DISPONIBILIDADE</th>
+                                        <th style="text-align:right">AÇÕES</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -354,7 +354,7 @@
                     </div>
 
                     <div class="form-card" id="form-finance" style="display: none; background:var(--bg-surface); padding:30px; border:1px solid var(--border-yellow); margin-bottom:30px;">
-                        <h3>LANÇAR FLUXO</h3>
+                        <h3>REGISTRAR MOVIMENTAÇÃO FINANCEIRA</h3>
                         <form id="finance-form-el" style="margin-top: 24px;">
                             <input type="hidden" id="trans-id">
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 24px;">
