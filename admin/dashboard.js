@@ -1,13 +1,15 @@
 /**
- * State Console V6.0 - Advanced Management
- * Specialized for State Marcenaria
+ * State Console V6.1 - Emergency Patch
+ * Fixed missing listeners and logout/auth issues
  */
 
 const DB_PREFIX = 'state_db_';
 const DB = {
     get: (key, defaultVal = []) => {
-        const data = localStorage.getItem(DB_PREFIX + key);
-        return data ? JSON.parse(data) : defaultVal;
+        try {
+            const data = localStorage.getItem(DB_PREFIX + key);
+            return data ? JSON.parse(data) : defaultVal;
+        } catch(e) { console.error("DB Error", e); return defaultVal; }
     },
     set: (key, val) => localStorage.setItem(DB_PREFIX + key, JSON.stringify(val)),
     log: (msg) => {
@@ -21,15 +23,10 @@ const DB = {
 // --- System Utilities ---
 function notify(msg, type = 'success') {
     const container = document.getElementById('toast-container');
+    if(!container) return;
     const toast = document.createElement('div');
     toast.className = 'toast';
-    toast.style.background = '#161311';
-    toast.style.borderLeft = `4px solid ${type === 'success' ? '#EAB308' : '#ff4d4d'}`;
-    toast.style.padding = '16px 24px';
-    toast.style.color = '#F0EBE1';
-    toast.style.marginBottom = '10px';
-    toast.style.borderRadius = '2px';
-    toast.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
+    toast.style.cssText = `background:#161311; border-left:4px solid ${type === 'success' ? '#EAB308' : '#ff4d4d'}; padding:16px 24px; color:#F0EBE1; margin-bottom:10px; border-radius:2px; box-shadow:0 10px 30px rgba(0,0,0,0.5); font-size:0.85rem; z-index:9999; position:relative; animation: slideIn 0.3s ease;`;
     toast.innerHTML = `<strong>SYSTEM:</strong> ${msg}`;
     container.appendChild(toast);
     setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 500); }, 4000);
@@ -44,7 +41,7 @@ const toBase64 = file => new Promise((resolve, reject) => {
 
 function previewImage(input, targetId) {
     const preview = document.getElementById(targetId);
-    if (input.files && input.files[0]) {
+    if (preview && input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = e => {
             preview.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">`;
@@ -55,23 +52,25 @@ function previewImage(input, targetId) {
 
 function formatBRL(input) {
     let value = input.value.replace(/\D/g, "");
-    value = (value / 100).toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-    });
+    value = (value / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
     input.value = value;
 }
 
 function parseBRL(value) {
     if (!value) return 0;
-    return parseFloat(value.replace(/[R$\s.]/g, "").replace(",", "."));
+    return parseFloat(value.toString().replace(/[R$\s.]/g, "").replace(",", ".")) || 0;
+}
+
+function toggleForm(id, show) { 
+    const el = document.getElementById(id); 
+    if(el) {
+        el.style.display = show ? 'block' : 'none'; 
+        if(show) window.scrollTo({top:0, behavior:'smooth'}); 
+    }
 }
 
 // --- Navigation ---
-const navLinks = document.querySelectorAll('.nav-link[data-mod]');
-const sections = document.querySelectorAll('.module-section');
-const sidebar = document.getElementById('sidebar');
-const menuToggle = document.getElementById('menu-toggle');
+let navLinks, sections;
 
 function switchModule(modId) {
     sections.forEach(s => s.classList.remove('active'));
@@ -81,16 +80,18 @@ function switchModule(modId) {
     if (target && link) {
         target.classList.add('active');
         link.classList.add('active');
-        document.getElementById('current-mod-name').innerText = link.querySelector('span').innerText;
+        const span = link.querySelector('span');
+        if(span) document.getElementById('current-mod-name').innerText = span.innerText;
     }
-    sidebar.classList.remove('open');
+    const sidebar = document.getElementById('sidebar');
+    if(sidebar) sidebar.classList.remove('open');
 }
 
-navLinks.forEach(l => l.onclick = () => switchModule(l.dataset.mod));
-if(menuToggle) menuToggle.onclick = () => sidebar.classList.toggle('open');
-
 // Modals
-function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+function openModal(id) { 
+    const el = document.getElementById(id);
+    if(el) el.style.display = 'flex'; 
+}
 function closeAllModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); }
 
 // --- ADVANCED CALCULATOR ---
@@ -112,45 +113,10 @@ window.runAdvancedCalc = () => {
 };
 
 // --- MODULE: CLIENTS ---
-function toggleForm(id, show) { document.getElementById(id).style.display = show ? 'block' : 'none'; if(show) window.scrollTo({top:0, behavior:'smooth'}); }
-
-document.getElementById('btn-add-client-toggle').onclick = () => {
-    document.getElementById('client-id').value = '';
-    document.getElementById('client-form-el').reset();
-    document.getElementById('photo-preview').innerHTML = '<i class="fa-solid fa-image" style="opacity:0.2; font-size:2rem;"></i>';
-    toggleForm('form-client', true);
-};
-
-document.getElementById('client-form-el').onsubmit = async (e) => {
-    e.preventDefault();
-    const id = document.getElementById('client-id').value;
-    const clients = DB.get('clients');
-    const photoInput = document.getElementById('client-photo');
-    let photo = id ? (clients.find(c => c.id === id)?.photo || '') : '';
-    if(photoInput.files[0]) photo = await toBase64(photoInput.files[0]);
-
-    const data = {
-        id: id || Date.now().toString(),
-        name: document.getElementById('client-name').value,
-        phone: document.getElementById('client-phone').value,
-        instagram: document.getElementById('client-instagram').value,
-        address: document.getElementById('client-address').value,
-        photo
-    };
-
-    if(id) clients[clients.findIndex(c => c.id === id)] = data;
-    else clients.push(data);
-
-    DB.set('clients', clients);
-    DB.log(`Base de clientes atualizada: ${data.name}`);
-    notify('Registro salvo com sucesso.');
-    renderClients();
-    toggleForm('form-client', false);
-};
-
 function renderClients(filter = '') {
     const clients = DB.get('clients');
     const tbody = document.querySelector('#table-clients tbody');
+    if(!tbody) return;
     const filtered = clients.filter(c => c.name.toLowerCase().includes(filter.toLowerCase()) || c.phone.includes(filter));
     
     tbody.innerHTML = filtered.map(c => `
@@ -174,8 +140,8 @@ function renderClients(filter = '') {
 window.openClientDetail = (id) => {
     const c = DB.get('clients').find(x => x.id === id);
     if(!c) return;
-    const modal = document.getElementById('modal-client-detail');
     const content = document.getElementById('client-detail-content');
+    if(!content) return;
     
     const waLink = `https://wa.me/${c.phone.replace(/\D/g,'')}`;
     const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.address)}`;
@@ -195,7 +161,7 @@ window.openClientDetail = (id) => {
                 <label>ENDEREÇO TÉCNICO</label>
                 <div style="color:var(--text-secondary)">${c.address || 'Não informado'}</div>
             </div>
-            <button class="btn btn-danger btn-sm" onclick="deleteItem('clients', '${c.id}', renderClients); closeAllModals();">DELETAR REGISTRO</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteItem('clients', '${c.id}', renderClients); closeAllModals();" style="margin-top:10px; border-color:#ff4d4d; color:#ff4d4d; background:none;">DELETAR REGISTRO</button>
         </div>
     `;
     openModal('modal-client-detail');
@@ -203,6 +169,7 @@ window.openClientDetail = (id) => {
 
 window.editClient = (id) => {
     const c = DB.get('clients').find(x => x.id === id);
+    if(!c) return;
     document.getElementById('client-id').value = c.id;
     document.getElementById('client-name').value = c.name;
     document.getElementById('client-phone').value = c.phone;
@@ -212,40 +179,11 @@ window.editClient = (id) => {
     toggleForm('form-client', true);
 };
 
-document.getElementById('search-clients').oninput = (e) => renderClients(e.target.value);
-
 // --- MODULE: PROJECTS ---
-document.getElementById('btn-add-project-toggle').onclick = () => {
-    document.getElementById('project-id').value = '';
-    document.getElementById('project-form-el').reset();
-    toggleForm('form-project', true);
-};
-
-document.getElementById('project-form-el').onsubmit = (e) => {
-    e.preventDefault();
-    const id = document.getElementById('project-id').value;
-    const projects = DB.get('projects');
-    const data = {
-        id: id || Date.now().toString(),
-        title: document.getElementById('project-title').value,
-        client: document.getElementById('project-client-select').value,
-        provider: document.getElementById('project-provider-select').value,
-        status: document.getElementById('project-status').value,
-        progress: parseInt(document.getElementById('project-progress').value || 0),
-        deadline: document.getElementById('project-deadline').value,
-        date: new Date().toLocaleDateString()
-    };
-    if(id) projects[projects.findIndex(p => p.id === id)] = data;
-    else projects.push(data);
-    DB.set('projects', projects);
-    renderProjects();
-    toggleForm('form-project', false);
-    DB.log(`Projeto ${id ? 'editado' : 'iniciado'}: ${data.title}`);
-};
-
 function renderProjects(filter = '') {
     const projects = DB.get('projects');
     const tbody = document.querySelector('#table-projects tbody');
+    if(!tbody) return;
     const filtered = projects.filter(p => p.title.toLowerCase().includes(filter.toLowerCase()) || p.client.toLowerCase().includes(filter.toLowerCase()));
     tbody.innerHTML = filtered.map(p => `
         <tr onclick="openProjectDetail('${p.id}')">
@@ -271,6 +209,7 @@ function renderProjects(filter = '') {
 window.openProjectDetail = (id) => {
     const p = DB.get('projects').find(x => x.id === id);
     const content = document.getElementById('project-detail-content');
+    if(!content) return;
     content.innerHTML = `
         <span class="modal-close" onclick="closeAllModals()">&times;</span>
         <h2 style="font-family:var(--font-head); color:var(--brand-yellow); margin-bottom:20px;">DETALHES DO PROJETO</h2>
@@ -301,6 +240,7 @@ window.openProjectDetail = (id) => {
 
 window.editProject = (id) => {
     const p = DB.get('projects').find(x => x.id === id);
+    if(!p) return;
     document.getElementById('project-id').value = p.id;
     document.getElementById('project-title').value = p.title;
     document.getElementById('project-client-select').value = p.client;
@@ -329,30 +269,10 @@ window.setInvDefaults = (type) => {
     }
 };
 
-document.getElementById('inventory-form-el').onsubmit = async (e) => {
-    e.preventDefault();
-    const id = document.getElementById('item-id').value;
-    const inv = DB.get('inventory');
-    const photoInput = document.getElementById('item-photo');
-    let photo = id ? (inv.find(i => i.id === id)?.photo || '') : '';
-    if(photoInput.files[0]) photo = await toBase64(photoInput.files[0]);
-
-    const data = {
-        id: id || Date.now().toString(),
-        name: document.getElementById('item-name').value,
-        qty: parseInt(document.getElementById('item-qty').value),
-        photo
-    };
-    if(id) inv[inv.findIndex(i => i.id === id)] = data;
-    else inv.push(data);
-    DB.set('inventory', inv);
-    renderInventory();
-    toggleForm('form-inventory', false);
-};
-
 function renderInventory(filter = '') {
     const inv = DB.get('inventory');
     const tbody = document.querySelector('#table-inventory tbody');
+    if(!tbody) return;
     const filtered = inv.filter(i => i.name.toLowerCase().includes(filter.toLowerCase()));
     tbody.innerHTML = filtered.map(i => `
         <tr>
@@ -373,36 +293,19 @@ function renderInventory(filter = '') {
 
 window.editItem = (id) => {
     const i = DB.get('inventory').find(x => x.id === id);
-    document.getElementById('item-id').value = i.id;
+    if(!i) return;
+    const mid = document.getElementById('item-id');
+    if(mid) mid.value = i.id;
     document.getElementById('item-name').value = i.name;
     document.getElementById('item-qty').value = i.qty;
     toggleForm('form-inventory', true);
 };
 
 // --- MODULE: FINANCE ---
-document.getElementById('finance-form-el').onsubmit = (e) => {
-    e.preventDefault();
-    const id = document.getElementById('trans-id').value;
-    const fin = DB.get('finance');
-    const data = {
-        id: id || Date.now().toString(),
-        type: document.getElementById('trans-type').value,
-        val: parseBRL(document.getElementById('trans-val').value),
-        desc: document.getElementById('trans-desc').value,
-        date: document.getElementById('trans-date').value
-    };
-    if(id) fin[fin.findIndex(f => f.id === id)] = data;
-    else fin.push(data);
-    DB.set('finance', fin);
-    renderFinance();
-    toggleForm('form-finance', false);
-    DB.log(`Fluxo: ${data.desc}`);
-    checkNotifications();
-};
-
 function renderFinance(filter = '') {
     const fin = DB.get('finance');
     const tbody = document.querySelector('#table-finance tbody');
+    if(!tbody) return;
     const filtered = fin.filter(f => f.desc.toLowerCase().includes(filter.toLowerCase()));
     let total = 0;
     tbody.innerHTML = filtered.map(f => {
@@ -418,34 +321,15 @@ function renderFinance(filter = '') {
             </tr>
         `;
     }).join('');
-    document.getElementById('st-income').innerText = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    const stIn = document.getElementById('st-income');
+    if(stIn) stIn.innerText = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
 // --- MODULE: PROVIDERS ---
-document.getElementById('provider-form-el').onsubmit = async (e) => {
-    e.preventDefault();
-    const id = document.getElementById('prov-id').value;
-    const ps = DB.get('providers');
-    const photoInput = document.getElementById('prov-photo');
-    let photo = id ? (ps.find(p => p.id === id)?.photo || '') : '';
-    if(photoInput.files[0]) photo = await toBase64(photoInput.files[0]);
-
-    const data = {
-        id: id || Date.now().toString(),
-        name: document.getElementById('prov-name').value,
-        skill: document.getElementById('prov-skill').value,
-        phone: document.getElementById('prov-phone').value,
-        photo
-    };
-    if(id) ps[ps.findIndex(p => p.id === id)] = data; else ps.push(data);
-    DB.set('providers', ps);
-    renderProviders();
-    toggleForm('form-provider', false);
-};
-
 function renderProviders() {
     const ps = DB.get('providers');
     const grid = document.getElementById('providers-grid');
+    if(!grid) return;
     grid.innerHTML = ps.map(p => `
         <div class="card">
             <div style="display:flex; align-items:center; gap:16px; margin-bottom:15px;">
@@ -467,6 +351,7 @@ function renderProviders() {
 
 window.editProvider = (id) => {
     const p = DB.get('providers').find(x => x.id === id);
+    if(!p) return;
     document.getElementById('prov-id').value = p.id;
     document.getElementById('prov-name').value = p.name;
     document.getElementById('prov-skill').value = p.skill;
@@ -476,30 +361,10 @@ window.editProvider = (id) => {
 };
 
 // --- MODULE: GALLERY ---
-document.getElementById('gallery-form-el').onsubmit = async (e) => {
-    e.preventDefault();
-    const id = document.getElementById('gal-id').value;
-    const gallery = DB.get('gallery');
-    const fileInput = document.getElementById('gal-file');
-    let photo = id ? (gallery.find(g => g.id === id)?.photo || '') : '';
-    if(fileInput.files[0]) photo = await toBase64(fileInput.files[0]);
-
-    const data = {
-        id: id || Date.now().toString(),
-        title: document.getElementById('gal-title').value,
-        sub: document.getElementById('gal-sub').value,
-        photo
-    };
-    if(id) gallery[gallery.findIndex(g => g.id === id)] = data;
-    else gallery.push(data);
-    DB.set('gallery', gallery);
-    renderGallery();
-    toggleForm('form-gallery', false);
-};
-
 function renderGallery() {
     const gs = DB.get('gallery');
     const grid = document.getElementById('gallery-list');
+    if(!grid) return;
     grid.innerHTML = gs.map(g => `
         <div class="card" style="padding:0">
             <img src="${g.photo}" style="width:100%; height:180px; object-fit:cover">
@@ -517,6 +382,7 @@ function renderGallery() {
 
 window.editGallery = (id) => {
     const g = DB.get('gallery').find(x => x.id === id);
+    if(!g) return;
     document.getElementById('gal-id').value = g.id;
     document.getElementById('gal-title').value = g.title;
     document.getElementById('gal-sub').value = g.sub;
@@ -547,6 +413,7 @@ function checkNotifications() {
     });
 
     const list = document.getElementById('notifications-list');
+    if(!list) return;
     list.innerHTML = alerts.map(a => `
         <div class="card" style="border-left:4px solid ${a.type === 'expense' ? '#ff4d4d' : 'var(--brand-yellow)'}; padding:15px;">
            <i class="fa-solid fa-triangle-exclamation" style="margin-right:10px;"></i> ${a.msg}
@@ -557,7 +424,8 @@ function checkNotifications() {
 
 function renderLogs() {
     const logs = DB.get('logs');
-    document.getElementById('recent-logs').innerHTML = logs.map(l => `<div style="margin-bottom:5px;"><span style="color:var(--brand-yellow)">[${l.time}]</span> ${l.msg}</div>`).join('');
+    const el = document.getElementById('recent-logs');
+    if(el) el.innerHTML = logs.map(l => `<div style="margin-bottom:5px;"><span style="color:var(--brand-yellow)">[${l.time}]</span> ${l.msg}</div>`).join('');
 }
 
 // Global Delete
@@ -573,8 +441,10 @@ window.deleteItem = (key, id, callback) => {
 
 // Data Sync
 function updateStats() {
-    document.getElementById('st-projects').innerText = DB.get('projects').length;
-    document.getElementById('st-clients').innerText = DB.get('clients').length;
+    const sp = document.getElementById('st-projects');
+    const sc = document.getElementById('st-clients');
+    if(sp) sp.innerText = DB.get('projects').length;
+    if(sc) sc.innerText = DB.get('clients').length;
 }
 
 function updateSelectors() {
@@ -586,13 +456,149 @@ function updateSelectors() {
     if(selP) selP.innerHTML = '<option value="">OPCIONAL: PARCEIRO</option>' + ps.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
 }
 
-document.getElementById('search-projects').oninput = (e) => renderProjects(e.target.value);
-document.getElementById('search-inventory').oninput = (e) => renderInventory(e.target.value);
-document.getElementById('search-finance').oninput = (e) => renderFinance(e.target.value);
+// --- Initialization & Event Binding ---
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Selector Assignments
+    navLinks = document.querySelectorAll('.nav-link[data-mod]');
+    sections = document.querySelectorAll('.module-section');
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.getElementById('menu-toggle');
+    const logoutBtn = document.getElementById('logout-trigger');
 
-// Initial Run
-window.onload = () => {
-    flatpickr(".datepicker", { locale: "pt", theme: "dark" });
+    // 2. Navigation
+    navLinks.forEach(l => l.onclick = () => switchModule(l.dataset.mod));
+    if(menuToggle) menuToggle.onclick = () => sidebar.classList.toggle('open');
+    if(logoutBtn) logoutBtn.onclick = () => { localStorage.removeItem('state_admin_session'); window.location.href = 'login.html'; };
+
+    // 3. Search Filters
+    const attachSearch = (id, fn) => {
+        const el = document.getElementById(id);
+        if(el) el.oninput = (e) => fn(e.target.value);
+    };
+    attachSearch('search-clients', renderClients);
+    attachSearch('search-projects', renderProjects);
+    attachSearch('search-inventory', renderInventory);
+    attachSearch('search-finance', renderFinance);
+
+    // 4. Action Buttons (The missing ones)
+    const attachClick = (id, fn) => {
+        const el = document.getElementById(id);
+        if(el) el.onclick = fn;
+    };
+
+    attachClick('btn-add-client-toggle', () => {
+        document.getElementById('client-id').value = '';
+        document.getElementById('client-form-el').reset();
+        document.getElementById('photo-preview').innerHTML = '<i class="fa-solid fa-image" opacity="0.2"></i>';
+        toggleForm('form-client', true);
+    });
+
+    attachClick('btn-add-project-toggle', () => {
+        document.getElementById('project-id').value = '';
+        document.getElementById('project-form-el').reset();
+        toggleForm('form-project', true);
+    });
+
+    attachClick('btn-add-item-toggle', () => {
+        document.getElementById('item-id').value = '';
+        document.getElementById('inventory-form-el').reset();
+        document.getElementById('item-photo-preview').innerHTML = '<i class="fa-solid fa-box"></i>';
+        toggleForm('form-inventory', true);
+    });
+
+    attachClick('btn-add-trans-toggle', () => {
+        document.getElementById('trans-id').value = '';
+        document.getElementById('finance-form-el').reset();
+        toggleForm('form-finance', true);
+    });
+
+    attachClick('btn-add-prov-toggle', () => {
+        document.getElementById('prov-id').value = '';
+        document.getElementById('provider-form-el').reset();
+        document.getElementById('prov-photo-preview').innerHTML = '<i class="fa-solid fa-users"></i>';
+        toggleForm('form-provider', true);
+    });
+
+    attachClick('btn-add-gallery-toggle', () => {
+        document.getElementById('gal-id').value = '';
+        document.getElementById('gallery-form-el').reset();
+        toggleForm('form-gallery', true);
+    });
+
+    // 5. Submit Handlers
+    const attachSubmit = (id, fn) => {
+        const el = document.getElementById(id);
+        if(el) el.onsubmit = fn;
+    };
+
+    attachSubmit('client-form-el', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('client-id').value;
+        const clients = DB.get('clients');
+        const photoInput = document.getElementById('client-photo');
+        let photo = id ? (clients.find(c => c.id === id)?.photo || '') : '';
+        if(photoInput.files[0]) photo = await toBase64(photoInput.files[0]);
+        const data = { id: id || Date.now().toString(), name: document.getElementById('client-name').value, phone: document.getElementById('client-phone').value, instagram: document.getElementById('client-instagram').value, address: document.getElementById('client-address').value, photo };
+        if(id) clients[clients.findIndex(c => c.id === id)] = data; else clients.push(data);
+        DB.set('clients', clients); renderClients(); toggleForm('form-client', false); notify('Cliente salvo.');
+    });
+
+    attachSubmit('project-form-el', (e) => {
+        e.preventDefault();
+        const id = document.getElementById('project-id').value;
+        const projects = DB.get('projects');
+        const data = { id: id || Date.now().toString(), title: document.getElementById('project-title').value, client: document.getElementById('project-client-select').value, provider: document.getElementById('project-provider-select').value, status: document.getElementById('project-status').value, progress: parseInt(document.getElementById('project-progress').value || 0), deadline: document.getElementById('project-deadline').value, date: new Date().toLocaleDateString() };
+        if(id) projects[projects.findIndex(p => p.id === id)] = data; else projects.push(data);
+        DB.set('projects', projects); renderProjects(); toggleForm('form-project', false); notify('Projeto atualizado.');
+    });
+
+    attachSubmit('inventory-form-el', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('item-id').value;
+        const inv = DB.get('inventory');
+        const photoInput = document.getElementById('item-photo');
+        let photo = id ? (inv.find(i => i.id === id)?.photo || '') : '';
+        if(photoInput.files[0]) photo = await toBase64(photoInput.files[0]);
+        const data = { id: id || Date.now().toString(), name: document.getElementById('item-name').value, qty: parseInt(document.getElementById('item-qty').value), photo };
+        if(id) inv[inv.findIndex(i => i.id === id)] = data; else inv.push(data);
+        DB.set('inventory', inv); renderInventory(); toggleForm('form-inventory', false); notify('Estoque atualizado.');
+    });
+
+    attachSubmit('finance-form-el', (e) => {
+        e.preventDefault();
+        const id = document.getElementById('trans-id').value;
+        const fin = DB.get('finance');
+        const data = { id: id || Date.now().toString(), type: document.getElementById('trans-type').value, val: parseBRL(document.getElementById('trans-val').value), desc: document.getElementById('trans-desc').value, date: document.getElementById('trans-date').value };
+        if(id) fin[fin.findIndex(f => f.id === id)] = data; else fin.push(data);
+        DB.set('finance', fin); renderFinance(); toggleForm('form-finance', false); checkNotifications(); notify('Lançamento realizado.');
+    });
+
+    attachSubmit('provider-form-el', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('prov-id').value;
+        const ps = DB.get('providers');
+        const photoInput = document.getElementById('prov-photo');
+        let photo = id ? (ps.find(p => p.id === id)?.photo || '') : '';
+        if(photoInput.files[0]) photo = await toBase64(photoInput.files[0]);
+        const data = { id: id || Date.now().toString(), name: document.getElementById('prov-name').value, skill: document.getElementById('prov-skill').value, phone: document.getElementById('prov-phone').value, photo };
+        if(id) ps[ps.findIndex(p => p.id === id)] = data; else ps.push(data);
+        DB.set('providers', ps); renderProviders(); toggleForm('form-provider', false); notify('Parceiro salvo.');
+    });
+
+    attachSubmit('gallery-form-el', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('gal-id').value;
+        const gallery = DB.get('gallery');
+        const fileInput = document.getElementById('gal-file');
+        let photo = id ? (gallery.find(g => g.id === id)?.photo || '') : '';
+        if(fileInput && fileInput.files[0]) photo = await toBase64(fileInput.files[0]);
+        const data = { id: id || Date.now().toString(), title: document.getElementById('gal-title').value, sub: document.getElementById('gal-sub').value, photo };
+        if(id) gallery[gallery.findIndex(g => g.id === id)] = data; else gallery.push(data);
+        DB.set('gallery', gallery); renderGallery(); toggleForm('form-gallery', false); notify('Galeria atualizada.');
+    });
+
+    // 6. Final Initialization
+    if(typeof flatpickr !== 'undefined') flatpickr(".datepicker", { locale: "pt", theme: "dark" });
     renderClients(); renderProjects(); renderInventory(); renderFinance(); renderProviders(); renderGallery(); renderLogs(); checkNotifications(); updateStats();
-    DB.log("SYSTEM_V6_CONNECTED");
-};
+    DB.log("SYSTEM_EMERGENCY_PATCH_V6.1_ACTIVE");
+});
