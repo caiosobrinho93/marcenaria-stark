@@ -1,6 +1,6 @@
 /**
- * State Console V6.1 - Emergency Patch
- * Fixed missing listeners and logout/auth issues
+ * State Console V6.2 - Professional Refinement
+ * Technical Dark UI with Premium Features
  */
 
 const DB_PREFIX = 'state_db_';
@@ -16,9 +16,43 @@ const DB = {
         const logs = DB.get('logs', []);
         logs.unshift({ time: new Date().toLocaleTimeString(), msg });
         DB.set('logs', logs.slice(0, 50));
-        renderLogs();
     }
 };
+
+// --- Seed Data Initialization ---
+function initSeedData() {
+    if (DB.get('clients').length === 0) {
+        const seedClients = [
+            { id: 'c1', name: 'Ricardo Alberto', phone: '11988887766', instagram: 'https://instagram.com/ricardo_alberto', address: 'Av. Paulista, 1000 - SP', photo: '' },
+            { id: 'c2', name: 'Fernanda Lima', phone: '11977776655', instagram: '', address: 'Rua Oscar Freire, 500 - SP', photo: '' }
+        ];
+        DB.set('clients', seedClients);
+    }
+    if (DB.get('projects').length === 0) {
+        const today = new Date();
+        const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString();
+        const seedProjects = [
+            { id: 'p1', title: 'Cozinha Linear Premium', client: 'Ricardo Alberto', provider: 'Marmoraria Rocha', status: 'producao', progress: 65, deadline: nextWeek, date: new Date().toLocaleDateString() },
+            { id: 'p2', title: 'Closet Executive Suite', client: 'Fernanda Lima', provider: '', status: 'planejamento', progress: 20, deadline: '', date: new Date().toLocaleDateString() }
+        ];
+        DB.set('projects', seedProjects);
+    }
+    if (DB.get('finance').length === 0) {
+        const seedFinance = [
+            { id: 'f1', type: 'income', val: 15000, desc: 'Entrada Projeto Cozinha Ricardo', date: new Date().toLocaleDateString() },
+            { id: 'f2', type: 'expense', val: 4200, desc: 'Compra de Ferragens - Blum', date: new Date().toLocaleDateString() }
+        ];
+        DB.set('finance', seedFinance);
+    }
+    if (DB.get('inventory').length === 0) {
+        const seedInv = [
+            { id: 'i1', name: 'MDF Grafite Chess 18mm', qty: 12, photo: '' },
+            { id: 'i2', name: 'MDF Branco TX 15mm', qty: 25, photo: '' },
+            { id: 'i3', name: 'Fita de Borda Grafite', qty: 5, photo: '' }
+        ];
+        DB.set('inventory', seedInv);
+    }
+}
 
 // --- System Utilities ---
 function notify(msg, type = 'success') {
@@ -26,8 +60,8 @@ function notify(msg, type = 'success') {
     if(!container) return;
     const toast = document.createElement('div');
     toast.className = 'toast';
-    toast.style.cssText = `background:#161311; border-left:4px solid ${type === 'success' ? '#EAB308' : '#ff4d4d'}; padding:16px 24px; color:#F0EBE1; margin-bottom:10px; border-radius:2px; box-shadow:0 10px 30px rgba(0,0,0,0.5); font-size:0.85rem; z-index:9999; position:relative; animation: slideIn 0.3s ease;`;
-    toast.innerHTML = `<strong>SYSTEM:</strong> ${msg}`;
+    toast.style.cssText = `background:#161311; border-left:4px solid ${type === 'success' ? '#EAB308' : '#ff4d4d'}; padding:16px 24px; color:#F0EBE1; margin-bottom:10px; border-radius:4px; box-shadow:0 10px 40px rgba(0,0,0,0.8); font-size:0.9rem; z-index:9999; animation: slideIn 0.3s ease;`;
+    toast.innerHTML = `<strong>SYSTEM_V6.2:</strong> ${msg}`;
     container.appendChild(toast);
     setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 500); }, 4000);
 }
@@ -52,6 +86,7 @@ function previewImage(input, targetId) {
 
 function formatBRL(input) {
     let value = input.value.replace(/\D/g, "");
+    if(value === "") return;
     value = (value / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
     input.value = value;
 }
@@ -87,14 +122,13 @@ function switchModule(modId) {
     if(sidebar) sidebar.classList.remove('open');
 }
 
-// Modals
 function openModal(id) { 
     const el = document.getElementById(id);
     if(el) el.style.display = 'flex'; 
 }
 function closeAllModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); }
 
-// --- ADVANCED CALCULATOR ---
+// --- CALCULATOR ---
 window.openPriceModal = () => openModal('modal-calculator');
 window.runAdvancedCalc = () => {
     const mat = parseBRL(document.getElementById('calc-material').value);
@@ -107,9 +141,9 @@ window.runAdvancedCalc = () => {
     const profit = final - base;
 
     document.getElementById('calc-final-price').innerText = final.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    document.getElementById('calc-profit').innerText = `Margem Bruta Estimada: ${profit.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+    document.getElementById('calc-profit').innerText = `Lucro Bruto: ${profit.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
     document.getElementById('calc-adv-result').style.display = 'block';
-    DB.log(`Cálculo de Engenharia: ${final.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`);
+    DB.log(`Cálculo de Preço: ${final.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`);
 };
 
 // --- MODULE: CLIENTS ---
@@ -117,20 +151,20 @@ function renderClients(filter = '') {
     const clients = DB.get('clients');
     const tbody = document.querySelector('#table-clients tbody');
     if(!tbody) return;
-    const filtered = clients.filter(c => c.name.toLowerCase().includes(filter.toLowerCase()) || c.phone.includes(filter));
+    const filtered = clients.filter(c => c.name.toLowerCase().includes(filter.toLowerCase()) || (c.phone && c.phone.includes(filter)));
     
     tbody.innerHTML = filtered.map(c => `
         <tr onclick="openClientDetail('${c.id}')">
             <td><code style="color:var(--brand-yellow)">#${c.id.slice(-4)}</code></td>
             <td>
                 <div style="display:flex; align-items:center; gap:12px">
-                    <div class="avatar" style="width:30px; height:30px; font-size:0.7rem">${c.photo ? `<img src="${c.photo}" style="width:100%;height:100%;border-radius:50%">` : c.name[0]}</div>
+                    <div class="avatar" style="width:32px; height:32px; font-size:0.75rem">${c.photo ? `<img src="${c.photo}" style="width:100%;height:100%;border-radius:50%">` : c.name[0]}</div>
                     <strong>${c.name}</strong>
                 </div>
             </td>
-            <td><span style="font-size:0.8rem">${c.phone}</span></td>
+            <td><span style="font-size:0.85rem">${c.phone || '---'}</span></td>
             <td style="text-align:right">
-                <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation(); editClient('${c.id}')"><i class="fa-solid fa-pen"></i></button>
+                <button class="btn btn-ghost btn-sm" style="padding:4px 8px;" onclick="event.stopPropagation(); editClient('${c.id}')"><i class="fa-solid fa-pen"></i></button>
             </td>
         </tr>
     `).join('');
@@ -142,26 +176,25 @@ window.openClientDetail = (id) => {
     if(!c) return;
     const content = document.getElementById('client-detail-content');
     if(!content) return;
-    
-    const waLink = `https://wa.me/${c.phone.replace(/\D/g,'')}`;
-    const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.address)}`;
+    const waLink = `https://wa.me/${(c.phone || '').replace(/\D/g,'')}`;
+    const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.address || '')}`;
     
     content.innerHTML = `
         <span class="modal-close" onclick="closeAllModals()">&times;</span>
-        <div style="text-align:center; margin-bottom:30px;">
-            <div class="avatar" style="width:100px; height:100px; margin:0 auto 15px; font-size:2rem; border-width:4px;">${c.photo ? `<img src="${c.photo}" style="width:100%;height:100%;border-radius:50%">` : c.name[0]}</div>
-            <h2 style="font-family:var(--font-head); font-size:1.8rem; color:var(--brand-yellow);">${c.name}</h2>
-            <p style="color:var(--text-muted); font-size:0.8rem; letter-spacing:1px;">FICHA_CLIENTE_ID_${c.id.slice(-4)}</p>
+        <div style="text-align:center; margin-bottom:25px;">
+            <div class="avatar" style="width:100px; height:100px; margin:0 auto 15px; font-size:2.5rem; border-width:4px;">${c.photo ? `<img src="${c.photo}" style="width:100%;height:100%;border-radius:50%">` : c.name[0]}</div>
+            <h2 style="font-family:var(--font-head); font-size:1.8rem; color:var(--brand-yellow); text-transform:uppercase;">${c.name}</h2>
+            <p style="color:var(--text-muted); font-size:0.75rem; letter-spacing:2px; font-weight:700;">SYSTEM_RECORD_ID_${c.id.slice(-4)}</p>
         </div>
-        <div style="display:grid; gap:16px;">
-            <a href="${waLink}" target="_blank" class="btn btn-primary" style="width:100%; background:#25D366; color:#fff;"><i class="fa-brands fa-whatsapp"></i> CONECTAR WHATSAPP</a>
-            ${c.instagram ? `<a href="${c.instagram}" target="_blank" class="btn btn-ghost" style="width:100%;"><i class="fa-brands fa-instagram"></i> VER NO INSTAGRAM</a>` : ''}
-            <a href="${mapsLink}" target="_blank" class="btn btn-ghost" style="width:100%;"><i class="fa-solid fa-map-location-dot"></i> VER LOCALIZAÇÃO NO MAPS</a>
-            <div style="margin-top:20px; padding:20px; background:#000; border:1px solid var(--border);">
-                <label>ENDEREÇO TÉCNICO</label>
-                <div style="color:var(--text-secondary)">${c.address || 'Não informado'}</div>
+        <div style="display:grid; gap:12px;">
+            <a href="${waLink}" target="_blank" class="btn btn-success" style="width:100%;"><i class="fa-brands fa-whatsapp"></i> CONECTAR WHATSAPP</a>
+            ${c.instagram ? `<a href="${c.instagram}" target="_blank" class="btn btn-ghost" style="width:100%;"><i class="fa-brands fa-instagram"></i> PERFIL INSTAGRAM</a>` : ''}
+            <a href="${mapsLink}" target="_blank" class="btn btn-ghost" style="width:100%;"><i class="fa-solid fa-location-arrow"></i> ENDEREÇO NO MAPS</a>
+            <div style="margin-top:15px; padding:18px; background:rgba(255,255,255,0.03); border:1px solid var(--border);">
+                <label style="color:var(--brand-yellow); margin-bottom:5px;">ENDEREÇO TÉCNICO</label>
+                <div style="color:var(--text-secondary); font-size:0.9rem;">${c.address || 'Não informado no cadastro'}</div>
             </div>
-            <button class="btn btn-danger btn-sm" onclick="deleteItem('clients', '${c.id}', renderClients); closeAllModals();" style="margin-top:10px; border-color:#ff4d4d; color:#ff4d4d; background:none;">DELETAR REGISTRO</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteItem('clients', '${c.id}', renderClients); closeAllModals();" style="width:100%; margin-top:20px;">EXCLUIR REGISTRO DEFINITIVAMENTE</button>
         </div>
     `;
     openModal('modal-client-detail');
@@ -172,9 +205,9 @@ window.editClient = (id) => {
     if(!c) return;
     document.getElementById('client-id').value = c.id;
     document.getElementById('client-name').value = c.name;
-    document.getElementById('client-phone').value = c.phone;
+    document.getElementById('client-phone').value = c.phone || '';
     document.getElementById('client-instagram').value = c.instagram || '';
-    document.getElementById('client-address').value = c.address;
+    document.getElementById('client-address').value = c.address || '';
     if(c.photo) document.getElementById('photo-preview').innerHTML = `<img src="${c.photo}" style="width:100%;height:100%;object-fit:cover">`;
     toggleForm('form-client', true);
 };
@@ -187,15 +220,15 @@ function renderProjects(filter = '') {
     const filtered = projects.filter(p => p.title.toLowerCase().includes(filter.toLowerCase()) || p.client.toLowerCase().includes(filter.toLowerCase()));
     tbody.innerHTML = filtered.map(p => `
         <tr onclick="openProjectDetail('${p.id}')">
-            <td><strong>${p.title}</strong></td>
-            <td style="font-size:0.8rem; color:var(--text-secondary)">${p.client}</td>
+            <td><strong style="font-size:1rem">${p.title}</strong></td>
+            <td style="font-size:0.85rem; color:var(--text-secondary)">${p.client}</td>
             <td>
-                <div style="display:flex; justify-content:space-between; font-size:0.6rem; margin-bottom:4px">
-                    <span>${p.status.toUpperCase()}</span>
+                <div style="display:flex; justify-content:space-between; font-size:0.7rem; margin-bottom:6px; font-weight:700">
+                    <span style="color:var(--brand-yellow)">${p.status.toUpperCase()}</span>
                     <span>${p.progress}%</span>
                 </div>
-                <div style="height:4px; background:var(--border); width:100%; border-radius:10px">
-                    <div style="height:4px; background:var(--brand-yellow); width:${p.progress}%; border-radius:10px"></div>
+                <div style="height:6px; background:var(--bg-surface-light); width:100%; border-radius:10px">
+                    <div style="height:6px; background:var(--brand-yellow); width:${p.progress}%; border-radius:10px; box-shadow:0 0 5px var(--brand-yellow-glow)"></div>
                 </div>
             </td>
             <td style="text-align:right">
@@ -208,31 +241,44 @@ function renderProjects(filter = '') {
 
 window.openProjectDetail = (id) => {
     const p = DB.get('projects').find(x => x.id === id);
+    if(!p) return;
     const content = document.getElementById('project-detail-content');
     if(!content) return;
+    const statusMap = { planejamento: 'PLANEJAMENTO', producao: 'EM PRODUÇÃO', montagem: 'EM MONTAGEM', finalizado: 'CONCLUÍDO' };
+    
     content.innerHTML = `
         <span class="modal-close" onclick="closeAllModals()">&times;</span>
-        <h2 style="font-family:var(--font-head); color:var(--brand-yellow); margin-bottom:20px;">DETALHES DO PROJETO</h2>
-        <div style="display:grid; gap:20px;">
-            <div style="padding:20px; background:#000; border:1px solid var(--border);">
-                <label>INSTALAÇÃO / SISTEMA</label>
-                <div style="font-size:1.2rem; font-weight:700;">${p.title}</div>
+        <h2 style="font-family:var(--font-head); color:var(--brand-yellow); margin-bottom:25px; border-bottom:1px solid var(--border); padding-bottom:12px;">DADOS DO PROJETO</h2>
+        <div style="display:grid; gap:15px;">
+            <div style="padding:18px; background:rgba(0,0,0,0.5); border:1px solid var(--border);">
+                <label>SISTEMA / INSTALAÇÃO</label>
+                <div style="font-size:1.3rem; font-weight:800; color:var(--text-primary);">${p.title}</div>
             </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-                <div style="padding:15px; border:1px solid var(--border);">
-                    <label>CLIENTE</label>
-                    <div style="font-weight:600;">${p.client}</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div style="padding:12px; border:1px solid var(--border);">
+                    <label>CLIENTE_OWNER</label>
+                    <div style="font-weight:600; font-size:0.9rem;">${p.client}</div>
                 </div>
-                <div style="padding:15px; border:1px solid var(--border);">
-                    <label>PARCEIRO RESPONSÁVEL</label>
-                    <div style="font-weight:600;">${p.provider || 'Nenhum'}</div>
+                <div style="padding:12px; border:1px solid var(--border);">
+                    <label>PARCEIRO_SYNC</label>
+                    <div style="font-weight:600; font-size:0.9rem;">${p.provider || 'Nenhum'}</div>
                 </div>
             </div>
-            <div style="padding:15px; border:1px solid var(--border-yellow); text-align:center;">
-                <label>STATUS ATUAL</label>
-                <div style="font-size:1.5rem; color:var(--brand-yellow); font-weight:800;">${p.status.toUpperCase()} (${p.progress}%)</div>
+            <div style="padding:20px; border:1px solid var(--border-yellow); text-align:center; background:rgba(234, 179, 8, 0.02);">
+                <label>STATUS_ATUAL</label>
+                <div style="font-size:1.6rem; color:var(--brand-yellow); font-weight:900; letter-spacing:1px;">${statusMap[p.status] || p.status.toUpperCase()}</div>
+                <div style="margin-top:10px; height:8px; background:rgba(255,255,255,0.05); width:100%; border-radius:10px">
+                    <div style="height:8px; background:var(--brand-yellow); width:${p.progress}%; border-radius:10px; box-shadow:0 0 10px var(--brand-yellow-glow)"></div>
+                </div>
             </div>
-            <button class="btn btn-danger btn-sm" onclick="deleteItem('projects', '${p.id}', renderProjects); closeAllModals();">REMOVER PROJETO</button>
+            <div style="padding:12px; border:1px solid var(--border);">
+                <label>ENTREGA ESTIMADA</label>
+                <div style="font-weight:700; color:var(--brand-yellow);">${p.deadline || 'A definir'}</div>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <button class="btn btn-primary" style="flex:1" onclick="editProject('${p.id}'); closeAllModals();">EDITAR PROJETO</button>
+                <button class="btn btn-danger" onclick="deleteItem('projects', '${p.id}', renderProjects); closeAllModals();"><i class="fa-solid fa-trash"></i></button>
+            </div>
         </div>
     `;
     openModal('modal-project-detail');
@@ -254,18 +300,16 @@ window.editProject = (id) => {
 // --- MODULE: INVENTORY ---
 window.setInvDefaults = (type) => {
     const map = {
-        mdf3: { name: 'Chapa MDF 3mm', qty: 10, min: 5 },
-        mdf6: { name: 'Chapa MDF 6mm', qty: 10, min: 5 },
-        mdf15: { name: 'Chapa MDF 15mm', qty: 10, min: 5 },
-        mdf18: { name: 'Chapa MDF 18mm', qty: 10, min: 5 },
-        fita22: { name: 'Fita de Borda 22mm (Rolo)', qty: 5, min: 2 },
-        fita35: { name: 'Fita de Borda 35mm (Rolo)', qty: 5, min: 1 },
-        fita60: { name: 'Fita de Borda 60mm (Rolo)', qty: 2, min: 1 }
+        mdf3: { name: 'Chapa MDF 3mm', qty: 10 },
+        mdf15: { name: 'Chapa MDF 15mm', qty: 10 },
+        mdf18: { name: 'Chapa MDF 18mm', qty: 10 },
+        fita22: { name: 'Fita 22mm', qty: 5 },
+        fita60: { name: 'Fita 60mm', qty: 2 }
     };
     if(map[type]) {
         document.getElementById('item-name').value = map[type].name;
         document.getElementById('item-qty').value = map[type].qty;
-        notify(`Carregado padrão: ${map[type].name}`);
+        notify(`Padrão técnico carregado.`);
     }
 };
 
@@ -275,27 +319,54 @@ function renderInventory(filter = '') {
     if(!tbody) return;
     const filtered = inv.filter(i => i.name.toLowerCase().includes(filter.toLowerCase()));
     tbody.innerHTML = filtered.map(i => `
-        <tr>
+        <tr onclick="openInventoryDetail('${i.id}')">
             <td>
                 <div style="display:flex; align-items:center; gap:12px">
-                    <div style="width:40px; height:40px; background:#000; border:1px solid var(--border)">
-                        ${i.photo ? `<img src="${i.photo}" style="width:100%;height:100%;object-fit:cover">` : ''}
+                    <div style="width:36px; height:36px; background:rgba(0,0,0,0.5); border:1px solid var(--border)">
+                        ${i.photo ? `<img src="${i.photo}" style="width:100%;height:100%;object-fit:cover">` : '<i class="fa-solid fa-layer-group" style="opacity:0.2; margin:8px"></i>'}
                     </div>
                     <strong>${i.name}</strong>
                 </div>
             </td>
-            <td>${i.qty} UNIDADES</td>
-            <td><span style="color:var(--brand-yellow); font-size:0.7rem;">ESTÁVEL</span></td>
-            <td><button class="btn btn-ghost btn-sm" onclick="editItem('${i.id}')"><i class="fa-solid fa-pen"></i></button></td>
+            <td><strong>${i.qty}</strong> <span style="font-size:0.7rem; color:var(--text-muted)">UNID</span></td>
+            <td><span style="color:#4ade80; font-size:0.75rem; font-weight:700">EM_ESTOQUE</span></td>
+            <td><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation(); editItem('${i.id}')"><i class="fa-solid fa-pen"></i></button></td>
         </tr>
     `).join('');
 }
 
+window.openInventoryDetail = (id) => {
+    const i = DB.get('inventory').find(x => x.id === id);
+    if(!i) return;
+    const content = document.getElementById('inventory-detail-content');
+    content.innerHTML = `
+        <span class="modal-close" onclick="closeAllModals()">&times;</span>
+        <h2 style="font-family:var(--font-head); color:var(--brand-yellow); margin-bottom:25px; border-bottom:1px solid var(--border); padding-bottom:12px;">DADOS DO MATERIAL</h2>
+        <div style="display:grid; gap:20px;">
+            <div style="text-align:center;">
+                <div style="width:150px; height:150px; background:var(--bg-surface-light); margin:0 auto 15px; border:1px solid var(--border); overflow:hidden;">
+                    ${i.photo ? `<img src="${i.photo}" style="width:100%;height:100%;object-fit:cover;">` : '<i class="fa-solid fa-box-open" style="font-size:4rem; opacity:0.1; line-height:150px;"></i>'}
+                </div>
+                <h3 style="font-size:1.5rem; color:var(--text-primary);">${i.name}</h3>
+            </div>
+            <div style="padding:20px; border:1px solid var(--border-yellow); text-align:center; background:rgba(0,0,0,0.3);">
+                <label>SALDO ATUAL</label>
+                <div style="font-size:2.5rem; color:var(--brand-yellow); font-weight:900;">${i.qty}</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);">Unidades em depósito</div>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-primary" style="flex:1" onclick="editItem('${i.id}'); closeAllModals();">ATUALIZAR ESTOQUE</button>
+                <button class="btn btn-danger" onclick="deleteItem('inventory', '${i.id}', renderInventory); closeAllModals();"><i class="fa-solid fa-trash"></i></button>
+            </div>
+        </div>
+    `;
+    openModal('modal-inventory-detail');
+};
+
 window.editItem = (id) => {
     const i = DB.get('inventory').find(x => x.id === id);
     if(!i) return;
-    const mid = document.getElementById('item-id');
-    if(mid) mid.value = i.id;
+    document.getElementById('item-id').value = i.id;
     document.getElementById('item-name').value = i.name;
     document.getElementById('item-qty').value = i.qty;
     toggleForm('form-inventory', true);
@@ -309,15 +380,16 @@ function renderFinance(filter = '') {
     const filtered = fin.filter(f => f.desc.toLowerCase().includes(filter.toLowerCase()));
     let total = 0;
     tbody.innerHTML = filtered.map(f => {
-        if(f.type === 'income') total += f.val; else total -= f.val;
+        const val = parseFloat(f.val || 0);
+        if(f.type === 'income') total += val; else total -= val;
         return `
             <tr>
-                <td style="font-size:0.8rem">${f.date}</td>
-                <td>${f.desc}</td>
-                <td style="color:${f.type === 'income' ? 'var(--brand-yellow)' : '#ff4d4d'}; font-weight:800">
-                    ${f.type === 'income' ? '+' : '-'} ${f.val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                <td style="font-size:0.85rem">${f.date}</td>
+                <td style="font-size:0.95rem; font-weight:500;">${f.desc}</td>
+                <td style="color:${f.type === 'income' ? 'var(--brand-yellow)' : '#ef4444'}; font-weight:800; font-family:var(--font-mono)">
+                    ${f.type === 'income' ? '+' : '-'} ${val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                 </td>
-                <td><button class="btn btn-ghost btn-sm" onclick="deleteItem('finance', '${f.id}', renderFinance)"><i class="fa-solid fa-trash"></i></button></td>
+                <td style="text-align:right"><button class="btn btn-ghost btn-sm" onclick="deleteItem('finance', '${f.id}', renderFinance)"><i class="fa-solid fa-trash"></i></button></td>
             </tr>
         `;
     }).join('');
@@ -333,14 +405,14 @@ function renderProviders() {
     grid.innerHTML = ps.map(p => `
         <div class="card">
             <div style="display:flex; align-items:center; gap:16px; margin-bottom:15px;">
-                <div class="avatar" style="width:50px; height:50px;">${p.photo ? `<img src="${p.photo}" style="width:100%;height:100%;border-radius:50%">` : p.name[0]}</div>
+                <div class="avatar" style="width:48px; height:48px;">${p.photo ? `<img src="${p.photo}" style="width:100%;height:100%;border-radius:50%">` : p.name[0]}</div>
                 <div>
-                   <h4 style="font-family:var(--font-head); color:var(--brand-yellow)">${p.name.toUpperCase()}</h4>
-                   <span style="font-size:0.7rem; color:var(--text-muted)">${p.skill}</span>
+                   <h4 style="font-family:var(--font-head); color:var(--brand-yellow); font-size:1.1rem;">${p.name.toUpperCase()}</h4>
+                   <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">${p.skill}</span>
                 </div>
             </div>
-            <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:15px;"><i class="fa-solid fa-phone"></i> ${p.phone}</div>
-            <div style="display:flex; gap:8px;">
+            <div style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:15px;"><i class="fa-solid fa-phone" style="margin-right:8px; color:var(--brand-yellow)"></i> ${p.phone}</div>
+            <div style="display:flex; gap:10px;">
                 <button class="btn btn-ghost btn-sm" style="flex:1" onclick="editProvider('${p.id}')">EDITAR</button>
                 <button class="btn btn-danger btn-sm" onclick="deleteItem('providers', '${p.id}', renderProviders)"><i class="fa-solid fa-trash"></i></button>
             </div>
@@ -355,22 +427,26 @@ window.editProvider = (id) => {
     document.getElementById('prov-id').value = p.id;
     document.getElementById('prov-name').value = p.name;
     document.getElementById('prov-skill').value = p.skill;
-    document.getElementById('prov-phone').value = p.phone;
+    document.getElementById('prov-phone').value = p.phone || '';
     if(p.photo) document.getElementById('prov-photo-preview').innerHTML = `<img src="${p.photo}" style="width:100%;height:100%;object-fit:cover">`;
     toggleForm('form-provider', true);
 };
 
-// --- MODULE: GALLERY ---
+// --- GALLERY SYNC ---
 function renderGallery() {
     const gs = DB.get('gallery');
     const grid = document.getElementById('gallery-list');
     if(!grid) return;
+    if(gs.length === 0) {
+        grid.innerHTML = '<div class="prod-placeholder" style="grid-column:1/-1">Nenhum projeto exposto na galeria web.</div>';
+        return;
+    }
     grid.innerHTML = gs.map(g => `
         <div class="card" style="padding:0">
-            <img src="${g.photo}" style="width:100%; height:180px; object-fit:cover">
+            <img src="${g.photo}" style="width:100%; height:180px; object-fit:cover; border-bottom:1px solid var(--border);">
             <div style="padding:20px">
-                <h5 style="color:var(--brand-yellow); font-family:var(--font-head);">${g.title}</h5>
-                <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:15px;">${g.sub}</p>
+                <h5 style="color:var(--brand-yellow); font-family:var(--font-head); font-size:1.1rem; margin-bottom:5px;">${g.title}</h5>
+                <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:15px;">${g.sub}</p>
                 <div style="display:flex; gap:8px;">
                     <button class="btn btn-ghost btn-sm" style="flex:1" onclick="editGallery('${g.id}')">EDITAR</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteItem('gallery', '${g.id}', renderGallery)"><i class="fa-solid fa-trash"></i></button>
@@ -389,57 +465,62 @@ window.editGallery = (id) => {
     toggleForm('form-gallery', true);
 };
 
-// --- NOTIFICATIONS & LOGS ---
+// --- NOTIFICATIONS & DEADLINES ---
 function checkNotifications() {
     const fin = DB.get('finance');
-    const ps = DB.get('projects');
+    const projects = DB.get('projects');
     const alerts = [];
     const today = new Date();
+    const list = document.getElementById('notifications-list');
+    const homeList = document.getElementById('upcoming-deadlines-home');
 
+    // Populate alerts (finance mostly)
     fin.forEach(f => {
         if(!f.date) return;
         const d = new Date(f.date.split('/').reverse().join('-'));
         if(d >= today && d <= new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000)) {
-            alerts.push({ msg: `VENCIMENTO PRÓXIMO: ${f.desc} (R$ ${f.val.toLocaleString()})`, type: f.type });
+            alerts.push({ msg: `VENCIMENTO: ${f.desc} (${parseFloat(f.val).toLocaleString('pt-BR', {style:'currency', currency:'BRL'})})`, type: f.type });
         }
     });
 
-    ps.forEach(p => {
-        if(!p.deadline) return;
-        const d = new Date(p.deadline.split('/').reverse().join('-'));
-        if(d >= today && d <= new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000)) {
-            alerts.push({ msg: `POUPUP_ALERTA: Entrega do projeto [${p.title}] em breve!`, type: 'project' });
+    if(list) {
+        list.innerHTML = alerts.map(a => `<div class="card" style="border-left:4px solid ${a.type === 'expense' ? '#ef4444' : 'var(--brand-yellow)'}; padding:15px;"><i class="fa-solid fa-triangle-exclamation" style="margin-right:10px; color:var(--brand-yellow);"></i> ${a.msg}</div>`).join('');
+        if(alerts.length === 0) list.innerHTML = '<div class="prod-placeholder">Tudo em dia. Sem alertas financeiros críticos.</div>';
+    }
+
+    // Populate Home Deadlines
+    if(homeList) {
+        const upcoming = projects.filter(p => p.deadline && p.status !== 'finalizado');
+        if(upcoming.length === 0) {
+            homeList.innerHTML = '<div class="prod-placeholder" style="padding:10px;">Sem prazos próximos.</div>';
+        } else {
+            homeList.innerHTML = upcoming.map(p => `
+                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:10px; border-left:2px solid var(--brand-yellow);">
+                    <div style="font-size:0.85rem;">
+                        <span style="display:block; font-weight:700;">${p.title}</span>
+                        <span style="font-size:0.7rem; color:var(--text-muted);">${p.client}</span>
+                    </div>
+                    <div style="text-align:right">
+                        <span style="display:block; font-family:var(--font-mono); font-size:0.75rem; color:var(--brand-yellow);">${p.deadline}</span>
+                        <span style="font-size:0.6rem; color:var(--text-muted);">${p.progress}%</span>
+                    </div>
+                </div>
+            `).join('');
         }
-    });
-
-    const list = document.getElementById('notifications-list');
-    if(!list) return;
-    list.innerHTML = alerts.map(a => `
-        <div class="card" style="border-left:4px solid ${a.type === 'expense' ? '#ff4d4d' : 'var(--brand-yellow)'}; padding:15px;">
-           <i class="fa-solid fa-triangle-exclamation" style="margin-right:10px;"></i> ${a.msg}
-        </div>
-    `).join('');
-    if(alerts.length === 0) list.innerHTML = '<div class="prod-placeholder">Tudo em dia. Sem alertas críticos.</div>';
-}
-
-function renderLogs() {
-    const logs = DB.get('logs');
-    const el = document.getElementById('recent-logs');
-    if(el) el.innerHTML = logs.map(l => `<div style="margin-bottom:5px;"><span style="color:var(--brand-yellow)">[${l.time}]</span> ${l.msg}</div>`).join('');
+    }
 }
 
 // Global Delete
 window.deleteItem = (key, id, callback) => {
-    if(confirm('Confirmar deleção permanente?')) {
+    if(confirm('Confirmar exclusão permanente?')) {
         let items = DB.get(key);
         items = items.filter(x => x.id !== id);
         DB.set(key, items);
         callback();
-        notify('Excluído do banco de dados.');
+        notify('Registro excluído do banco de dados.');
     }
 };
 
-// Data Sync
 function updateStats() {
     const sp = document.getElementById('st-projects');
     const sc = document.getElementById('st-clients');
@@ -456,149 +537,41 @@ function updateSelectors() {
     if(selP) selP.innerHTML = '<option value="">OPCIONAL: PARCEIRO</option>' + ps.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
 }
 
-// --- Initialization & Event Binding ---
+// --- Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Selector Assignments
+    initSeedData();
     navLinks = document.querySelectorAll('.nav-link[data-mod]');
     sections = document.querySelectorAll('.module-section');
     const sidebar = document.getElementById('sidebar');
     const menuToggle = document.getElementById('menu-toggle');
     const logoutBtn = document.getElementById('logout-trigger');
 
-    // 2. Navigation
     navLinks.forEach(l => l.onclick = () => switchModule(l.dataset.mod));
     if(menuToggle) menuToggle.onclick = () => sidebar.classList.toggle('open');
     if(logoutBtn) logoutBtn.onclick = () => { localStorage.removeItem('state_admin_session'); window.location.href = 'login.html'; };
 
-    // 3. Search Filters
-    const attachSearch = (id, fn) => {
-        const el = document.getElementById(id);
-        if(el) el.oninput = (e) => fn(e.target.value);
-    };
+    const attachSearch = (id, fn) => { const el = document.getElementById(id); if(el) el.oninput = (e) => fn(e.target.value); };
     attachSearch('search-clients', renderClients);
     attachSearch('search-projects', renderProjects);
     attachSearch('search-inventory', renderInventory);
     attachSearch('search-finance', renderFinance);
 
-    // 4. Action Buttons (The missing ones)
-    const attachClick = (id, fn) => {
-        const el = document.getElementById(id);
-        if(el) el.onclick = fn;
-    };
+    const attachClick = (id, fn) => { const el = document.getElementById(id); if(el) el.onclick = fn; };
+    attachClick('btn-add-client-toggle', () => { document.getElementById('client-id').value = ''; document.getElementById('client-form-el').reset(); document.getElementById('photo-preview').innerHTML = '<i class="fa-solid fa-image" style="opacity:0.2"></i>'; toggleForm('form-client', true); });
+    attachClick('btn-add-project-toggle', () => { document.getElementById('project-id').value = ''; document.getElementById('project-form-el').reset(); toggleForm('form-project', true); });
+    attachClick('btn-add-item-toggle', () => { document.getElementById('item-id').value = ''; document.getElementById('inventory-form-el').reset(); document.getElementById('item-photo-preview').innerHTML = '<i class="fa-solid fa-box"></i>'; toggleForm('form-inventory', true); });
+    attachClick('btn-add-trans-toggle', () => { document.getElementById('trans-id').value = ''; document.getElementById('finance-form-el').reset(); toggleForm('form-finance', true); });
+    attachClick('btn-add-prov-toggle', () => { document.getElementById('prov-id').value = ''; document.getElementById('provider-form-el').reset(); document.getElementById('prov-photo-preview').innerHTML = '<i class="fa-solid fa-users"></i>'; toggleForm('form-provider', true); });
+    attachClick('btn-add-gallery-toggle', () => { document.getElementById('gal-id').value = ''; document.getElementById('gallery-form-el').reset(); toggleForm('form-gallery', true); });
 
-    attachClick('btn-add-client-toggle', () => {
-        document.getElementById('client-id').value = '';
-        document.getElementById('client-form-el').reset();
-        document.getElementById('photo-preview').innerHTML = '<i class="fa-solid fa-image" opacity="0.2"></i>';
-        toggleForm('form-client', true);
-    });
+    const attachSubmit = (id, fn) => { const el = document.getElementById(id); if(el) el.onsubmit = fn; };
+    attachSubmit('client-form-el', async (e) => { e.preventDefault(); const id = document.getElementById('client-id').value; const clients = DB.get('clients'); const photoInput = document.getElementById('client-photo'); let photo = id ? (clients.find(c => c.id === id)?.photo || '') : ''; if(photoInput.files[0]) photo = await toBase64(photoInput.files[0]); const data = { id: id || Date.now().toString(), name: document.getElementById('client-name').value, phone: document.getElementById('client-phone').value, instagram: document.getElementById('client-instagram').value, address: document.getElementById('client-address').value, photo }; if(id) clients[clients.findIndex(c => c.id === id)] = data; else clients.push(data); DB.set('clients', clients); renderClients(); toggleForm('form-client', false); notify('Registro salvo.'); });
+    attachSubmit('project-form-el', (e) => { e.preventDefault(); const id = document.getElementById('project-id').value; const projects = DB.get('projects'); const data = { id: id || Date.now().toString(), title: document.getElementById('project-title').value, client: document.getElementById('project-client-select').value, provider: document.getElementById('project-provider-select').value, status: document.getElementById('project-status').value, progress: parseInt(document.getElementById('project-progress').value || 0), deadline: document.getElementById('project-deadline').value, date: new Date().toLocaleDateString() }; if(id) projects[projects.findIndex(p => p.id === id)] = data; else projects.push(data); DB.set('projects', projects); renderProjects(); toggleForm('form-project', false); notify('Projeto atualizado.'); });
+    attachSubmit('inventory-form-el', async (e) => { e.preventDefault(); const id = document.getElementById('item-id').value; const inv = DB.get('inventory'); const photoInput = document.getElementById('item-photo'); let photo = id ? (inv.find(i => i.id === id)?.photo || '') : ''; if(photoInput.files[0]) photo = await toBase64(photoInput.files[0]); const data = { id: id || Date.now().toString(), name: document.getElementById('item-name').value, qty: parseInt(document.getElementById('item-qty').value), photo }; if(id) inv[inv.findIndex(i => i.id === id)] = data; else inv.push(data); DB.set('inventory', inv); renderInventory(); toggleForm('form-inventory', false); notify('Estoque sincronizado.'); });
+    attachSubmit('finance-form-el', (e) => { e.preventDefault(); const id = document.getElementById('trans-id').value; const fin = DB.get('finance'); const data = { id: id || Date.now().toString(), type: document.getElementById('trans-type').value, val: parseBRL(document.getElementById('trans-val').value), desc: document.getElementById('trans-desc').value, date: document.getElementById('trans-date').value }; if(id) fin[fin.findIndex(f => f.id === id)] = data; else fin.push(data); DB.set('finance', fin); renderFinance(); toggleForm('form-finance', false); checkNotifications(); notify('Lançamento processado.'); });
+    attachSubmit('provider-form-el', async (e) => { e.preventDefault(); const id = document.getElementById('prov-id').value; const ps = DB.get('providers'); const photoInput = document.getElementById('prov-photo'); let photo = id ? (ps.find(p => p.id === id)?.photo || '') : ''; if(photoInput.files[0]) photo = await toBase64(photoInput.files[0]); const data = { id: id || Date.now().toString(), name: document.getElementById('prov-name').value, skill: document.getElementById('prov-skill').value, phone: document.getElementById('prov-phone').value, photo }; if(id) ps[ps.findIndex(p => p.id === id)] = data; else ps.push(data); DB.set('providers', ps); renderProviders(); toggleForm('form-provider', false); notify('Parceiro credenciado.'); });
+    attachSubmit('gallery-form-el', async (e) => { e.preventDefault(); const id = document.getElementById('gal-id').value; const gallery = DB.get('gallery'); const fileInput = document.getElementById('gal-file'); let photo = id ? (gallery.find(g => g.id === id)?.photo || '') : ''; if(fileInput && fileInput.files[0]) photo = await toBase64(fileInput.files[0]); const data = { id: id || Date.now().toString(), title: document.getElementById('gal-title').value, sub: document.getElementById('gal-sub').value, photo }; if(id) gallery[gallery.findIndex(g => g.id === id)] = data; else gallery.push(data); DB.set('gallery', gallery); renderGallery(); toggleForm('form-gallery', false); notify('Mídia publicada na web.'); });
 
-    attachClick('btn-add-project-toggle', () => {
-        document.getElementById('project-id').value = '';
-        document.getElementById('project-form-el').reset();
-        toggleForm('form-project', true);
-    });
-
-    attachClick('btn-add-item-toggle', () => {
-        document.getElementById('item-id').value = '';
-        document.getElementById('inventory-form-el').reset();
-        document.getElementById('item-photo-preview').innerHTML = '<i class="fa-solid fa-box"></i>';
-        toggleForm('form-inventory', true);
-    });
-
-    attachClick('btn-add-trans-toggle', () => {
-        document.getElementById('trans-id').value = '';
-        document.getElementById('finance-form-el').reset();
-        toggleForm('form-finance', true);
-    });
-
-    attachClick('btn-add-prov-toggle', () => {
-        document.getElementById('prov-id').value = '';
-        document.getElementById('provider-form-el').reset();
-        document.getElementById('prov-photo-preview').innerHTML = '<i class="fa-solid fa-users"></i>';
-        toggleForm('form-provider', true);
-    });
-
-    attachClick('btn-add-gallery-toggle', () => {
-        document.getElementById('gal-id').value = '';
-        document.getElementById('gallery-form-el').reset();
-        toggleForm('form-gallery', true);
-    });
-
-    // 5. Submit Handlers
-    const attachSubmit = (id, fn) => {
-        const el = document.getElementById(id);
-        if(el) el.onsubmit = fn;
-    };
-
-    attachSubmit('client-form-el', async (e) => {
-        e.preventDefault();
-        const id = document.getElementById('client-id').value;
-        const clients = DB.get('clients');
-        const photoInput = document.getElementById('client-photo');
-        let photo = id ? (clients.find(c => c.id === id)?.photo || '') : '';
-        if(photoInput.files[0]) photo = await toBase64(photoInput.files[0]);
-        const data = { id: id || Date.now().toString(), name: document.getElementById('client-name').value, phone: document.getElementById('client-phone').value, instagram: document.getElementById('client-instagram').value, address: document.getElementById('client-address').value, photo };
-        if(id) clients[clients.findIndex(c => c.id === id)] = data; else clients.push(data);
-        DB.set('clients', clients); renderClients(); toggleForm('form-client', false); notify('Cliente salvo.');
-    });
-
-    attachSubmit('project-form-el', (e) => {
-        e.preventDefault();
-        const id = document.getElementById('project-id').value;
-        const projects = DB.get('projects');
-        const data = { id: id || Date.now().toString(), title: document.getElementById('project-title').value, client: document.getElementById('project-client-select').value, provider: document.getElementById('project-provider-select').value, status: document.getElementById('project-status').value, progress: parseInt(document.getElementById('project-progress').value || 0), deadline: document.getElementById('project-deadline').value, date: new Date().toLocaleDateString() };
-        if(id) projects[projects.findIndex(p => p.id === id)] = data; else projects.push(data);
-        DB.set('projects', projects); renderProjects(); toggleForm('form-project', false); notify('Projeto atualizado.');
-    });
-
-    attachSubmit('inventory-form-el', async (e) => {
-        e.preventDefault();
-        const id = document.getElementById('item-id').value;
-        const inv = DB.get('inventory');
-        const photoInput = document.getElementById('item-photo');
-        let photo = id ? (inv.find(i => i.id === id)?.photo || '') : '';
-        if(photoInput.files[0]) photo = await toBase64(photoInput.files[0]);
-        const data = { id: id || Date.now().toString(), name: document.getElementById('item-name').value, qty: parseInt(document.getElementById('item-qty').value), photo };
-        if(id) inv[inv.findIndex(i => i.id === id)] = data; else inv.push(data);
-        DB.set('inventory', inv); renderInventory(); toggleForm('form-inventory', false); notify('Estoque atualizado.');
-    });
-
-    attachSubmit('finance-form-el', (e) => {
-        e.preventDefault();
-        const id = document.getElementById('trans-id').value;
-        const fin = DB.get('finance');
-        const data = { id: id || Date.now().toString(), type: document.getElementById('trans-type').value, val: parseBRL(document.getElementById('trans-val').value), desc: document.getElementById('trans-desc').value, date: document.getElementById('trans-date').value };
-        if(id) fin[fin.findIndex(f => f.id === id)] = data; else fin.push(data);
-        DB.set('finance', fin); renderFinance(); toggleForm('form-finance', false); checkNotifications(); notify('Lançamento realizado.');
-    });
-
-    attachSubmit('provider-form-el', async (e) => {
-        e.preventDefault();
-        const id = document.getElementById('prov-id').value;
-        const ps = DB.get('providers');
-        const photoInput = document.getElementById('prov-photo');
-        let photo = id ? (ps.find(p => p.id === id)?.photo || '') : '';
-        if(photoInput.files[0]) photo = await toBase64(photoInput.files[0]);
-        const data = { id: id || Date.now().toString(), name: document.getElementById('prov-name').value, skill: document.getElementById('prov-skill').value, phone: document.getElementById('prov-phone').value, photo };
-        if(id) ps[ps.findIndex(p => p.id === id)] = data; else ps.push(data);
-        DB.set('providers', ps); renderProviders(); toggleForm('form-provider', false); notify('Parceiro salvo.');
-    });
-
-    attachSubmit('gallery-form-el', async (e) => {
-        e.preventDefault();
-        const id = document.getElementById('gal-id').value;
-        const gallery = DB.get('gallery');
-        const fileInput = document.getElementById('gal-file');
-        let photo = id ? (gallery.find(g => g.id === id)?.photo || '') : '';
-        if(fileInput && fileInput.files[0]) photo = await toBase64(fileInput.files[0]);
-        const data = { id: id || Date.now().toString(), title: document.getElementById('gal-title').value, sub: document.getElementById('gal-sub').value, photo };
-        if(id) gallery[gallery.findIndex(g => g.id === id)] = data; else gallery.push(data);
-        DB.set('gallery', gallery); renderGallery(); toggleForm('form-gallery', false); notify('Galeria atualizada.');
-    });
-
-    // 6. Final Initialization
-    if(typeof flatpickr !== 'undefined') flatpickr(".datepicker", { locale: "pt", theme: "dark" });
-    renderClients(); renderProjects(); renderInventory(); renderFinance(); renderProviders(); renderGallery(); renderLogs(); checkNotifications(); updateStats();
-    DB.log("SYSTEM_EMERGENCY_PATCH_V6.1_ACTIVE");
+    if(typeof flatpickr !== 'undefined') flatpickr(".datepicker", { locale: "pt", theme: "dark", dateFormat: "d/m/Y" });
+    renderClients(); renderProjects(); renderInventory(); renderFinance(); renderProviders(); renderGallery(); checkNotifications(); updateStats();
 });
