@@ -38,9 +38,13 @@ function initSeedData() {
         DB.set('projects', seedProjects);
     }
     if (DB.get('finance').length === 0) {
+        const todayStr = new Date().toLocaleDateString();
+        const futureDate = new Date();
+        futureDate.setDate(futureDate.getDate() + 3);
         const seedFinance = [
-            { id: 'f1', type: 'income', val: 15000, desc: 'Entrada Projeto Cozinha Ricardo', date: new Date().toLocaleDateString() },
-            { id: 'f2', type: 'expense', val: 4200, desc: 'Compra de Ferragens - Blum', date: new Date().toLocaleDateString() }
+            { id: 'f1', type: 'income', val: 15000, desc: 'Entrada Projeto Cozinha Ricardo', date: todayStr },
+            { id: 'f2', type: 'expense', val: 4200, desc: 'Compra de Ferragens - Blum', date: todayStr },
+            { id: 'f3', type: 'expense', val: 850, desc: 'Pagamento Marmoraria (Saldo)', date: futureDate.toLocaleDateString() }
         ];
         DB.set('finance', seedFinance);
     }
@@ -51,6 +55,20 @@ function initSeedData() {
             { id: 'i3', name: 'Fita de Borda Grafite', qty: 5, photo: '' }
         ];
         DB.set('inventory', seedInv);
+    }
+    if (DB.get('providers').length === 0) {
+        const seedProviders = [
+            { id: 'p1', name: 'Marmoraria Rocha', skill: 'Mármores e Granitos', phone: '11 91234-5678', photo: '' },
+            { id: 'p2', name: 'Serralheria Ferro Art', skill: 'Estruturas Metálicas', phone: '11 98765-4321', photo: '' }
+        ];
+        DB.set('providers', seedProviders);
+    }
+    if (DB.get('gallery').length === 0) {
+        const seedGallery = [
+            { id: 'g1', title: 'Cozinha Industrial Grey', sub: 'Finalizado em Janeiro/2026', photo: 'https://images.unsplash.com/photo-1556911227-41cc57297e6b?q=80&w=600&auto=format&fit=crop' },
+            { id: 'g2', title: 'Painel Home Minimalista', sub: 'MDF Ripado Nogueira', photo: 'https://images.unsplash.com/photo-1593062096033-9a26b09da705?q=80&w=600&auto=format&fit=crop' }
+        ];
+        DB.set('gallery', seedGallery);
     }
 }
 
