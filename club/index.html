@@ -25,15 +25,19 @@
         <div class="glass-panel login-box fade-in">
             <img src="../imgs/logo-state.png" alt="STATE" class="login-logo">
             <h1 class="login-title">CLUB<span>STATE</span></h1>
-            <p class="login-sub">Insira o código exclusivo da sua obra para acompanhar o progresso em tempo real.</p>
+            <p class="login-sub">Conecte-se ao polo executivo usando suas credenciais corporativas.</p>
             
             <form id="login-form">
                 <div class="input-group">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="access-user" placeholder="Usuário Admin..." required autocomplete="off">
+                </div>
+                <div class="input-group">
                     <i class="fa-solid fa-key"></i>
-                    <input type="text" id="access-code" placeholder="Código de Acesso (ID da Obra)" required autocomplete="off">
+                    <input type="password" id="access-pass" placeholder="Senha Corporativa State..." required autocomplete="off">
                 </div>
                 <button type="submit" class="btn-primary" id="btn-login">
-                    <span>ACESSAR PORTAL</span>
+                    <span>ACESSAR HUB</span>
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </form>
@@ -66,9 +70,9 @@
             <section class="progress-section">
                 <div class="glass-panel progress-card">
                     <div class="progress-info">
-                        <h3>Gestão do Projeto</h3>
-                        <h4 id="dash-project-title">Sistema de Marcenaria</h4>
-                        <p id="dash-deadline" class="deadline-text"><i class="fa-regular fa-calendar"></i> Previsão Inicial: --/--/----</p>
+                        <h3>Desempenho (Taxa de Conclusão)</h3>
+                        <h4 id="dash-project-title">Análise de Entregas</h4>
+                        <p id="dash-deadline" class="deadline-text"><i class="fa-solid fa-chart-pie"></i> Sucesso de execução</p>
                     </div>
                     <div class="progress-circle-wrapper">
                         <svg class="progress-ring" width="120" height="120">
@@ -81,26 +85,22 @@
             </section>
 
             <!-- Diary / Timeline -->
-            <h3 class="section-title">Diário da Obra</h3>
+            <h3 class="section-title">Novidades do Hub</h3>
             <div class="glass-panel finance-card">
                 <div id="diary-list">
                     <!-- Gerado via JS -->
                 </div>
-                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:15px; border-top:1px solid var(--border-glass); padding-top:15px; text-align:center;">
-                    <i class="fa-solid fa-shield-halved"></i> Os lançamentos desta timeline refletem com exatidão os diários e eventos corporativos da obra.
-                </p>
             </div>
 
             <!-- Need Help -->
             <div class="contact-card">
                 <div class="contact-info">
-                    <i class="fa-brands fa-whatsapp"></i>
+                    <i class="fa-solid fa-briefcase"></i>
                     <div>
-                        <h4>Dúvidas sobre o projeto?</h4>
-                        <p>Fale diretamente com o arquiteto ou líder de obras via WhatsApp corporativo.</p>
+                        <h4>Extensão Corporativa STATE</h4>
+                        <p>O seu painel de marcenaria conectado ao ecossistema global.</p>
                     </div>
                 </div>
-                <a href="https://api.whatsapp.com/send?phone=5517999999999&text=Ol%C3%A1%21%20Gostaria%20de%20falar%20sobre%20meu%20projeto." target="_blank" class="btn-whatsapp">CHAMAR NO WHATSAPP</a>
             </div>
             
             <div style="text-align:center; padding: 20px 0; color:var(--text-muted); font-size:0.75rem; font-family:var(--font-mono);">

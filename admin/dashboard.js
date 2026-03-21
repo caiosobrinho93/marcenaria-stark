@@ -650,36 +650,6 @@ window.runAdvancedCalc = () => {
     document.getElementById('calc-adv-result').style.display = 'block';
 };
 
-window.openClubStateModal = () => {
-    const pSelect = document.getElementById('club-project-select');
-    const projects = DB.get('projects');
-    pSelect.innerHTML = '<option value="">-- Selecione a obra --</option>' + projects.map(p => `<option value="${p.id}">${p.title} (${p.client})</option>`).join('');
-    
-    pSelect.onchange = (e) => {
-        const id = e.target.value;
-        const box = document.getElementById('club-link-preview');
-        if(!id) box.innerHTML = `<strong>Link:</strong> statemarcenaria.com.br/club<br><strong>Token:</strong> Selecione a obra...`;
-        else box.innerHTML = `<strong>Link:</strong> statemarcenaria.com.br/club<br><strong>Token de Acesso:</strong> ${id}`;
-    };
-    
-    openModal('modal-clubstate');
-};
-
-window.copyClubAccess = () => {
-    const id = document.getElementById('club-project-select').value;
-    if(!id) return notify('Atenção: Selecione uma obra primeiro.', 'error');
-    
-    const p = DB.get('projects').find(x => x.id === id);
-    const msg = `Olá!\n\nAcompanhe a evolução do seu projeto de marcenaria em tempo real pelo acesso VIP *clubSTATE*.\n\n🔗 *Portal do Cliente*: https://statemarcenaria.com.br/club\n🔑 *Seu Token de Acesso*: ${id}\n\nLá você poderá conferir o diário da obra, prazos e novidades.\n_State Marcenaria_`;
-    
-    navigator.clipboard.writeText(msg).then(() => {
-        notify('Mensagem copiada! Cole no WhatsApp do cliente.', 'success');
-        closeAllModals();
-    }).catch(err => {
-        notify('Erro ao copiar área de transferência.', 'error');
-    });
-};
-
 // Global Helpers
 window.deleteItem = (key, id, callback) => {
     if(confirm('Confirmar exclusão deste registro?')) {

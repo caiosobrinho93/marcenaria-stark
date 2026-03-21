@@ -132,7 +132,7 @@
                             <div style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:15px; line-height:1.4;">
                                 Programa exclusivo para interligar nossa marcenaria com clientes finais, fornecendo transparência e acompanhamento de obras em tempo real.
                             </div>
-                            <button class="btn btn-primary" onclick="openClubStateModal()" style="width:100%; border-radius:20px; font-weight:800;"><i class="fa-solid fa-users"></i> GERAR ACESSO VIP</button>
+                            <button class="btn btn-primary" onclick="window.open('../club/index.html', '_blank')" style="width:100%; border-radius:20px; font-weight:800;"><i class="fa-solid fa-crown"></i> ACESSAR MEU CLUBSTATE</button>
                         </div>
                     </div>
                 </section>
@@ -589,27 +589,6 @@
         </main>
     </div>
 
-    <!-- CLUBSTATE ACCESS MODAL -->
-    <div class="modal-overlay" id="modal-clubstate">
-        <div class="modal-box" style="max-width:450px; text-align:center;">
-            <span class="modal-close" onclick="closeAllModals()">&times;</span>
-            <div style="font-size:3rem; color:var(--brand-yellow); margin-bottom:10px;"><i class="fa-solid fa-shield-halved"></i></div>
-            <h3 style="font-family:var(--font-head); margin-bottom:20px; color:#fff;">ACESSO clubSTATE</h3>
-            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:25px;">Selecione o projeto em andamento para gerar o token e o link do cliente.</p>
-            
-            <div class="group" style="text-align:left; margin-bottom:20px;">
-                <label>OBRA / PROJETO MESTRE</label>
-                <select id="club-project-select"></select>
-            </div>
-
-            <div style="background:rgba(0,0,0,0.5); padding:15px; border-radius:8px; border:1px solid var(--border-yellow); font-family:var(--font-mono); font-size:0.8rem; color:var(--brand-yellow); border-left:4px solid var(--brand-yellow); margin-bottom:20px; text-align:left;" id="club-link-preview">
-                <strong>Link:</strong> statemarcenaria.com.br/club<br>
-                <strong>Token:</strong> Selecione a obra...
-            </div>
-
-            <button class="btn btn-primary" onclick="copyClubAccess()" style="width:100%;"><i class="fa-brands fa-whatsapp"></i> COPIAR MENSAGEM PARA CLIENTE</button>
-        </div>
-    </div>
     <!-- Detail modals removed, replaced by static sections -->
 
     <!-- Scripts -->
