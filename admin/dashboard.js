@@ -113,7 +113,7 @@ function switchModule(modId) {
     }
 
     // Module Handlers
-    if(modId === 'home') renderFeed();
+    if(modId === 'home') renderDashboardHome();
     if(modId === 'clients') renderClients();
     if(modId === 'projects') renderProjects();
     if(modId === 'inventory') renderInventory();
@@ -206,55 +206,82 @@ function renderProjects(filter = '') {
     `).join('');
 }
 
-function openProjectDetail(id) {
-    const projects = DB.get('projects');
-    const p = projects.find(x => x.id === id);
-    if (!p) return;
-
-    document.getElementById('det-project-id').value = p.id;
-    document.getElementById('det-project-title').innerText = p.title.toUpperCase();
-    document.getElementById('det-project-client').innerText = p.client;
-    document.getElementById('det-project-status').innerText = (p.status || 'Em Aberto').toUpperCase();
-    document.getElementById('det-project-obs').innerText = p.obs || 'Nenhuma observação.';
-    
-    // Render Images
-    const container = document.getElementById('det-project-images');
-    container.innerHTML = (p.images || []).map(img => `
-        <div class="project-img-card">
-            <img src="${img}" onclick="window.open('${img}')">
-        </div>
-    `).join('');
-
-    openModal('modal-project-detail');
-}
-
-function openClientDetail(id) {
-    const clients = DB.get('clients');
-    const c = clients.find(x => x.id === id);
-    if (!c) return;
-
-    document.getElementById('det-client-id').value = c.id;
-    document.getElementById('det-client-name').innerText = c.name.toUpperCase();
-    document.getElementById('det-client-phone').innerText = c.phone || 'Não informado';
-    document.getElementById('det-client-insta').innerText = c.insta || 'Não informado';
-    
-    const photo = document.getElementById('det-client-photo');
-    if(c.photo) {
-        photo.src = c.photo;
-        photo.style.display = 'block';
-    } else {
-        photo.style.display = 'none';
-    }
-
-    // WA Link
-    const wa = document.getElementById('btn-wa-client');
-    if(wa && c.phone) {
-        const num = c.phone.replace(/\D/g, '');
-        wa.onclick = () => window.open(`https://wa.me/55${num}`);
-    }
-
     openModal('modal-client-detail');
 }
+
+function renderInventory() {
+    const items = DB.get('inventory');
+    const container = document.getElementById('inventory-list');
+    if(!container) return;
+    container.innerHTML = items.map(i => `
+        <div class="card">
+            <div style="height:150px; background:rgba(255,255,255,0.05); overflow:hidden; border-radius:4px; margin-bottom:15px; display:flex; align-items:center; justify-content:center;">
+                ${i.photo ? `<img src="${i.photo}" style="width:100%;height:100%;object-fit:cover">` : '<i class="fa-solid fa-box-open" style="font-size:3rem; opacity:0.1"></i>'}
+            </div>
+            <strong style="color:var(--brand-yellow);">${(i.name || 'Sem nome').toUpperCase()}</strong>
+            <p style="font-size:0.8rem; margin:10px 0; opacity:0.6;">QUANTIDADE EM ESTOQUE: ${i.qty || 0}</p>
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-primary btn-sm" onclick="editInventory('${i.id}')">EDITAR</button>
+            </div>
+        </div>
+    `).join('') || '<p style="text-align:center; grid-column:1/-1; padding:40px; opacity:0.5;">Nenhum item em estoque.</p>';
+}
+
+function renderFinance() {
+    const data = DB.get('finance');
+    const tbody = document.querySelector('#table-finance tbody');
+    if(!tbody) return;
+    tbody.innerHTML = data.map(f => `
+        <tr>
+            <td><strong style="color:${f.type === 'entrada' ? '#4ade80' : '#ef4444'}">${f.type.toUpperCase()}</strong></td>
+            <td>${f.desc}</td>
+            <td><strong>${f.val}</strong></td>
+            <td><small>${f.date}</small></td>
+        </tr>
+    `).join('');
+}
+
+function renderProviders() {
+    const provs = DB.get('providers');
+    const container = document.getElementById('providers-list');
+    if(!container) return;
+    container.innerHTML = provs.map(p => `
+        <div class="card">
+            <strong style="color:var(--brand-yellow);">${p.name.toUpperCase()}</strong>
+            <p style="font-size:0.8rem; margin:5px 0; opacity:0.7;">${p.segment}</p>
+            <div style="margin-top:15px; display:flex; gap:10px;">
+                <button class="btn btn-primary btn-sm" onclick="window.open('https://wa.me/55${p.phone.replace(/\D/g,'')}')"><i class="fa-brands fa-whatsapp"></i></button>
+            </div>
+        </div>
+    `).join('') || '<p style="text-align:center; grid-column:1/-1; padding:40px; opacity:0.5;">Nenhum parceiro cadastrado.</p>';
+}
+
+function renderGallery() {
+    const gal = DB.get('gallery');
+    const container = document.getElementById('gallery-list');
+    if(!container) return;
+    container.innerHTML = gal.map(g => `
+        <div class="card" style="padding:0; overflow:hidden;">
+            <img src="${g.photo}" style="width:100%; height:200px; object-fit:cover;">
+            <div style="padding:15px;">
+                <strong style="color:var(--brand-yellow);">${g.title.toUpperCase()}</strong>
+                <p style="font-size:0.75rem; opacity:0.6; margin-top:5px;">${g.sub}</p>
+            </div>
+        </div>
+    `).join('') || '<p style="text-align:center; grid-column:1/-1; padding:40px; opacity:0.5;">Nenhuma foto publicada na web.</p>';
+}
+
+function editInventory(id) {
+    const items = DB.get('inventory');
+    const i = items.find(x => x.id === id);
+    if(i) {
+        document.getElementById('item-id').value = i.id;
+        document.getElementById('item-name').value = i.name;
+        document.getElementById('item-qty').value = i.qty;
+        switchModule('form-inventory');
+    }
+}
+window.editInventory = editInventory;
 
 function changePass() {
     const newPass = prompt("Digite a nova senha de segurança:");
@@ -406,7 +433,15 @@ function updateTopbarProfile() {
     if(upsell) upsell.style.display = isVIP ? 'none' : 'block';
 
     const avatar = document.querySelector('.topbar-right .avatar');
-    if(avatar) avatar.innerText = currentUser[0].toUpperCase();
+    if(avatar) {
+        if(u && u.avatar) {
+            avatar.innerHTML = `<img src="${u.avatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+            avatar.style.background = 'transparent';
+        } else {
+            avatar.innerText = currentUser[0].toUpperCase();
+            avatar.style.background = 'var(--brand-yellow)';
+        }
+    }
     
     // Admin Only Visibility
     const adminMenu = document.getElementById('nav-admin-only');
@@ -467,7 +502,8 @@ function saveProfile(e) {
         users[idx].avatar = document.getElementById('profile-avatar').value;
         localStorage.setItem('state_users', JSON.stringify(users));
         updateTopbarProfile();
-        notify('Perfil atualizado com sucesso!');
+        notify('Perfil atualizado! Recarregando sistema...');
+        setTimeout(() => location.reload(), 1500);
     }
 }
 
