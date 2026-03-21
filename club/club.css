@@ -9,7 +9,7 @@
     --text-muted: #807e7a;
     --font-sans: 'Inter', sans-serif;
     --font-head: 'Outfit', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
+    --font-mono: 'Inter', sans-serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -126,9 +126,9 @@ body {
 .dashboard-content { max-width: 800px; margin: 100px auto 40px auto; padding: 0 20px; width: 100%; }
 
 .welcome-section { margin-bottom: 30px; }
-.greeting { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 5px; }
-.client-name { font-size: 1.8rem; font-family: var(--font-head); margin-bottom: 10px; color: #fff; }
-.status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(234, 179, 8, 0.1); border: 1px solid var(--brand-yellow); border-radius: 20px; font-size: 0.75rem; font-weight: 700; color: var(--brand-yellow); text-transform: uppercase; letter-spacing: 1px; }
+.greeting { font-size: 1rem; color: var(--text-secondary); margin-bottom: 5px; }
+.client-name { font-size: 2rem; font-family: var(--font-head); margin-bottom: 10px; color: #fff; }
+.status-badge { display: none; }
 .status-badge.concluido { background: rgba(74, 222, 128, 0.1); border-color: #4ade80; color: #4ade80; }
 
 .progress-section { margin-bottom: 30px; }
@@ -239,7 +239,7 @@ body {
 .btn-option:hover { background: rgba(255,255,255,0.05) !important; color: var(--brand-yellow) !important; }
 
 .comment-bubble {
-    padding: 10px 15px; border-radius: 12px; font-size: 0.8rem;
+    padding: 12px 18px; border-radius: 12px; font-size: 0.95rem;
     background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass);
 }
 .comment-bubble strong { color: var(--brand-yellow); margin-right: 5px; }

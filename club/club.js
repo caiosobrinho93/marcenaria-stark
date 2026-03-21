@@ -79,12 +79,25 @@ window.logout = logout;
 // --- GLOBAL STATE ---
 let currentPostImages = [];
 let activeCommentPostId = null;
+let feedPage = 0;
+const postsPerPage = 6;
+let feedObserver = null;
 
 // --- FEED ENGINE ---
-function renderFeed() {
+function renderFeed(append = false) {
     const container = document.getElementById('social-feed-list');
     if(!container) return;
-    const posts = LocalDB.get('social_posts');
+    
+    if(!append) {
+        container.innerHTML = '';
+        feedPage = 0;
+    }
+
+    const allPosts = LocalDB.get('social_posts');
+    const start = feedPage * postsPerPage;
+    const end = start + postsPerPage;
+    const posts = allPosts.slice(start, end);
+    
     const dbUsers = JSON.parse(localStorage.getItem('state_users')) || [];
     const currentUser = sessionProject;
     const currentUserObj = dbUsers.find(x => x.u === currentUser) || {};
@@ -96,7 +109,7 @@ function renderFeed() {
         createBtn.title = currentUserObj.isVIP ? 'Criar Novo Grupo' : 'Recurso exclusivo para Membros VIP';
     }
 
-    container.innerHTML = posts.map(p => {
+    const html = posts.map(p => {
         const u = dbUsers.find(x => x.u === p.user) || { name: p.user };
         const isLiked = (p.likes || []).includes(currentUser);
         const imagesHtml = (p.images || []).map(img => `<img src="${img}" class="feed-img-small" style="width:100px; height:100px; object-fit:cover; border-radius:8px; border:1px solid var(--border-glass);">`).join('');
@@ -107,27 +120,52 @@ function renderFeed() {
                 
                 <div style="padding:12px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border-glass);">
                     <img src="${u.avatar || '../imgs/logo-state.png'}" style="width:35px; height:35px; border-radius:50%; object-fit:cover;">
-                    <div><strong style="color:var(--brand-yellow); font-size:0.9rem;">${(u.name || p.user).toUpperCase()}</strong><br><small style="opacity:0.5; font-size:0.7rem;">${p.time || 'Agora'}</small></div>
+                    <div><strong style="color:var(--brand-yellow); font-size:1rem;">${(u.name || p.user).toUpperCase()}</strong><br><small style="opacity:0.5; font-size:0.75rem;">${p.time || 'Agora'}</small></div>
                 </div>
                 
-                ${p.text ? `<div style="padding:12px; font-size:0.85rem; line-height:1.4;">${p.text}</div>` : ''}
+                ${p.text ? `<div style="padding:12px; font-size:1rem; line-height:1.5;">${p.text}</div>` : ''}
                 
                 ${p.images && p.images.length > 0 ? `
                     <div style="display:flex; flex-wrap:wrap; gap:5px; padding:0 12px 12px 12px;">${imagesHtml}</div>
                 ` : ''}
                 
-                <div style="padding:8px 12px; display:flex; gap:15px; background:rgba(255,255,255,0.02); border-top:1px solid var(--border-glass);">
-                    <button class="btn-icon" onclick="likePost(${p.id})" style="color:${isLiked ? '#ef4444' : 'var(--text-secondary)'}; font-size:0.8rem; background:transparent; border:none; cursor:pointer;">
+                <div style="padding:10px 12px; display:flex; gap:20px; background:rgba(255,255,255,0.02); border-top:1px solid var(--border-glass);">
+                    <button class="btn-icon" onclick="likePost(${p.id})" style="color:${isLiked ? '#ef4444' : 'var(--text-secondary)'}; font-size:0.9rem; background:transparent; border:none; cursor:pointer;">
                         <i class="fa-${isLiked ? 'solid' : 'regular'} fa-heart"></i> ${p.likes?.length || 0}
                     </button>
-                    <button class="btn-icon" onclick="openCommentModal(${p.id})" style="font-size:0.8rem; color:var(--text-secondary); background:transparent; border:none; cursor:pointer;">
-                        <i class="fa-regular fa-comment"></i> ${p.comments?.length || 0} Comentários
+                    <button class="btn-icon" onclick="openCommentModal(${p.id})" style="font-size:0.9rem; color:var(--text-secondary); background:transparent; border:none; cursor:pointer;">
+                        <i class="fa-regular fa-comment"></i> ${p.comments?.length || 0}
                     </button>
                 </div>
             </div>
         `;
-    }).join('') || '<p style="text-align:center; padding:30px; opacity:0.5; font-size:0.8rem;">Nenhuma atividade no feed VIP ainda.</p>';
+    }).join('');
+
+    if(append) {
+        container.insertAdjacentHTML('beforeend', html);
+    } else {
+        container.innerHTML = html || '<p style="text-align:center; padding:30px; opacity:0.5; font-size:0.9rem;">Nenhuma atividade no feed VIP ainda.</p>';
+    }
+
+    if(end < allPosts.length) {
+        setupInfiniteScroll();
+    }
 }
+
+function setupInfiniteScroll() {
+    if(feedObserver) feedObserver.disconnect();
+    
+    feedObserver = new IntersectionObserver((entries) => {
+        if(entries[0].isIntersecting) {
+            feedPage++;
+            renderFeed(true);
+        }
+    }, { threshold: 0.1 });
+
+    const lastPost = document.querySelector('#social-feed-list .post-card:last-child');
+    if(lastPost) feedObserver.observe(lastPost);
+}
+
 
 function handleMultipleImages(input) {
     if (input.files) {
@@ -414,8 +452,10 @@ let currentFriendsSubTab = 'all';
 function switchFriendsSubTab(sub) {
     currentFriendsSubTab = sub;
     document.querySelectorAll('.sub-tab-btn').forEach(b => {
-        b.classList.toggle('active', b.innerText.toLowerCase().includes(sub.toLowerCase()) || (sub === 'all' && b.innerText === 'TODOS'));
-        b.style.background = b.classList.contains('active') ? 'var(--brand-yellow-glow)' : 'transparent';
+        const isTarget = b.getAttribute('onclick').includes(`'${sub}'`);
+        b.classList.toggle('active', isTarget);
+        b.style.background = isTarget ? 'var(--brand-yellow-glow)' : 'transparent';
+        b.style.color = isTarget ? 'var(--brand-yellow)' : '#fff';
     });
     const searchArea = document.getElementById('friends-search-area');
     if(searchArea) searchArea.style.display = (sub === 'all') ? 'block' : 'none';

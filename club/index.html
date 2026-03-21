@@ -73,7 +73,7 @@
             <section class="welcome-section">
                 <p class="greeting" id="dash-greeting">Bem-vindo(a),</p>
                 <h2 class="client-name" id="dash-client-name">Carregando...</h2>
-                <div class="status-badge" id="dash-status-badge"><i class="fa-solid fa-circle-notch fa-spin"></i> Sincronizando dados</div>
+                <div id="dash-status-badge"></div>
             </section>
 
             <!-- SOCIAL HUB SECTION -->
@@ -92,13 +92,13 @@
                     <div id="post-images-preview" style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:10px;"></div>
                     
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <div style="display:flex; gap:15px;">
-                            <label class="upload-btn-premium" style="cursor:pointer; font-size:0.8rem; color:var(--brand-yellow); display:flex; align-items:center; gap:5px; background:var(--brand-yellow-glow); padding:5px 12px; border-radius:20px; border:1px solid var(--brand-yellow);">
-                                <i class="fa-solid fa-camera"></i> ADICIONAR FOTOS 
+                        <div style="display:flex; gap:10px;">
+                            <label class="btn-icon" title="Adicionar Fotos" style="cursor:pointer; font-size:1.1rem; color:var(--brand-yellow); background:var(--brand-yellow-glow); border-color:var(--brand-yellow); width:40px; height:40px;">
+                                <i class="fa-solid fa-camera"></i>
                                 <input type="file" id="post-img-input" accept="image/*" multiple style="display:none;" onchange="handleMultipleImages(this)">
                             </label>
                         </div>
-                        <button class="btn-primary" style="padding:8px 20px; font-size:0.8rem;" onclick="handlePostSubmit()">PUBLICAR NO FEED</button>
+                        <button class="btn-primary" style="padding:8px 15px; font-size:0.75rem; width:auto;" onclick="handlePostSubmit()">PUBLICAR</button>
                     </div>
                 </div>
                 <div id="social-feed-list" style="display:grid; gap:15px;">
@@ -125,8 +125,8 @@
             <!-- GROUPS TAB -->
             <section id="tab-groups" class="social-tab-content" style="display:none;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <h3 style="color:#fff;">MEUS GRUPOS</h3>
-                    <button class="btn-primary btn-sm" onclick="openCreateGroup()"><i class="fa-solid fa-plus"></i> CRIAR</button>
+                    <h3 style="color:#fff; font-size:0.9rem;">MEUS GRUPOS</h3>
+                    <button class="btn-primary btn-sm" onclick="openCreateGroup()" style="width:auto; padding:5px 12px; font-size:0.7rem;">CRIAR</button>
                 </div>
                 <div id="groups-list" style="display:grid; gap:10px;"></div>
             </section>
