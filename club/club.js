@@ -174,15 +174,31 @@ function renderComments() {
     if(!p) return;
 
     list.innerHTML = (p.comments || []).map(c => `
-        <div style="background:rgba(255,255,255,0.05); padding:12px; border-radius:8px; border:1px solid var(--border-glass);">
-            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                <strong style="color:var(--brand-yellow); font-size:0.8rem;">${c.user === sessionProject ? 'VOCÊ' : c.user.toUpperCase()}</strong>
-                <small style="opacity:0.4; font-size:0.7rem;">${c.time || ''}</small>
+        <div style="background:rgba(255,255,255,0.05); padding:10px 15px; border-radius:8px; border:1px solid var(--border-glass); min-height:60px; max-height:180px; overflow-y:auto; display:flex; flex-direction:column; justify-content:center; position:relative;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:5px; align-items:center;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <strong style="color:var(--brand-yellow); font-size:0.75rem;">${c.user === sessionProject ? 'VOCÊ' : c.user.toUpperCase()}</strong>
+                    <small style="opacity:0.3; font-size:0.65rem;">${c.time || ''}</small>
+                </div>
+                ${c.user === sessionProject ? `<i class="fa-solid fa-trash" style="color:#ef4444; font-size:0.7rem; cursor:pointer; opacity:0.5;" onclick="deleteComment('${c.time}')" title="Apagar"></i>` : ''}
             </div>
-            <div style="font-size:0.85rem; color:#fff; white-space: pre-wrap;">${c.text}</div>
+            <div style="font-size:0.85rem; color:#fff; white-space: pre-wrap; line-height:1.4;">${c.text}</div>
         </div>
     `).join('') || '<p style="text-align:center; opacity:0.5; font-size:0.8rem; padding:20px;">Nenhuma interação ainda.</p>';
 }
+
+function deleteComment(timeId) {
+    if(!confirm('Deseja apagar este comentário?')) return;
+    const posts = LocalDB.get('social_posts');
+    const pIdx = posts.findIndex(x => x.id == activeCommentPostId);
+    if(pIdx > -1) {
+        posts[pIdx].comments = posts[pIdx].comments.filter(c => c.time !== timeId);
+        LocalDB.set('social_posts', posts);
+        renderComments();
+        renderFeed();
+    }
+}
+window.deleteComment = deleteComment;
 
 function setupInfiniteScroll() {
     if(feedObserver) feedObserver.disconnect();
@@ -287,9 +303,15 @@ function renderComments() {
     if(!post) return;
 
     list.innerHTML = (post.comments || []).map(c => `
-        <div class="comment-bubble">
-            <strong>${c.user.toUpperCase()}:</strong> ${c.text}
-            <div style="font-size:0.6rem; opacity:0.5; margin-top:4px;">${c.time || ''}</div>
+        <div style="background:rgba(255,255,255,0.05); padding:10px 15px; border-radius:8px; border:1px solid var(--border-glass); min-height:60px; max-height:180px; overflow-y:auto; display:flex; flex-direction:column; justify-content:center; position:relative;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:5px; align-items:center;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <strong style="color:var(--brand-yellow); font-size:0.75rem;">${c.user === sessionProject ? 'VOCÊ' : c.user.toUpperCase()}</strong>
+                    <small style="opacity:0.3; font-size:0.65rem;">${c.time || ''}</small>
+                </div>
+                ${c.user === sessionProject ? `<i class="fa-solid fa-trash" style="color:#ef4444; font-size:0.7rem; cursor:pointer; opacity:0.5;" onclick="deleteComment('${c.time}')" title="Apagar"></i>` : ''}
+            </div>
+            <div style="font-size:0.85rem; color:#fff; white-space: pre-wrap; line-height:1.4;">${c.text}</div>
         </div>
     `).join('') || '<p style="text-align:center; opacity:0.4; font-size:0.8rem;">Seja o primeiro a interagir!</p>';
 }
@@ -318,8 +340,11 @@ window.submitComment = submitComment;
 
 function addEmoji(emoji) {
     const input = document.getElementById('comment-input');
-    input.value += emoji;
-    input.focus();
+    if(input) {
+        input.value += emoji;
+        input.focus();
+        if(typeof toggleEmojiPicker === 'function') toggleEmojiPicker();
+    }
 }
 window.addEmoji = addEmoji;
 
