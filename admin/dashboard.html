@@ -34,9 +34,11 @@
             
             <nav class="nav-list">
                 <div class="nav-link active" data-mod="home"><i class="fa-solid fa-house-chimney-window"></i> <span>Início</span></div>
-                <div class="nav-link" data-mod="clients"><i class="fa-solid fa-user-tie"></i> <span>Clientes</span></div>
-                <div class="nav-link" data-mod="projects"><i class="fa-solid fa-diagram-project"></i> <span>Projetos</span></div>
-                <div class="nav-link" data-mod="inventory"><i class="fa-solid fa-boxes-stacked"></i> <span>Estoque</span></div>
+                <div class="nav-link" data-mod="clients"><i class="fa-solid fa-users"></i> <span>CLIENTES</span></div>
+                <div class="nav-link" data-mod="projects"><i class="fa-solid fa-list-check"></i> <span>PROJETOS</span></div>
+                <div class="nav-link" data-mod="friends"><i class="fa-solid fa-user-group"></i> <span>REDE MENTAL</span></div>
+                <div class="nav-link" data-mod="groups"><i class="fa-solid fa-comments"></i> <span>MEUS GRUPOS</span></div>
+                <div class="nav-link" data-mod="inventory"><i class="fa-solid fa-layer-group"></i> <span>ESTOQUE</span></div>
                 <div class="nav-link" data-mod="finance"><i class="fa-solid fa-vault"></i> <span>Pagar/Receber</span></div>
                 <div class="nav-link" data-mod="providers"><i class="fa-solid fa-handshake"></i> <span>Parceiros</span></div>
                 <div class="nav-link" data-mod="gallery"><i class="fa-solid fa-images"></i> <span>Galeria Web</span></div>
@@ -527,26 +529,135 @@
                                 <label>LINK PARA FOTO DE PERFIL</label>
                                 <input type="text" id="profile-avatar" placeholder="https://exemplo.com/minhafoto.jpg">
                             </div>
-                            <button type="submit" class="btn btn-primary" style="width:100%;"><i class="fa-solid fa-floppy-disk"></i> SALVAR ALTERAÇÕES</button>
+                            <div style="display:flex; gap:10px;">
+                                <button type="submit" class="btn btn-primary" style="flex:1;"><i class="fa-solid fa-floppy-disk"></i> SALVAR PERFIL</button>
+                                <button type="button" class="btn btn-ghost" onclick="changePass()" style="flex:1;"><i class="fa-solid fa-key"></i> MUDAR SENHA</button>
+                            </div>
                         </form>
 
                         <button class="btn btn-danger" onclick="logout()" style="width:100%;"><i class="fa-solid fa-power-off"></i> ENCERRAR SESSÃO NO DISPOSITIVO</button>
                     </div>
                 </section>
-                        
-                        <button class="btn btn-danger" onclick="logout()" style="width:100%;"><i class="fa-solid fa-power-off"></i> ENCERRAR SESSÃO NO DISPOSITIVO</button>
 
-                        <div style="display:flex; gap:15px; justify-content:center;">
-                            <button class="btn btn-ghost" onclick="notify('Alteração de sistema offline')">MUDAR SENHA</button>
-                            <button class="btn btn-danger" onclick="document.querySelector('#logout-trigger').onclick()"><i class="fa-solid fa-power-off"></i> ENCERRAR SESSÃO</button>
+                <!-- FRIENDS MODULE -->
+                <section id="mod-friends" class="module-section">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                        <h2 class="topbar-title">REDE MENTAL (AMIGOS)</h2>
+                        <div style="display:flex; gap:10px;">
+                             <button class="btn btn-primary" onclick="openModal('modal-find-friends')"><i class="fa-solid fa-magnifying-glass"></i> BUSCAR PARCEIROS</button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h4 style="color:var(--brand-yellow); margin-bottom:15px;">SOLICITAÇÕES PENDENTES</h4>
+                        <div id="friends-requests-list" style="display:grid; gap:10px; margin-bottom:30px;">
+                            <!-- JS -->
+                        </div>
+                        <h4 style="color:var(--brand-yellow); margin-bottom:15px;">MEUS AMIGOS</h4>
+                        <div id="friends-list" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap:15px;">
+                            <!-- JS -->
                         </div>
                     </div>
                 </section>
+
+                <!-- GROUPS MODULE -->
+                <section id="mod-groups" class="module-section">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                        <h2 class="topbar-title">MEUS GRUPOS</h2>
+                        <button class="btn btn-primary" onclick="openModal('modal-create-group')"><i class="fa-solid fa-plus"></i> CRIAR NOVO GRUPO</button>
+                    </div>
+                    <div id="groups-list" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:20px;">
+                        <!-- JS -->
+                    </div>
+                </section>
+
+                <!-- GROUP DETAIL SECTION -->
+                <section id="mod-group-detail" class="module-section">
+                    <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 24px;">
+                        <button class="btn btn-ghost" onclick="switchModule('groups')"><i class="fa-solid fa-arrow-left"></i> VOLTAR</button>
+                        <h2 class="topbar-title" id="group-detail-name">NOME DO GRUPO</h2>
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 350px; gap:24px;">
+                        <div class="card" style="display:flex; flex-direction:column; height:600px;">
+                            <h4 style="color:var(--brand-yellow); margin-bottom:15px;">MURAL E CHAT</h4>
+                            <div id="group-messages" style="flex:1; overflow-y:auto; margin-bottom:15px; padding:10px; background:rgba(0,0,0,0.2); border:1px solid var(--border);">
+                                <!-- JS -->
+                            </div>
+                            <div style="display:flex; gap:10px;">
+                                <input type="text" id="group-msg-input" placeholder="Escreva para o grupo..." style="flex:1;">
+                                <button class="btn btn-primary" id="btn-send-group-msg">ENVIAR</button>
+                            </div>
+                        </div>
+                        <div style="display:grid; gap:24px;">
+                            <div class="card">
+                                <h4 style="color:var(--brand-yellow); margin-bottom:15px;">GALERIA DO LÍDER</h4>
+                                <div id="group-gallery" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:15px;">
+                                    <!-- JS -->
+                                </div>
+                                <div id="leader-only-upload" style="display:none;">
+                                    <input type="file" id="group-photo-upload" accept="image/*" style="display:none;" onchange="handleGroupPhoto(this)">
+                                    <button class="btn btn-ghost" style="width:100%;" onclick="document.getElementById('group-photo-upload').click()">ANEXAR ARQUITETURA/FOTO</button>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <h4 style="color:var(--brand-yellow); margin-bottom:15px;">MEMBROS</h4>
+                                <div id="group-members-list" style="display:grid; gap:10px; margin-bottom:15px;">
+                                    <!-- JS -->
+                                </div>
+                                <div id="leader-only-invite" style="display:none;">
+                                    <button class="btn btn-ghost" style="width:100%;" onclick="openGroupInviteModal()">CONVIDAR AMIGOS</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
             </div>
         </main>
     </div>
 
     <!-- Detail modals removed, replaced by static sections -->
+
+    <!-- MODAL FIND FRIENDS -->
+    <div class="modal-overlay" id="modal-find-friends">
+        <div class="modal-box" style="max-width:500px;">
+            <span class="modal-close" onclick="closeAllModals()">&times;</span>
+            <h3 style="color:var(--brand-yellow); margin-bottom:20px;">BUSCAR PARCEIROS</h3>
+            <input type="text" id="search-global-users" placeholder="Pesquisar por nome ou login..." style="width:100%; margin-bottom:20px;" oninput="renderGlobalSearch(this.value)">
+            <div id="global-search-results" style="display:grid; gap:15px; max-height:400px; overflow-y:auto;">
+                <!-- JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CREATE GROUP -->
+    <div class="modal-overlay" id="modal-create-group">
+        <div class="modal-box" style="max-width:450px;">
+            <span class="modal-close" onclick="closeAllModals()">&times;</span>
+            <h3 style="color:var(--brand-yellow); margin-bottom:20px;">NOVO GRUPO COLABORATIVO</h3>
+            <div id="vip-only-group-msg" style="display:none; color:#ef4444; font-size:0.9rem; margin-bottom:15px; padding:10px; background:rgba(239,68,68,0.1); border:1px solid #ef4444;">
+                <i class="fa-solid fa-crown"></i> RECURSO VIP: Você precisa ser VIP e ter gemas para criar grupos.
+            </div>
+            <form id="form-create-group-el">
+                <div class="group">
+                    <label>NOME DO GRUPO</label>
+                    <input type="text" id="new-group-name" required placeholder="Ex: Marceneiros Elite SP">
+                </div>
+                <p style="font-size:0.8rem; color:var(--text-muted); margin:15px 0;">Custo: 10 Gemas / Status VIP ativo.</p>
+                <button type="submit" class="btn btn-primary" style="width:100%;">CRIAR AGORA</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL INVITE TO GROUP -->
+    <div class="modal-overlay" id="modal-invite-group">
+        <div class="modal-box" style="max-width:450px;">
+            <span class="modal-close" onclick="closeAllModals()">&times;</span>
+            <h3 style="color:var(--brand-yellow); margin-bottom:20px;">CONVIDAR AMIGOS</h3>
+            <div id="group-invite-list" style="display:grid; gap:10px; max-height:400px; overflow-y:auto;">
+                <!-- JS -->
+            </div>
+        </div>
+    </div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
