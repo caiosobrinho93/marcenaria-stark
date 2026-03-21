@@ -4,7 +4,13 @@ const LocalDB = {
 };
 
 // State
-let sessionProject = localStorage.getItem('state_current_user') || sessionStorage.getItem('clubstate_session') || null;
+let bridgeUser = localStorage.getItem('clubstate_bridge_user');
+if(bridgeUser) {
+    localStorage.setItem('state_current_user', bridgeUser);
+    sessionStorage.setItem('clubstate_session', 'active');
+    localStorage.removeItem('clubstate_bridge_user'); // Consumed
+}
+let sessionProject = localStorage.getItem('state_current_user') || null;
 
 // Routing
 const viewLogin = document.getElementById('view-login');
@@ -55,12 +61,13 @@ if (loginForm) {
         const validUser = db.find(x => x.u === u && x.p === p);
         
         if (validUser) {
-            localStorage.setItem('state_current_user', validUser.u); // Log into Dashboard first
-            sessionStorage.setItem('clubstate_session', validUser.u);
+            localStorage.setItem('state_current_user', validUser.u);
+            localStorage.setItem('state_admin_session', 'active');
             sessionProject = validUser.u;
-            toast(`Autenticação Bem-sucedida!`, 'success');
+            toast(`Bem-vindo ao clubSTATE!`, 'success');
             setTimeout(() => {
-                window.location.href = '../admin/dashboard.html'; // Go to Dashboard
+                initDashboard();
+                switchView('dashboard');
             }, 800);
         } else {
             toast('Credenciais corporativas inválidas.', 'error');
