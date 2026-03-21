@@ -205,6 +205,63 @@ function openClientDetail(id) {
 }
 window.openClientDetail = openClientDetail;
 
+function deleteProjectFromDetail() {
+    if(confirm('Tem certeza que deseja excluir o projeto?')) {
+        const id = document.getElementById('det-project-id').value;
+        const all = DB._getAll('projects');
+        DB.set('projects', all.filter(x => x.id !== id));
+        closeModal('modal-project-detail');
+        renderProjects();
+        notify('Projeto excluído com sucesso.', 'success');
+    }
+}
+window.deleteProjectFromDetail = deleteProjectFromDetail;
+
+function editProjectFromDetail() {
+    const id = document.getElementById('det-project-id').value;
+    closeModal('modal-project-detail');
+    const projects = DB.get('projects');
+    const p = projects.find(x => x.id === id);
+    if(p) {
+        document.getElementById('project-id').value = p.id;
+        document.getElementById('project-title').value = p.title;
+        document.getElementById('project-status').value = p.status || 'planejamento';
+        document.getElementById('project-progress').value = p.progress || 0;
+        document.getElementById('project-deadline').value = p.deadline || '';
+        switchModule('form-project');
+    }
+}
+window.editProjectFromDetail = editProjectFromDetail;
+
+function deleteClientFromDetail() {
+    if(confirm('Tem certeza que deseja excluir o cliente?')) {
+        const id = document.getElementById('det-client-id').value;
+        const all = DB._getAll('clients');
+        DB.set('clients', all.filter(x => x.id !== id));
+        closeModal('modal-client-detail');
+        renderClients();
+        notify('Cliente excluído com sucesso.', 'success');
+    }
+}
+window.deleteClientFromDetail = deleteClientFromDetail;
+
+function editClientFromDetail() {
+    const id = document.getElementById('det-client-id').value;
+    closeModal('modal-client-detail');
+    const clients = DB.get('clients');
+    const c = clients.find(x => x.id === id);
+    if(c) {
+        document.getElementById('client-id').value = c.id;
+        document.getElementById('client-name').value = c.name;
+        document.getElementById('client-phone').value = c.phone || '';
+        document.getElementById('client-instagram').value = c.insta || '';
+        document.getElementById('client-address').value = c.address || '';
+        switchModule('form-client');
+    }
+}
+window.editClientFromDetail = editClientFromDetail;
+
+
 function renderInventory() {
     const items = DB.get('inventory');
     const container = document.getElementById('inventory-list');
