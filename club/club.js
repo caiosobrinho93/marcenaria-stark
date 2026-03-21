@@ -33,10 +33,13 @@ if (loginForm) {
         const u = document.getElementById('access-user').value.trim();
         const p = document.getElementById('access-pass').value.trim();
         
-        if (u === 'admin' && p === 'state2026') {
-            sessionStorage.setItem('clubstate_session', 'admin');
-            sessionProject = 'admin';
-            toast('Conectado ao Hub Corporativo!', 'success');
+        const db = JSON.parse(localStorage.getItem('state_users')) || [];
+        const validUser = db.find(x => x.u === u && x.p === p);
+        
+        if (validUser) {
+            sessionStorage.setItem('clubstate_session', validUser.u);
+            sessionProject = validUser.u;
+            toast(`Conectado ao Hub Corporativo!`, 'success');
             setTimeout(() => {
                 initDashboard();
             }, 800);
@@ -69,7 +72,7 @@ function initDashboard() {
     const totalRevenue = fin.filter(f => f.type === 'income').reduce((acc, curr) => acc + parseFloat(curr.val||0), 0);
 
     // Populate Data
-    document.getElementById('dash-client-name').innerText = 'Líder Executivo';
+    document.getElementById('dash-client-name').innerText = sessionProject ? `Operador: ${sessionProject.toUpperCase()}` : 'Líder Executivo';
     document.getElementById('dash-project-title').innerText = `${completedProjects} obras confirmadas de ${totalProjects}`;
     
     // Status Badge

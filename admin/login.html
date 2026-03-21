@@ -149,8 +149,8 @@
 
     <div class="login-box">
         <img src="../imgs/logo-state.png" alt="State Marcenaria" class="logo">
-        <h1>Acesso Restrito</h1>
-        <span class="subtitle">CONSOLE_MANAGEMENT_V3.0</span>
+        <h1 id="title-login">Acesso Restrito</h1>
+        <span class="subtitle">CONSOLE_MANAGEMENT_V4.0</span>
 
         <div id="error-box" class="error">
             <i class="fa-solid fa-triangle-exclamation"></i> ACESSO NEGADO: CREDENCIAIS INVÁLIDAS
@@ -159,39 +159,90 @@
         <form id="login-form">
             <div class="form-group">
                 <label>Operador</label>
-                <input type="text" id="user" required autocomplete="username" placeholder="Seu usuário">
+                <input type="text" id="user" required autocomplete="username" placeholder="Seu usuário corporativo">
             </div>
             <div class="form-group">
                 <label>Chave de Segurança</label>
                 <input type="password" id="pass" required autocomplete="current-password" placeholder="••••••••">
             </div>
-            <button type="submit" class="btn-submit">
+            <button type="submit" class="btn-submit" id="btn-submit-main">
                 AUTENTICAR <i class="fa-solid fa-chevron-right" style="margin-left: 5px;"></i>
             </button>
         </form>
 
-        <a href="../index.html" class="footer-link">
+        <a href="#" onclick="toggleRegister()" id="btn-toggle" class="footer-link" style="color:var(--state-gold); font-weight:800; margin-top:20px;">
+            Novo Líder? Criar Conta Administrativa
+        </a>
+        <a href="../index.html" class="footer-link" style="margin-top:15px;">
             <i class="fa-solid fa-arrow-left"></i> VOLTAR AO SITE
         </a>
     </div>
 
     <script>
+        let isRegisterMode = false;
+        
+        // Setup initial default DB
+        let usersDB = JSON.parse(localStorage.getItem('state_users'));
+        if(!usersDB) {
+            usersDB = [{ u: 'admin', p: 'state2026' }];
+            localStorage.setItem('state_users', JSON.stringify(usersDB));
+        }
+
+        function toggleRegister() {
+            isRegisterMode = !isRegisterMode;
+            document.getElementById('title-login').innerText = isRegisterMode ? 'Cadastro Corporativo' : 'Acesso Restrito';
+            document.getElementById('btn-submit-main').innerHTML = isRegisterMode ? 'VINCULAR CREDENCIAL <i class="fa-solid fa-user-plus" style="margin-left: 5px;"></i>' : 'AUTENTICAR <i class="fa-solid fa-chevron-right" style="margin-left: 5px;"></i>';
+            document.getElementById('btn-toggle').innerText = isRegisterMode ? 'Já tem acesso? Retornar ao Login Seguro' : 'Novo Líder? Criar Conta Administrativa';
+        }
+
+        function showError(msg, success = false) {
+            const err = document.getElementById('error-box');
+            err.innerHTML = `<i class="fa-solid ${success ? 'fa-check' : 'fa-triangle-exclamation'}"></i> ${msg}`;
+            err.style.background = success ? 'rgba(74, 222, 128, 0.1)' : 'rgba(239, 68, 68, 0.1)';
+            err.style.color = success ? '#4ade80' : '#ef4444';
+            err.style.borderColor = success ? '#4ade80' : '#ef4444';
+            err.style.display = 'block';
+            setTimeout(() => err.style.display = 'none', 3000);
+        }
+
         document.getElementById('login-form').onsubmit = (e) => {
             e.preventDefault();
-            const u = document.getElementById('user').value;
-            const p = document.getElementById('pass').value;
+            const u = document.getElementById('user').value.trim();
+            const p = document.getElementById('pass').value.trim();
+            
+            if(!u || !p) return;
 
-            // Secure session simulation
-            if (u === 'admin' && p === 'state2026') {
-                localStorage.setItem('state_admin_session', 'active');
-                localStorage.setItem('state_last_login', new Date().toISOString());
-                window.location.href = 'dashboard.html';
+            let db = JSON.parse(localStorage.getItem('state_users')) || [];
+
+            if (isRegisterMode) {
+                // Check if exists
+                if (db.find(x => x.u === u)) {
+                    showError('Operador já cadastrado no banco central.');
+                    return;
+                }
+                // Add new user
+                db.push({ u, p });
+                localStorage.setItem('state_users', JSON.stringify(db));
+                showError('Membro autorizado com sucesso! Entrando...', true);
+                
+                setTimeout(() => doLogin(u), 1500);
+
             } else {
-                const err = document.getElementById('error-box');
-                err.style.display = 'block';
-                setTimeout(() => err.style.display = 'none', 3000);
+                // Regular Login
+                if (db.find(x => x.u === u && x.p === p)) {
+                    doLogin(u);
+                } else {
+                    showError('ACESSO NEGADO: CREDENCIAIS INVÁLIDAS');
+                }
             }
         };
+
+        function doLogin(username) {
+            localStorage.setItem('state_admin_session', 'active');
+            localStorage.setItem('state_current_user', username);
+            localStorage.setItem('state_last_login', new Date().toISOString());
+            window.location.href = 'dashboard.html';
+        }
     </script>
 </body>
 </html>

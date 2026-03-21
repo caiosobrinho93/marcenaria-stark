@@ -177,11 +177,23 @@ tr:hover td { background: rgba(234, 179, 8, 0.02); color: var(--text-primary); c
 .group { margin-bottom: 24px; }
 label { display: block; font-size: 0.8rem; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
 input, select, textarea {
-    width: 100%; background: #000; border: 1px solid var(--border);
-    padding: 14px 18px; color: var(--text-primary); border-radius: 2px;
-    font-family: inherit; transition: var(--transition);
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 14px 18px; 
+    color: var(--text-primary); 
+    border-radius: 6px;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    transition: var(--transition);
 }
-input:focus { border-color: var(--brand-yellow); outline: none; box-shadow: 0 0 10px var(--brand-yellow-glow); }
+input::placeholder, textarea::placeholder { color: var(--text-muted); opacity: 0.6; }
+input:focus, select:focus, textarea:focus { 
+    background: rgba(255,255,255,0.08);
+    border-color: var(--brand-yellow); 
+    outline: none; 
+    box-shadow: 0 0 10px var(--brand-yellow-glow); 
+}
 
 /* --- Utils --- */
 .avatar { 
