@@ -81,8 +81,8 @@ body {
     border-radius: 12px;
     padding: 16px 16px 16px 45px;
     color: #fff;
-    font-size: 1rem;
-    font-family: var(--font-mono);
+    font-size: 17px;
+    font-family: var(--font-sans);
     outline: none;
     transition: all 0.3s ease;
 }
@@ -242,6 +242,8 @@ body {
     padding: 12px 18px; border-radius: 12px; font-size: 0.95rem;
     background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass);
 }
-.comment-bubble strong { color: var(--brand-yellow); margin-right: 5px; }
+.comment-bubble strong { color: var(--brand-yellow); margin-right: 8px; }
+.btn-icon i + span, .btn-icon i + b, .btn-icon i { margin-right: 5px; }
+.post-card .btn-icon { display: flex; align-items: center; gap: 8px; }
 
 @keyframes slideInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

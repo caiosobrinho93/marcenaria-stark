@@ -356,11 +356,51 @@ function loadProfile() {
         document.getElementById('profile-name').value = u.name || '';
         document.getElementById('profile-bio').value = u.bio || '';
         document.getElementById('profile-avatar').value = u.avatar || '';
+        const display = document.getElementById('profile-avatar-display');
+        const placeholder = document.getElementById('profile-avatar-placeholder');
+        const previewBox = document.getElementById('avatar-preview-box');
+        
         if(u.avatar) {
-            document.getElementById('profile-avatar-display').src = u.avatar;
-            document.getElementById('profile-avatar-display').style.display = 'block';
-            document.getElementById('profile-avatar-placeholder').style.display = 'none';
+            display.src = u.avatar;
+            display.style.display = 'block';
+            placeholder.style.display = 'none';
+            if(previewBox) previewBox.innerHTML = `<img src="${u.avatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+        } else {
+            display.style.display = 'none';
+            placeholder.style.display = 'flex';
+            if(previewBox) previewBox.innerText = user[0].toUpperCase();
         }
+    }
+}
+
+async function handleAvatarUpload(input) {
+    if (input.files && input.files[0]) {
+        try {
+            const base64 = await toBase64(input.files[0]);
+            document.getElementById('profile-avatar').value = base64;
+            const previewBox = document.getElementById('avatar-preview-box');
+            if(previewBox) previewBox.innerHTML = `<img src="${base64}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+            notify('Imagem carregada! Clique em Salvar Perfil para aplicar.');
+        } catch(e) {
+            notify('Erro ao processar imagem.', 'error');
+        }
+    }
+}
+window.handleAvatarUpload = handleAvatarUpload;
+
+function saveProfile(e) {
+    if(e) e.preventDefault();
+    const user = localStorage.getItem('state_current_user') || 'admin';
+    let users = JSON.parse(localStorage.getItem('state_users')) || [];
+    const idx = users.findIndex(x => x.u === user);
+    
+    if(idx > -1) {
+        users[idx].name = document.getElementById('profile-name').value;
+        users[idx].bio = document.getElementById('profile-bio').value;
+        users[idx].avatar = document.getElementById('profile-avatar').value;
+        localStorage.setItem('state_users', JSON.stringify(users));
+        updateTopbarProfile();
+        notify('Perfil atualizado com sucesso!');
     }
 }
 
@@ -387,6 +427,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Global Search Attachments
     const sC = document.getElementById('search-clients'); if(sC) sC.oninput = (e) => renderClients(e.target.value);
     const sP = document.getElementById('search-projects'); if(sP) sP.oninput = (e) => renderProjects(e.target.value);
+
+    // Profile Form
+    const pF = document.getElementById('profile-form'); if(pF) pF.onsubmit = saveProfile;
 });
 
 // Windows Global Exports
@@ -400,4 +443,10 @@ window.openClientDetail = openClientDetail;
 window.likePost = likePost;
 window.openModal = openModal;
 window.closeModal = closeModal;
-window.logout = () => { localStorage.removeItem('state_admin_session'); window.location.href='login.html'; };
+window.saveProfile = saveProfile;
+window.logout = () => { 
+    localStorage.removeItem('state_admin_session'); 
+    localStorage.removeItem('state_current_user');
+    sessionStorage.removeItem('clubstate_session');
+    window.location.href='login.html'; 
+};

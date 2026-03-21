@@ -54,11 +54,12 @@ if (loginForm) {
         const validUser = db.find(x => x.u === u && x.p === p);
         
         if (validUser) {
+            localStorage.setItem('state_current_user', validUser.u); // Log into Dashboard first
             sessionStorage.setItem('clubstate_session', validUser.u);
             sessionProject = validUser.u;
-            toast(`Conectado ao Hub Corporativo!`, 'success');
+            toast(`Autenticação Bem-sucedida!`, 'success');
             setTimeout(() => {
-                initDashboard();
+                window.location.href = '../admin/dashboard.html'; // Go to Dashboard
             }, 800);
         } else {
             toast('Credenciais corporativas inválidas.', 'error');
@@ -131,10 +132,10 @@ function renderFeed(append = false) {
                 
                 <div style="padding:10px 12px; display:flex; gap:20px; background:rgba(255,255,255,0.02); border-top:1px solid var(--border-glass);">
                     <button class="btn-icon" onclick="likePost(${p.id})" style="color:${isLiked ? '#ef4444' : 'var(--text-secondary)'}; font-size:0.9rem; background:transparent; border:none; cursor:pointer;">
-                        <i class="fa-${isLiked ? 'solid' : 'regular'} fa-heart"></i> ${p.likes?.length || 0}
+                        <i class="fa-${isLiked ? 'solid' : 'regular'} fa-heart"></i> <span>${p.likes?.length || 0}</span>
                     </button>
                     <button class="btn-icon" onclick="openCommentModal(${p.id})" style="font-size:0.9rem; color:var(--text-secondary); background:transparent; border:none; cursor:pointer;">
-                        <i class="fa-regular fa-comment"></i> ${p.comments?.length || 0}
+                        <i class="fa-regular fa-comment"></i> <span>${p.comments?.length || 0}</span>
                     </button>
                 </div>
             </div>
