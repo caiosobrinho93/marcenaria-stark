@@ -219,6 +219,7 @@ input:focus { border-color: var(--brand-yellow); outline: none; box-shadow: 0 0 
     .topbar-title { font-size: 1rem; max-width: 140px; }
     .topbar .avatar { width: 32px; height: 32px; font-size: 0.7rem; }
     .topbar span[style*="font-size: 0.7rem"] { display: none; } /* Hide the 'ADM' label name on mobile to save space */
+    .modal-box { padding: 24px !important; }
 }
 
 @media (max-width: 480px) {

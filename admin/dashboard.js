@@ -195,7 +195,6 @@ function renderClients(filter = '') {
                     </div>
                     <div style="display:flex; flex-direction:column;">
                         <strong style="color:var(--text-primary);">${c.name}</strong>
-                        <span class="show-mobile-only" style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">${c.phone}</span>
                     </div>
                 </div>
             </td>
@@ -260,12 +259,11 @@ function renderProjects(filter = '') {
         <tr onclick="openProjectDetail('${p.id}')" style="cursor:pointer;">
             <td>
                 <div style="display:flex; align-items:center; gap:12px">
-                    <div style="width:36px; height:36px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:4px; flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden;">
-                        ${p.images && p.images[0] ? `<img src="${p.images[0]}" style="width:100%;height:100%;object-fit:cover">` : '<i class="fa-solid fa-drafting-dot" style="opacity:0.2"></i>'}
+                    <div style="width:36px; height:36px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                        ${p.images && p.images[0] ? `<img src="${p.images[0]}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : '<i class="fa-solid fa-drafting-dot" style="opacity:0.2"></i>'}
                     </div>
                     <div style="display:flex; flex-direction:column;">
                         <strong style="color:var(--brand-yellow); text-transform:uppercase; font-size:0.85rem;">${p.title}</strong>
-                        <span class="show-mobile-only" style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">${p.status.toUpperCase()} • ${p.progress}%</span>
                     </div>
                 </div>
             </td>
@@ -288,7 +286,7 @@ function renderProjects(filter = '') {
 window.openProjectDetail = (id) => {
     const p = DB.get('projects').find(x => x.id === id);
     if(!p) return;
-    const content = document.getElementById('project-detail-content');
+    const content = document.getElementById('project-view-content');
     const statusMap = { planejamento: 'PLANEJAMENTO', producao: 'EM PRODUÇÃO', montagem: 'EM MONTAGEM', finalizado: 'CONCLUÍDO' };
     
     // Project Media HTML
@@ -304,8 +302,7 @@ window.openProjectDetail = (id) => {
     `).join('');
 
     content.innerHTML = `
-        <span class="modal-close" onclick="closeAllModals()">&times;</span>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:30px;">
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:30px;">
             <div>
                 <h2 style="font-family:var(--font-head); color:var(--brand-yellow); margin-bottom:20px;">DETALHES DO PROJETO</h2>
                 <div style="display:grid; gap:15px;">
@@ -355,11 +352,11 @@ window.openProjectDetail = (id) => {
             </div>
         </div>
         <div style="display:flex; gap:10px; margin-top:30px; border-top:1px solid var(--border); padding-top:20px;">
-            <button class="btn btn-ghost" style="flex:1" onclick="editProject('${p.id}'); closeAllModals();">EDITAR CONFIGURAÇÕES</button>
-            <button class="btn btn-danger" onclick="deleteItem('projects', '${p.id}', renderProjects); closeAllModals();"><i class="fa-solid fa-trash"></i></button>
+            <button class="btn btn-ghost" style="flex:1" onclick="editProject('${p.id}');">EDITAR CONFIGURAÇÕES</button>
+            <button class="btn btn-danger" onclick="deleteItem('projects', '${p.id}', () => { renderProjects(); switchModule('projects'); });"><i class="fa-solid fa-trash"></i></button>
         </div>
     `;
-    openModal('modal-project-detail');
+    switchModule('project-view');
 };
 
 window.addProjectMedia = async (id, input) => {
@@ -411,12 +408,11 @@ function renderInventory(filter = '') {
         <tr onclick="openInventoryDetail('${i.id}')" style="cursor:pointer;">
             <td>
                 <div style="display:flex; align-items:center; gap:12px">
-                    <div style="width:36px; height:36px; background:rgba(0,0,0,0.5); border:1px solid var(--border); overflow:hidden; border-radius:4px; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
-                        ${i.photo ? `<img src="${i.photo}" style="width:100%;height:100%;object-fit:cover">` : '<i class="fa-solid fa-box" style="opacity:0.2;"></i>'}
+                    <div style="width:36px; height:36px; background:rgba(0,0,0,0.5); border:1px solid var(--border); overflow:hidden; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                        ${i.photo ? `<img src="${i.photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` : '<i class="fa-solid fa-box" style="opacity:0.2;"></i>'}
                     </div>
                     <div style="display:flex; flex-direction:column;">
                         <strong style="color:var(--text-primary); font-size:0.85rem;">${i.name}</strong>
-                        <span class="show-mobile-only" style="font-size:0.7rem; color:${i.qty < 5 ? '#ef4444' : 'var(--brand-yellow)'}; font-weight:700;">SALDO: ${i.qty}</span>
                     </div>
                 </div>
             </td>
@@ -480,7 +476,6 @@ function renderFinance(filter = '') {
                 <td class="hide-mobile" style="font-size:0.85rem">${f.date}</td>
                 <td>
                     <div style="font-size:0.95rem; font-weight:600;">${f.desc}</div>
-                    <div class="show-mobile-only" style="font-size:0.7rem; color:var(--text-muted);">${f.date}</div>
                 </td>
                 <td style="color:${f.type === 'income' ? 'var(--brand-yellow)' : '#ef4444'}; font-weight:800; font-family:var(--font-mono); text-align:right;">
                     ${f.type === 'income' ? '+' : '-'} ${val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
@@ -538,6 +533,16 @@ function renderGallery() {
         </div>
     `).join('');
 }
+window.editGallery = (id) => {
+    const g = DB.get('gallery').find(x => x.id === id);
+    if(!g) return;
+    document.getElementById('gal-id').value = g.id;
+    document.getElementById('gal-title').value = g.title;
+    document.getElementById('gal-sub').value = g.sub;
+    document.getElementById('gallery-form-title').innerText = 'EDITAR ARTE/FOTO';
+    toggleForm('form-gallery', true);
+};
+
 window.deleteGalleryItem = (id) => {
     if(confirm('Excluir imagem do portfólio?')) {
         let gs = DB.get('gallery');
@@ -573,8 +578,13 @@ function renderNotifications() {
     });
 
     if(list) {
-        list.innerHTML = alerts.map(a => `<div class="card" style="border-left:4px solid ${a.type === 'expense' ? '#ef4444' : 'var(--brand-yellow)'}; padding:15px;">${a.msg}</div>`).join('');
-        if(alerts.length === 0) list.innerHTML = '<div class="prod-placeholder">Sem notificações pendentes no momento.</div>';
+        list.innerHTML = alerts.map(a => `<div style="border-bottom:1px solid var(--border); padding:10px 5px; font-size:0.8rem; border-left:3px solid ${a.type === 'expense' ? '#ef4444' : 'var(--brand-yellow)'}; margin-bottom:5px;">${a.msg}</div>`).join('');
+        if(alerts.length === 0) list.innerHTML = '<div style="padding:15px; text-align:center; color:var(--text-muted); font-size:0.8rem;">Sem notificações.</div>';
+    }
+    const badge = document.getElementById('notif-badge');
+    if(badge) {
+        if(alerts.length > 0) { badge.style.display = 'flex'; badge.innerText = alerts.length; }
+        else { badge.style.display = 'none'; }
     }
 
     if(homeList) {
@@ -786,8 +796,37 @@ async function handleGallerySubmit(e) {
 }
 
 // --- Initialization ---
+function updateHomeGreeting() {
+    const title = document.getElementById('home-greeting-title');
+    const dateEl = document.getElementById('home-greeting-date');
+    if(!title || !dateEl) return;
+    const hr = new Date().getHours();
+    let msg = 'BOM DIA';
+    if(hr >= 12 && hr < 18) msg = 'BOA TARDE';
+    else if(hr >= 18) msg = 'BOA NOITE';
+    title.innerText = `${msg}, ADMIN`;
+    const dias = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+    const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+    const d = new Date();
+    dateEl.innerText = `${dias[d.getDay()]}, ${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()}`.toUpperCase();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initSeedData();
+    updateHomeGreeting();
+    
+    // Notifications Dropdown Toggle
+    const notifTrigger = document.getElementById('notifications-trigger');
+    const notifDropdown = document.getElementById('notif-dropdown');
+    if(notifTrigger && notifDropdown) {
+        notifTrigger.addEventListener('click', (e) => {
+            if(e.target.closest('#notif-dropdown') && !e.target.closest('.btn-ghost')) return;
+            notifDropdown.style.display = notifDropdown.style.display === 'none' ? 'flex' : 'none';
+        });
+        document.addEventListener('click', (e) => {
+            if(!notifTrigger.contains(e.target)) notifDropdown.style.display = 'none';
+        });
+    }
     navLinks = document.querySelectorAll('.nav-link[data-mod]');
     sections = document.querySelectorAll('.module-section');
     const sidebar = document.getElementById('sidebar');

@@ -42,7 +42,6 @@
                 <div class="nav-link" data-mod="inventory"><i class="fa-solid fa-boxes-stacked"></i> <span>Estoque</span></div>
                 <div class="nav-link" data-mod="finance"><i class="fa-solid fa-vault"></i> <span>Pagar/Receber</span></div>
                 <div class="nav-link" data-mod="providers"><i class="fa-solid fa-handshake"></i> <span>Parceiros</span></div>
-                <div class="nav-link" data-mod="notifications"><i class="fa-solid fa-bell"></i> <span>Alertas</span></div>
                 <div class="nav-link" data-mod="gallery"><i class="fa-solid fa-images"></i> <span>Galeria Web</span></div>
             </nav>
 
@@ -60,7 +59,19 @@
                 </div>
                 
                 <div class="topbar-right">
-                    <span style="font-size: 0.7rem; font-weight: 800; color: var(--text-muted);" class="hide-mobile">OPERADOR: <strong>ADMIN</strong></span>
+                    <span style="font-size: 0.7rem; font-weight: 800; color: var(--text-muted);" class="hide-mobile" id="topbar-greeting">OPERADOR: <strong>ADMIN</strong></span>
+                    <div id="notifications-trigger" style="position:relative; cursor:pointer; font-size:1.2rem; color:var(--text-muted); margin-right:10px; transition:color 0.3s; display:flex; align-items:center;">
+                        <i class="fa-solid fa-bell" id="bell-icon" onmouseover="this.style.color='var(--brand-yellow)'" onmouseout="this.style.color=''"></i>
+                        <span id="notif-badge" style="position:absolute; top:-5px; right:-8px; background:#ef4444; color:#fff; font-size:0.6rem; font-weight:bold; border-radius:50%; width:16px; height:16px; display:flex; align-items:center; justify-content:center; display:none;"></span>
+                        <!-- Dropdown panel -->
+                        <div id="notif-dropdown" style="display:none; position:absolute; top:35px; right:0; width:300px; background:var(--bg-surface); border:1px solid var(--border-yellow); border-radius:4px; box-shadow:0 10px 40px rgba(0,0,0,0.8); z-index:9999; flex-direction:column; overflow:hidden;">
+                            <div style="padding:15px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                                <span style="font-family:var(--font-head); font-size:0.9rem; color:var(--brand-yellow);">NOTIFICAÇÕES</span>
+                                <button class="btn btn-ghost btn-sm" onclick="clearNotifications()" style="padding:4px 8px; font-size:0.65rem;"><i class="fa-solid fa-broom"></i> Limpar</button>
+                            </div>
+                            <div id="notifications-list" style="max-height:300px; overflow-y:auto; padding:10px; display:grid; gap:8px;"></div>
+                        </div>
+                    </div>
                     <div class="avatar" id="logout-trigger" title="Sair" style="cursor:pointer">ADM</div>
                 </div>
             </header>
@@ -70,6 +81,11 @@
                 <!-- HOME MODULE -->
                 <section id="mod-home" class="module-section active">
                     <!-- Dashboard Summary -->
+                    <div style="margin-bottom: 24px; padding: 20px; background: linear-gradient(135deg, rgba(234, 179, 8, 0.1) 0%, rgba(0,0,0,0) 100%); border: 1px solid var(--border-yellow); border-radius: 4px;">
+                        <h3 id="home-greeting-title" style="font-family: var(--font-head); color: var(--brand-yellow); margin-bottom: 5px;">BOM DIA, ADMIN</h3>
+                        <p id="home-greeting-date" style="font-size: 0.85rem; color: var(--text-secondary);">Carregando data...</p>
+                    </div>
+
                     <div id="home-summary-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-bottom: 24px;">
                         <div class="card" style="text-align:center; padding:15px; border-left:4px solid var(--brand-yellow);">
                             <label style="margin-bottom:5px">SISTEMAS</label>
@@ -442,14 +458,13 @@
                     <div id="providers-grid" class="card-grid"></div>
                 </section>
 
-                <!-- NOTIFICATIONS MODULE -->
-                <section id="mod-notifications" class="module-section">
+                <!-- PROJECT VIEW MODULE -->
+                <section id="mod-project-view" class="module-section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                        <h2 class="topbar-title">NOTIFICAÇÕES E AVISOS</h2>
-                        <button class="btn btn-ghost btn-sm" onclick="clearNotifications()"><i class="fa-solid fa-broom"></i> Limpar Tudo</button>
+                        <button class="btn btn-ghost" onclick="switchModule('projects')" style="font-size:0.8rem; padding:8px 16px;"><i class="fa-solid fa-arrow-left"></i> VOLTAR AOS PROJETOS</button>
                     </div>
-                    <div id="notifications-list" style="display:grid; gap:16px;">
-                        <!-- Alerts rendered here -->
+                    <div id="project-view-content" style="background:var(--bg-surface); padding:24px; border:1px solid var(--border); border-radius:4px;">
+                        <!-- Rendered via JS -->
                     </div>
                 </section>
 
@@ -533,12 +548,7 @@
         <div class="modal-box" id="client-detail-content"></div>
     </div>
 
-    <!-- PROJECT DETAIL MODAL -->
-    <div class="modal-overlay" id="modal-project-detail">
-        <div class="modal-box" id="project-detail-content" style="max-width: 800px; padding: 30px;">
-            <!-- Rendered via JS -->
-        </div>
-    </div>
+    <!-- PROJECT DETAIL MODAL REMOVED - REPLACED BY SECTION -->
 
     <!-- INVENTORY DETAIL MODAL -->
     <div class="modal-overlay" id="modal-inventory-detail">
