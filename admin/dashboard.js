@@ -192,10 +192,6 @@ function closeAllModals() {
 // --- Navigation ---
 let navLinks, sections;
 
-"]`);
-    if (target) {
-        target.classList.add('active');
-    }
     if (link) {
         link.classList.add('active');
         const span = link.querySelector('span');
@@ -1669,16 +1665,7 @@ window.changePass = () => {
 };
 
 
-function switchModule(modId) {
-    const currentUser = localStorage.getItem('state_current_user') || 'admin';
-    
-    // Hide all
-    sections.forEach(s => s.classList.remove('active'));
-    navLinks.forEach(l => l.classList.remove('active'));
-
-    // Select target
-    const target = document.getElementById('mod-' + modId);
-    const nav = document.querySelector(`.nav-link[data-mod="${modId
+"]`);
     
     if(target) target.classList.add('active');
     if(nav) nav.classList.add('active');
@@ -1709,6 +1696,50 @@ function switchModule(modId) {
     if(modId === 'groups') renderGroups();
     
     // Auto-close sidebar on mobile
+    const sidebar = document.getElementById('sidebar');
+    if(sidebar) sidebar.classList.remove('open');
+}
+
+
+function switchModule(modId) {
+    const currentUser = localStorage.getItem('state_current_user') || 'admin';
+    if(!sections || !navLinks) {
+        navLinks = document.querySelectorAll('.nav-link[data-mod]');
+        sections = document.querySelectorAll('.module-section');
+    }
+    
+    sections.forEach(s => s.classList.remove('active'));
+    navLinks.forEach(l => l.classList.remove('active'));
+
+    const target = document.getElementById('mod-' + modId);
+    const nav = document.querySelector(`.nav-link[data-mod="${modId}"]`);
+    
+    if(target) target.classList.add('active');
+    if(nav) nav.classList.add('active');
+
+    const span = nav?.querySelector('span');
+    if(span && document.getElementById('current-mod-name')) {
+        document.getElementById('current-mod-name').innerText = span.innerText;
+    }
+
+    if(modId === 'home') {
+        const adminStats = document.getElementById('home-admin-stats');
+        const socialFeed = document.getElementById('home-social-feed');
+        if(currentUser === 'admin') {
+            if(adminStats) adminStats.style.display = 'block';
+            if(socialFeed) socialFeed.style.display = 'block';
+        } else {
+            if(adminStats) adminStats.style.display = 'none';
+            if(socialFeed) socialFeed.style.display = 'block';
+        }
+        if(typeof renderFeed === 'function') renderFeed();
+        updateStats();
+    }
+    
+    if(modId === 'admsettings' && typeof renderAdminSettings === 'function') renderAdminSettings();
+    if(modId === 'friends' && typeof renderFriends === 'function') renderFriends();
+    if(modId === 'groups' && typeof renderGroups === 'function') renderGroups();
+    
     const sidebar = document.getElementById('sidebar');
     if(sidebar) sidebar.classList.remove('open');
 }
