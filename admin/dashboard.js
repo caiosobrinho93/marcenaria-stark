@@ -190,18 +190,13 @@ function renderClients(filter = '') {
         <tr onclick="openClientDetail('${c.id}')" style="cursor:pointer;">
             <td>
                 <div style="display:flex; align-items:center; gap:12px">
-                    <div class="avatar" style="width:36px; height:36px; flex-shrink:0;">
+                    <div class="avatar" style="width:40px; height:40px; flex-shrink:0;">
                         ${c.photo ? `<img src="${c.photo}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">` : c.name[0]}
                     </div>
                     <div style="display:flex; flex-direction:column;">
-                        <strong style="color:var(--text-primary);">${c.name}</strong>
+                        <strong style="color:var(--text-primary); font-size:1.1rem;">${c.name}</strong>
                     </div>
                 </div>
-            </td>
-            <td class="hide-mobile" style="font-size:0.85rem">${c.phone}</td>
-            <td class="hide-mobile" style="font-size:0.85rem">${c.instagram}</td>
-            <td style="text-align:right">
-                <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation(); editClient('${c.id}')"><i class="fa-solid fa-pen"></i></button>
             </td>
         </tr>
     `).join('');
@@ -217,24 +212,26 @@ window.openClientDetail = (id) => {
     const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.address || '')}`;
     
     content.innerHTML = `
-        <span class="modal-close" onclick="closeAllModals()">&times;</span>
-        <div style="text-align:center; margin-bottom:25px;">
-            <div class="avatar" style="width:100px; height:100px; margin:0 auto 15px; font-size:2.5rem; border-width:4px;">${c.photo ? `<img src="${c.photo}" style="width:100%;height:100%;border-radius:50%">` : c.name[0]}</div>
-            <h2 style="font-family:var(--font-head); font-size:1.8rem; color:var(--brand-yellow); text-transform:uppercase;">${c.name}</h2>
-            <p style="color:var(--text-muted); font-size:0.75rem; letter-spacing:2px; font-weight:700;">REGISTRO ID ${c.id.slice(-4)}</p>
+        <div style="text-align:center; padding: 30px; margin-bottom:25px;">
+            <div class="avatar" style="width:120px; height:120px; margin:0 auto 15px; font-size:3rem; border-width:4px;">${c.photo ? `<img src="${c.photo}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">` : c.name[0]}</div>
+            <h2 style="font-family:var(--font-head); font-size:2rem; color:var(--brand-yellow); text-transform:uppercase;">${c.name}</h2>
+            <p style="color:var(--text-muted); font-size:0.85rem; letter-spacing:2px; font-weight:700;">REGISTRO ID ${c.id.slice(-4)}</p>
         </div>
-        <div style="display:grid; gap:12px;">
-            <a href="${waLink}" target="_blank" class="btn btn-success" style="width:100%;"><i class="fa-brands fa-whatsapp"></i> CONTATO WHATSAPP</a>
+        <div style="display:grid; gap:15px; padding: 0 30px 30px 30px;">
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-primary" onclick="editClient('${c.id}')" style="flex:1;">EDITAR CLIENTE</button>
+                <a href="${waLink}" target="_blank" class="btn btn-success" style="flex:1;"><i class="fa-brands fa-whatsapp"></i> WHATSAPP</a>
+            </div>
             ${c.instagram ? `<a href="${c.instagram}" target="_blank" class="btn btn-ghost" style="width:100%;"><i class="fa-brands fa-instagram"></i> PERFIL INSTAGRAM</a>` : ''}
             <a href="${mapsLink}" target="_blank" class="btn btn-ghost" style="width:100%;"><i class="fa-solid fa-location-arrow"></i> VER LOCALIZAÇÃO</a>
             <div style="margin-top:15px; padding:18px; background:rgba(255,255,255,0.03); border:1px solid var(--border);">
                 <label style="color:var(--brand-yellow); margin-bottom:5px;">ENDEREÇO CADASTRADO</label>
                 <div style="color:var(--text-secondary); font-size:0.9rem;">${c.address || 'Não informado'}</div>
             </div>
-            <button class="btn btn-danger btn-sm" onclick="deleteItem('clients', '${c.id}', renderClients); closeAllModals();" style="width:100%; margin-top:20px;">EXCLUIR CLIENTE</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteItem('clients', '${c.id}', () => { renderClients(); switchModule('clients'); });" style="width:100%; margin-top:20px;">EXCLUIR CLIENTE</button>
         </div>
     `;
-    openModal('modal-client-detail');
+    switchModule('client-detail');
 };
 
 window.editClient = (id) => {
@@ -245,8 +242,8 @@ window.editClient = (id) => {
     document.getElementById('client-phone').value = c.phone || '';
     document.getElementById('client-instagram').value = c.instagram || '';
     document.getElementById('client-address').value = c.address || '';
-    if(c.photo) document.getElementById('photo-preview').innerHTML = `<img src="${c.photo}" style="width:100%;height:100%;object-fit:cover">`;
-    toggleForm('form-client', true);
+    if(c.photo) document.getElementById('client-photo-preview').innerHTML = `<img src="${c.photo}" style="width:100%;height:100%;object-fit:cover">`;
+    switchModule('form-client');
 };
 
 // --- MODULE: PROJECTS ---
@@ -258,25 +255,15 @@ function renderProjects(filter = '') {
     tbody.innerHTML = filtered.map(p => `
         <tr onclick="openProjectDetail('${p.id}')" style="cursor:pointer;">
             <td>
-                <div style="display:flex; align-items:center; gap:12px">
-                    <div style="width:36px; height:36px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden;">
-                        ${p.images && p.images[0] ? `<img src="${p.images[0]}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : '<i class="fa-solid fa-drafting-dot" style="opacity:0.2"></i>'}
+                <div style="display:flex; align-items:center; gap:16px">
+                    <div style="width:48px; height:48px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                        ${p.images && p.images[0] ? `<img src="${p.images[0]}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : '<i class="fa-solid fa-drafting-dot" style="opacity:0.2; font-size:1.5rem;"></i>'}
                     </div>
                     <div style="display:flex; flex-direction:column;">
-                        <strong style="color:var(--brand-yellow); text-transform:uppercase; font-size:0.85rem;">${p.title}</strong>
+                        <strong style="color:var(--brand-yellow); text-transform:uppercase; font-size:1.1rem;">${p.title}</strong>
+                        <span style="color:var(--text-muted); font-size:0.85rem;">Cliente: ${p.client}</span>
                     </div>
                 </div>
-            </td>
-            <td class="hide-mobile">
-                <div style="font-size:0.85rem; font-weight:600;">${p.client}</div>
-                <div style="font-size:0.7rem; color:var(--text-muted)">${p.provider || 'Nenhum'}</div>
-            </td>
-            <td class="hide-mobile">
-                <div style="font-size:0.85rem; color:var(--brand-yellow); font-weight:700;">${p.status.toUpperCase()}</div>
-                <div style="font-size:0.7rem; font-family:var(--font-mono)">${p.deadline || 'A definir'}</div>
-            </td>
-            <td style="text-align:right">
-                <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation(); editProject('${p.id}')"><i class="fa-solid fa-pen"></i></button>
             </td>
         </tr>
     `).join('');
@@ -395,7 +382,7 @@ window.editProject = (id) => {
     document.getElementById('project-status').value = p.status;
     document.getElementById('project-progress').value = p.progress;
     document.getElementById('project-deadline').value = p.deadline || '';
-    toggleForm('form-project', true);
+    switchModule('form-project');
 };
 
 // --- MODULE: INVENTORY ---
@@ -407,19 +394,14 @@ function renderInventory(filter = '') {
     tbody.innerHTML = filtered.map(i => `
         <tr onclick="openInventoryDetail('${i.id}')" style="cursor:pointer;">
             <td>
-                <div style="display:flex; align-items:center; gap:12px">
-                    <div style="width:36px; height:36px; background:rgba(0,0,0,0.5); border:1px solid var(--border); overflow:hidden; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
-                        ${i.photo ? `<img src="${i.photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` : '<i class="fa-solid fa-box" style="opacity:0.2;"></i>'}
+                <div style="display:flex; align-items:center; gap:16px">
+                    <div style="width:48px; height:48px; background:rgba(0,0,0,0.5); border:1px solid var(--border); overflow:hidden; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                        ${i.photo ? `<img src="${i.photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` : '<i class="fa-solid fa-box" style="opacity:0.2; font-size:1.5rem;"></i>'}
                     </div>
                     <div style="display:flex; flex-direction:column;">
-                        <strong style="color:var(--text-primary); font-size:0.85rem;">${i.name}</strong>
+                        <strong style="color:var(--text-primary); font-size:1.1rem;">${i.name}</strong>
                     </div>
                 </div>
-            </td>
-            <td class="hide-mobile"><strong>${i.qty}</strong> <span style="font-size:0.7rem; color:var(--text-muted)">UNID</span></td>
-            <td class="hide-mobile"><span style="color:#4ade80; font-size:0.75rem; font-weight:700">ATIVO</span></td>
-            <td style="text-align:right">
-                <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation(); editItem('${i.id}')"><i class="fa-solid fa-pen"></i></button>
             </td>
         </tr>
     `).join('');
@@ -430,26 +412,25 @@ window.openInventoryDetail = (id) => {
     if(!i) return;
     const content = document.getElementById('inventory-detail-content');
     content.innerHTML = `
-        <span class="modal-close" onclick="closeAllModals()">&times;</span>
-        <h2 style="font-family:var(--font-head); color:var(--brand-yellow); margin-bottom:25px;">DADOS DO MATERIAL</h2>
-        <div style="display:grid; gap:20px;">
+        <h2 style="font-family:var(--font-head); color:var(--brand-yellow); text-align:center; margin-bottom:25px;">DADOS DO MATERIAL</h2>
+        <div style="display:grid; gap:20px; padding: 0 30px 30px 30px;">
             <div style="text-align:center;">
-                <div style="width:150px; height:150px; background:var(--bg-surface-light); margin:0 auto 15px; border:1px solid var(--border); overflow:hidden;">
-                    ${i.photo ? `<img src="${i.photo}" style="width:100%;height:100%;object-fit:cover;">` : '<i class="fa-solid fa-box-open" style="font-size:4rem; opacity:0.1; line-height:150px;"></i>'}
+                <div style="width:180px; height:180px; background:var(--bg-surface-light); margin:0 auto 15px; border:1px solid var(--border); overflow:hidden;">
+                    ${i.photo ? `<img src="${i.photo}" style="width:100%;height:100%;object-fit:cover;">` : '<i class="fa-solid fa-box-open" style="font-size:4rem; opacity:0.1; line-height:180px;"></i>'}
                 </div>
-                <h3 style="font-size:1.5rem; color:var(--text-primary);">${i.name}</h3>
+                <h3 style="font-size:1.8rem; color:var(--text-primary); text-transform:uppercase;">${i.name}</h3>
             </div>
-            <div style="padding:20px; border:1px solid var(--border-yellow); text-align:center; background:rgba(0,0,0,0.3);">
+            <div style="padding:30px; border:1px solid var(--border-yellow); text-align:center; background:rgba(0,0,0,0.3);">
                 <label>SALDO ATUAL</label>
-                <div style="font-size:2.5rem; color:var(--brand-yellow); font-weight:900;">${i.qty}</div>
+                <div style="font-size:3.5rem; color:var(--brand-yellow); font-weight:900;">${i.qty}</div>
             </div>
-            <div style="display:flex; gap:10px;">
-                <button class="btn btn-primary" style="flex:1" onclick="editItem('${i.id}'); closeAllModals();">EDITAR SALDO</button>
-                <button class="btn btn-danger" onclick="deleteItem('inventory', '${i.id}', renderInventory); closeAllModals();"><i class="fa-solid fa-trash"></i></button>
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <button class="btn btn-primary" style="flex:1; padding:15px;" onclick="editItem('${i.id}');">EDITAR SALDO</button>
+                <button class="btn btn-danger" style="padding:15px;" onclick="deleteItem('inventory', '${i.id}', () => { renderInventory(); switchModule('inventory'); });"><i class="fa-solid fa-trash"></i></button>
             </div>
         </div>
     `;
-    openModal('modal-inventory-detail');
+    switchModule('inventory-detail');
 };
 
 window.editItem = (id) => {
@@ -458,7 +439,7 @@ window.editItem = (id) => {
     document.getElementById('item-id').value = i.id;
     document.getElementById('item-name').value = i.name;
     document.getElementById('item-qty').value = i.qty;
-    toggleForm('form-inventory', true);
+    switchModule('form-inventory');
 };
 
 // --- MODULE: FINANCE ---
@@ -472,16 +453,18 @@ function renderFinance(filter = '') {
         const val = parseFloat(f.val || 0);
         if(f.type === 'income') total += val; else total -= val;
         return `
-            <tr>
-                <td class="hide-mobile" style="font-size:0.85rem">${f.date}</td>
-                <td>
-                    <div style="font-size:0.95rem; font-weight:600;">${f.desc}</div>
-                </td>
-                <td style="color:${f.type === 'income' ? 'var(--brand-yellow)' : '#ef4444'}; font-weight:800; font-family:var(--font-mono); text-align:right;">
-                    ${f.type === 'income' ? '+' : '-'} ${val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                </td>
-                <td style="text-align:right" class="hide-mobile">
-                    <button class="btn btn-ghost btn-sm" onclick="deleteItem('finance', '${f.id}', renderFinance)"><i class="fa-solid fa-trash"></i></button>
+            <tr onclick="editFinance('${f.id}')" style="cursor:pointer;">
+                <td style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="display:flex; flex-direction:column;">
+                        <div style="font-size:1.1rem; font-weight:600; color:var(--text-primary);">${f.desc}</div>
+                        <div style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;"><i class="fa-regular fa-calendar" style="margin-right:4px;"></i> ${f.date}</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <div style="color:${f.type === 'income' ? 'var(--brand-yellow)' : '#ef4444'}; font-weight:800; font-family:var(--font-mono); font-size:1.1rem; text-align:right;">
+                            ${f.type === 'income' ? '+' : '-'} ${val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                        </div>
+                        <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation(); deleteItem('finance', '${f.id}', renderFinance)"><i class="fa-solid fa-trash" style="color:#ef4444"></i></button>
+                    </div>
                 </td>
             </tr>
         `;
@@ -489,6 +472,17 @@ function renderFinance(filter = '') {
     const stIn = document.getElementById('st-income');
     if(stIn) stIn.innerText = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
+
+window.editFinance = (id) => {
+    const f = DB.get('finance').find(x => x.id === id);
+    if(!f) return;
+    document.getElementById('trans-id').value = f.id;
+    document.getElementById('trans-type').value = f.type;
+    document.getElementById('trans-val').value = parseFloat(f.val).toLocaleString('pt-BR', {minimumFractionDigits: 2});
+    document.getElementById('trans-desc').value = f.desc;
+    document.getElementById('trans-date').value = f.date;
+    switchModule('form-finance');
+};
 
 // --- MODULE: PROVIDERS ---
 function renderProviders() {
@@ -506,13 +500,24 @@ function renderProviders() {
             </div>
             <div style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:15px;"><i class="fa-solid fa-phone" style="margin-right:8px; color:var(--brand-yellow)"></i> ${p.phone}</div>
             <div style="display:flex; gap:10px;">
-                <button class="btn btn-ghost btn-sm" style="flex:1" onclick="editProvider('${p.id}')">GERENCIAR</button>
+                <button class="btn btn-ghost btn-sm" style="flex:1" onclick="editProvider('${p.id}')">EDITAR PARCEIRO</button>
                 <button class="btn btn-danger btn-sm" onclick="deleteItem('providers', '${p.id}', renderProviders)"><i class="fa-solid fa-trash"></i></button>
             </div>
         </div>
     `).join('');
     updateSelectors();
 }
+
+window.editProvider = (id) => {
+    const p = DB.get('providers').find(x => x.id === id);
+    if(!p) return;
+    document.getElementById('prov-id').value = p.id;
+    document.getElementById('prov-name').value = p.name;
+    document.getElementById('prov-skill').value = p.skill || '';
+    document.getElementById('prov-phone').value = p.phone || '';
+    if(p.photo) document.getElementById('prov-photo-preview').innerHTML = `<img src="${p.photo}" style="width:100%;height:100%;object-fit:cover">`;
+    switchModule('form-provider');
+};
 
 // --- GALLERY MODULE ---
 function renderGallery() {
@@ -540,7 +545,7 @@ window.editGallery = (id) => {
     document.getElementById('gal-title').value = g.title;
     document.getElementById('gal-sub').value = g.sub;
     document.getElementById('gallery-form-title').innerText = 'EDITAR ARTE/FOTO';
-    toggleForm('form-gallery', true);
+    switchModule('form-gallery');
 };
 
 window.deleteGalleryItem = (id) => {
@@ -592,11 +597,56 @@ function renderNotifications() {
         homeList.innerHTML = upcoming.map(p => `
             <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:10px; border-left:2px solid var(--brand-yellow);">
                 <div style="font-size:0.85rem;"><strong>${p.title}</strong><br><span style="font-size:0.7rem;">${p.client}</span></div>
-                <div style="text-align:right; font-family:var(--font-mono); font-size:0.75rem; color:var(--brand-yellow);">${p.deadline}</div>
+                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:5px;">
+                    <div style="font-family:var(--font-mono); font-size:0.75rem; color:var(--brand-yellow);">${p.deadline}</div>
+                    <button class="btn btn-success btn-sm" onclick="finishProject('${p.id}')">CONCLUIR OBRA</button>
+                </div>
             </div>
         `).join('') || '<div class="prod-placeholder">Sem entregas confirmadas.</div>';
     }
 }
+
+window.finishProject = (id) => {
+    if(!confirm('Deseja marcar esta obra como concluída antecipadamente?')) return;
+    const projects = DB.get('projects');
+    const pIdx = projects.findIndex(p => p.id === id);
+    if(pIdx > -1) {
+        projects[pIdx].status = 'finalizado';
+        projects[pIdx].progress = 100;
+        DB.set('projects', projects);
+        renderProjects();
+        renderNotifications();
+        notify('Obra concluída e movida para o histórico!', 'success');
+    }
+};
+
+window.openPriceModal = () => {
+    document.getElementById('calc-material').value = '';
+    document.getElementById('calc-logistics').value = '';
+    document.getElementById('calc-extras').value = '';
+    document.getElementById('calc-adv-result').style.display = 'none';
+    openModal('modal-calculator');
+};
+
+window.runAdvancedCalc = () => {
+    const mat = parseBRL(document.getElementById('calc-material').value || '0');
+    const log = parseBRL(document.getElementById('calc-logistics').value || '0');
+    const ext = parseBRL(document.getElementById('calc-extras').value || '0');
+    const mult = parseFloat(document.getElementById('calc-multiplier').value || '2.7');
+    
+    if (mat === 0) {
+        notify('Atenção: Insira o custo de material base.', 'error');
+        return;
+    }
+    
+    const cost = mat + log + ext;
+    const finalPrice = cost * mult;
+    const profit = finalPrice - cost;
+    
+    document.getElementById('calc-final-price').innerText = finalPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    document.getElementById('calc-profit').innerHTML = `LUCRO BRUTO ESTIMADO: <strong style="color:#4ade80;">${profit.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong>`;
+    document.getElementById('calc-adv-result').style.display = 'block';
+};
 
 // Global Helpers
 window.deleteItem = (key, id, callback) => {
@@ -668,7 +718,7 @@ async function handleClientSubmit(e) {
     
     DB.set('clients', clients);
     renderClients();
-    closeAllModals();
+    switchModule('clients');
     notify('Cliente salvo com sucesso.');
 }
 
@@ -696,7 +746,7 @@ function handleProjectSubmit(e) {
 
     DB.set('projects', projects);
     renderProjects();
-    closeAllModals();
+    switchModule('projects');
     notify('Projeto atualizado.');
 }
 
@@ -720,7 +770,7 @@ async function handleInventorySubmit(e) {
 
     DB.set('inventory', inv);
     renderInventory();
-    closeAllModals();
+    switchModule('inventory');
     notify('Estoque atualizado.');
 }
 
@@ -742,7 +792,7 @@ function handleFinanceSubmit(e) {
     DB.set('finance', fin);
     renderFinance();
     renderNotifications();
-    closeAllModals();
+    switchModule('finance');
     notify('Lançamento realizado.');
 }
 
@@ -767,7 +817,7 @@ async function handleProviderSubmit(e) {
 
     DB.set('providers', ps);
     renderProviders();
-    closeAllModals();
+    switchModule('providers');
     notify('Parceiro salvo.');
 }
 
@@ -791,7 +841,7 @@ async function handleGallerySubmit(e) {
 
     DB.set('gallery', gallery);
     renderGallery();
-    closeAllModals();
+    switchModule('gallery');
     notify('Imagem publicada na web.');
 }
 
