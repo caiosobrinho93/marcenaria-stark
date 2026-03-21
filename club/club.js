@@ -145,8 +145,8 @@ function renderFeed(append = false) {
                 </div>
                 
                 ${p.text ? `
-                    <div class="post-text-content" style="padding:12px; font-size:1rem; line-height:1.5; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden;">${p.text}</div>
-                    ${p.text.length > 300 ? `<button class="btn-ver-mais" onclick="toggleVerMais(this)" style="margin-left:12px; margin-bottom:10px;">Ver mais</button>` : ''}
+                    <div class="post-text-content" style="padding:12px; font-size:1rem; line-height:1.5; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-wrap;">${p.text}</div>
+                    ${p.text.length > 200 ? `<button class="btn-ver-mais" onclick="toggleVerMais(this)" style="margin-left:12px; margin-bottom:12px; color:var(--brand-yellow); background:transparent; border:none; cursor:pointer; font-weight:700; font-size:0.85rem;">Ver mais</button>` : ''}
                 ` : ''}
                 
                 ${p.images && p.images.length > 0 ? `
@@ -274,9 +274,27 @@ function handlePostSubmit() {
     LocalDB.set('social_posts', posts);
     
     currentPostImages = [];
+    textEl.value = '';
+    const preview = document.getElementById('post-images-preview');
+    if(preview) preview.innerHTML = '';
+    const fileInput = document.getElementById('post-img-input');
+    if(fileInput) fileInput.value = '';
+
     renderFeed();
     toast('Publicado no Feed VIP!');
 }
+
+function toggleVerMais(btn) {
+    const content = btn.previousElementSibling;
+    if (content.style.webkitLineClamp === 'none') {
+        content.style.webkitLineClamp = '4';
+        btn.innerText = 'Ver mais';
+    } else {
+        content.style.webkitLineClamp = 'none';
+        btn.innerText = 'Ver menos';
+    }
+}
+window.toggleVerMais = toggleVerMais;
 window.handlePostSubmit = handlePostSubmit;
 
 // --- COMMENT SYSTEM ---
