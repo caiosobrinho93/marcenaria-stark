@@ -247,6 +247,7 @@
         function doLogin(username) {
             localStorage.setItem('state_admin_session', 'active');
             localStorage.setItem('state_current_user', username);
+            sessionStorage.setItem('clubstate_session', 'active');
             localStorage.setItem('state_last_login', new Date().toISOString());
             window.location.href = 'dashboard.html';
         }

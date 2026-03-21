@@ -328,8 +328,8 @@ window.logout = () => {
 window.goToClub = () => {
     const user = localStorage.getItem('state_current_user');
     if(user) {
-        localStorage.setItem('clubstate_bridge_user', user); // Bridge via LocalStorage
         sessionStorage.setItem('clubstate_session', 'active');
+        localStorage.setItem('clubstate_bridge_user', user);
         window.location.href='../club/index.html';
     }
 };
