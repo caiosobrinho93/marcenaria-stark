@@ -124,9 +124,35 @@ function switchModule(modId) {
     if(modId === 'groups') renderGroups();
     if(modId === 'profile') loadProfile();
     if(modId === 'admsettings') renderAdminSettings();
+    if(modId === 'home') renderDashboardHome();
 
     const sidebar = document.getElementById('sidebar');
     if(sidebar) sidebar.classList.remove('open');
+}
+
+function renderDashboardHome() {
+    const container = document.getElementById('mod-home');
+    if(!container) return;
+    container.innerHTML = `
+        <h2 class="topbar-title">OPERADOR LOGADO: ${localStorage.getItem('state_current_user')?.toUpperCase()}</h2>
+        <div class="card-grid" style="margin-top:20px;">
+            <div class="card">
+                <h4 style="color:var(--brand-yellow); margin-bottom:15px;"><i class="fa-solid fa-bullhorn"></i> NOVIDADES DO SISTEMA</h4>
+                <div style="display:grid; gap:12px;">
+                    <div style="padding:10px; border-left:3px solid var(--brand-yellow); background:rgba(255,255,255,0.02);">
+                        <strong>V6.7 LANÇADA</strong><br><small>Novo sistema de Gemas e Perfil VIP integrado.</small>
+                    </div>
+                    <div style="padding:10px; border-left:3px solid #4ade80; background:rgba(255,255,255,0.02);">
+                        <strong>SEGURANÇA REFORÇADA</strong><br><small>Sessões agora expiram automaticamente após logout.</small>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h4 style="color:var(--brand-yellow); margin-bottom:15px;"><i class="fa-solid fa-chart-line"></i> ATIVIDADE RECENTE</h4>
+                <p style="font-size:0.85rem; opacity:0.6;">Acompanhe aqui o progresso dos seus projetos e interações sociais.</p>
+            </div>
+        </div>
+    `;
 }
 
 // --- MODAL ENGINE ---
@@ -229,6 +255,23 @@ function openClientDetail(id) {
 
     openModal('modal-client-detail');
 }
+
+function changePass() {
+    const newPass = prompt("Digite a nova senha de segurança:");
+    if(newPass && newPass.length >= 4) {
+        const user = localStorage.getItem('state_current_user');
+        let users = JSON.parse(localStorage.getItem('state_users')) || [];
+        const idx = users.findIndex(x => x.u === user);
+        if(idx > -1) {
+            users[idx].p = newPass;
+            localStorage.setItem('state_users', JSON.stringify(users));
+            notify("Senha alterada com sucesso! Use-a no próximo login.");
+        }
+    } else if(newPass) {
+        notify("Senha muito curta (mínimo 4 caracteres).", "error");
+    }
+}
+window.changePass = changePass;
 
 function likePost(id) {
     const posts = DB._getAll('social_posts', []);
@@ -455,7 +498,70 @@ document.addEventListener('DOMContentLoaded', () => {
     const sP = document.getElementById('search-projects'); if(sP) sP.oninput = (e) => renderProjects(e.target.value);
 
     // Profile Form
-    const pF = document.getElementById('profile-form'); if(pF) pF.onsubmit = saveProfile;
+    const pF = document.getElementById('profile-form'); 
+    if(pF) pF.onsubmit = (e) => { e.preventDefault(); saveProfile(e); };
+
+    // --- FORM SUBMISSIONS (FIXING DASHBOARD RESET) ---
+    const clientF = document.getElementById('client-form-el');
+    if(clientF) clientF.onsubmit = (e) => {
+        e.preventDefault();
+        const data = {
+            id: document.getElementById('client-id').value,
+            name: document.getElementById('client-name').value,
+            phone: document.getElementById('client-phone').value,
+            insta: document.getElementById('client-instagram').value,
+            photo: document.getElementById('photo-preview').querySelector('img')?.src || ''
+        };
+        DB.saveItem('clients', data.id, data);
+        notify("Cliente salvo!");
+        switchModule('clients');
+    };
+
+    const projectF = document.getElementById('project-form-el');
+    if(projectF) projectF.onsubmit = (e) => {
+        e.preventDefault();
+        const data = {
+            id: document.getElementById('project-id').value,
+            title: document.getElementById('project-title').value,
+            client: document.getElementById('project-client-select').value,
+            status: document.getElementById('project-status').value,
+            progress: document.getElementById('project-progress').value
+        };
+        DB.saveItem('projects', data.id, data);
+        notify("Projeto atualizado!");
+        switchModule('projects');
+    };
+
+    const inventoryF = document.getElementById('inventory-form-el');
+    if(inventoryF) inventoryF.onsubmit = (e) => {
+        e.preventDefault();
+        const data = {
+            id: document.getElementById('item-id').value,
+            name: document.getElementById('item-name').value,
+            qty: document.getElementById('item-qty').value,
+            photo: document.getElementById('item-photo-preview').querySelector('img')?.src || ''
+        };
+        DB.saveItem('inventory', data.id, data);
+        notify("Item de estoque salvo!");
+        switchModule('inventory');
+    };
+
+    const financeF = document.getElementById('finance-form-el');
+    if(financeF) financeF.onsubmit = (e) => {
+        e.preventDefault();
+        const data = {
+            id: document.getElementById('trans-id').value,
+            type: document.getElementById('trans-type').value,
+            val: document.getElementById('trans-val').value,
+            desc: document.getElementById('trans-desc').value,
+            date: document.getElementById('trans-date').value
+        };
+        DB.saveItem('finance', data.id, data);
+        notify("Lançamento financeiro concluído!");
+        switchModule('finance');
+    };
+    
+    renderDashboardHome();
 });
 
 // Windows Global Exports

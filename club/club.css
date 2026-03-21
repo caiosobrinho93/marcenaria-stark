@@ -249,3 +249,32 @@ body {
 .post-text-content { white-space: pre-wrap; word-break: break-word; }
 
 @keyframes slideInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Profile Tab (Instagram Style) */
+.insta-profile-header { display: grid; grid-template-columns: 100px 1fr; gap: 30px; padding: 20px; align-items: center; }
+.insta-avatar { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--brand-yellow); padding: 3px; background: #000; }
+.insta-stats { display: flex; gap: 20px; text-align: center; }
+.insta-stat-item b { display: block; font-size: 1.1rem; color: #fff; }
+.insta-stat-item { flex: 1; }
+.insta-stat-item span { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+.insta-bio { padding: 0 20px 20px 20px; font-size: 0.9rem; }
+.insta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; padding: 20px; border-top: 1px solid var(--border-glass); }
+.insta-grid img { width: 100%; aspect-ratio: 1/1; object-fit: cover; cursor: pointer; border-radius: 4px; transition: 0.3s; }
+.insta-grid img:hover { filter: brightness(1.2); }
+
+/* Ver Mais Button */
+.btn-ver-mais { background: transparent; border: none; color: var(--brand-yellow); cursor: pointer; font-size: 0.85rem; font-weight: 700; padding: 0; margin-top: 5px; }
+
+/* Animated Gems Border */
+@keyframes rotating-border {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+.gems-container { 
+    position: relative; padding: 10px 15px; background: #111; border-radius: 12px; z-index: 1; overflow: hidden;
+}
+.gems-container::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: conic-gradient(transparent, var(--brand-yellow), transparent 30%);
+    animation: rotating-border 4s linear infinite; z-index: -1;
+}

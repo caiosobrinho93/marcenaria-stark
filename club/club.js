@@ -30,6 +30,7 @@ function switchSocialTab(tabId) {
     if(tabId === 'feed') renderFeed();
     if(tabId === 'friends') renderFriendsList();
     if(tabId === 'groups') renderGroups();
+    if(tabId === 'profile') renderInstagramProfile();
 }
 window.switchView = switchView;
 
@@ -132,7 +133,10 @@ function renderFeed(append = false) {
                     <div><strong style="color:var(--brand-yellow); font-size:1rem;">${(u.name || p.user).toUpperCase()}</strong><br><small style="opacity:0.5; font-size:0.75rem;">${p.time || 'Agora'}</small></div>
                 </div>
                 
-                ${p.text ? `<div class="post-text-content" style="padding:12px; font-size:1rem; line-height:1.5;">${p.text}</div>` : ''}
+                ${p.text ? `
+                    <div class="post-text-content" style="padding:12px; font-size:1rem; line-height:1.5; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden;">${p.text}</div>
+                    ${p.text.length > 300 ? `<button class="btn-ver-mais" onclick="toggleVerMais(this)" style="margin-left:12px; margin-bottom:10px;">Ver mais</button>` : ''}
+                ` : ''}
                 
                 ${p.images && p.images.length > 0 ? `
                     <div style="display:flex; flex-wrap:wrap; gap:5px; padding:0 12px 12px 12px;">${imagesHtml}</div>
@@ -498,3 +502,41 @@ function switchFriendsSubTab(sub) {
     renderFriendsList();
 }
 window.switchFriendsSubTab = switchFriendsSubTab;
+
+function renderInstagramProfile() {
+    const users = JSON.parse(localStorage.getItem('state_users')) || [];
+    const u = users.find(x => x.u === sessionProject);
+    const allPosts = LocalDB.get('social_posts');
+    const myPosts = allPosts.filter(p => p.user === sessionProject);
+
+    if (u) {
+        document.getElementById('insta-avatar').src = u.avatar || '../imgs/logo-state.png';
+        document.getElementById('insta-name').innerText = (u.name || sessionProject).toUpperCase();
+        document.getElementById('insta-bio-text').innerText = u.bio || 'Expert VIP ClubSTATE System.';
+        document.getElementById('insta-posts-count').innerText = myPosts.length;
+        
+        const grid = document.getElementById('insta-grid-photos');
+        grid.innerHTML = myPosts.filter(p => p.images && p.images[0]).map(p => `
+            <img src="${p.images[0]}" onclick="switchSocialTab('feed')">
+        `).join('') || '<p style="grid-column: span 3; text-align:center; opacity:0.5; padding:40px;">Nenhuma foto publicada.</p>';
+    }
+}
+window.renderInstagramProfile = renderInstagramProfile;
+
+function toggleEmojiPicker() {
+    const p = document.getElementById('emoji-picker');
+    p.style.display = p.style.display === 'grid' ? 'none' : 'grid';
+}
+window.toggleEmojiPicker = toggleEmojiPicker;
+
+function toggleVerMais(btn) {
+    const content = btn.previousElementSibling;
+    if(content.style.webkitLineClamp === 'none') {
+        content.style.webkitLineClamp = '5';
+        btn.innerText = 'Ver mais';
+    } else {
+        content.style.webkitLineClamp = 'none';
+        btn.innerText = 'Ver menos';
+    }
+}
+window.toggleVerMais = toggleVerMais;

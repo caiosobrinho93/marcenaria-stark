@@ -73,9 +73,11 @@
                         <p class="greeting" id="dash-greeting">Bem-vindo(a),</p>
                         <h2 class="client-name" id="dash-client-name">Carregando...</h2>
                     </div>
-                    <div class="glass-panel" style="padding:10px 15px; border:1px solid var(--brand-yellow); background:var(--brand-yellow-glow); text-align:center;">
-                        <small style="color:var(--brand-yellow); font-size:0.6rem; font-weight:900; display:block; margin-bottom:2px;">MEU SALDO</small>
-                        <span style="color:#fff; font-weight:900; font-size:1.1rem;"><i class="fa-solid fa-gem" style="color:var(--brand-yellow);"></i> <span id="user-gems-balance">0</span></span>
+                    <div class="gems-container">
+                        <div style="position:relative; z-index:2; text-align:center;">
+                            <small style="color:var(--brand-yellow); font-size:0.6rem; font-weight:900; display:block; margin-bottom:2px;">MEU SALDO</small>
+                            <span style="color:#fff; font-weight:900; font-size:1.1rem;"><i class="fa-solid fa-gem" style="color:var(--brand-yellow);"></i> <span id="user-gems-balance">0</span></span>
+                        </div>
                     </div>
                 </div>
                 <div id="dash-status-badge"></div>
@@ -86,6 +88,7 @@
                 <button class="tab-btn active" onclick="switchSocialTab('feed')"><i class="fa-solid fa-rss"></i> FEED</button>
                 <button class="tab-btn" onclick="switchSocialTab('friends')"><i class="fa-solid fa-user-group"></i> AMIGOS</button>
                 <button class="tab-btn" onclick="switchSocialTab('groups')"><i class="fa-solid fa-users-viewfinder"></i> GRUPOS</button>
+                <button class="tab-btn" onclick="switchSocialTab('profile')"><i class="fa-solid fa-circle-user"></i> PERFIL</button>
             </div>
 
             <!-- FEED TAB -->
@@ -136,6 +139,26 @@
                 <div id="groups-list" style="display:grid; gap:10px;"></div>
             </section>
 
+            <!-- PROFILE TAB (INSTAGRAM STYLE) -->
+            <section id="tab-profile" class="social-tab-content" style="display:none;">
+                <div class="glass-panel" style="padding:0; overflow:hidden;">
+                    <div class="insta-profile-header">
+                        <img id="insta-avatar" src="../imgs/logo-state.png" class="insta-avatar">
+                        <div class="insta-stats">
+                            <div class="insta-stat-item"><b id="insta-posts-count">0</b><span>Posts</span></div>
+                            <div class="insta-stat-item"><b>842</b><span>Seguidores</span></div>
+                            <div class="insta-stat-item"><b>129</b><span>Seguindo</span></div>
+                        </div>
+                    </div>
+                    <div class="insta-bio">
+                        <strong id="insta-name" style="color:#fff; font-size:1rem;">CARREGANDO...</strong>
+                        <p id="insta-bio-text" style="opacity:0.7; margin-top:5px;">Expert VIP ClubSTATE System.</p>
+                        <button class="btn-primary" onclick="switchModule('profile')" style="margin-top:15px; padding:6px 20px; font-size:0.7rem; width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-glass);">Editar Perfil</button>
+                    </div>
+                    <div class="insta-grid" id="insta-grid-photos"></div>
+                </div>
+            </section>
+
             <!-- Progress Ring & Portfolio (Hidden in Social Mode but kept for logic) -->
             <section class="progress-section" style="display:none;">
                 <div class="glass-panel progress-card">
@@ -181,11 +204,20 @@
                     <textarea id="comment-input" placeholder="Sua mensagem corporativa..." style="flex:1; height:60px; background:rgba(0,0,0,0.4); border:1px solid var(--border-glass); border-radius:8px; padding:10px; color:#fff; resize:none; font-size:0.85rem;"></textarea>
                     <button class="btn-royal" onclick="submitComment()" style="height:60px;"><i class="fa-solid fa-paper-plane"></i></button>
                 </div>
+                <div id="emoji-picker" style="display:none; position:absolute; bottom:80px; left:15px; background:#111; border:1px solid var(--border-glass); padding:10px; border-radius:8px; display:grid; grid-template-columns:repeat(5, 1fr); gap:10px; z-index:100;">
+                    <span onclick="addEmoji('🚀')" style="cursor:pointer; font-size:1.2rem;">🚀</span>
+                    <span onclick="addEmoji('🤝')" style="cursor:pointer; font-size:1.2rem;">🤝</span>
+                    <span onclick="addEmoji('💎')" style="cursor:pointer; font-size:1.2rem;">💎</span>
+                    <span onclick="addEmoji('🔥')" style="cursor:pointer; font-size:1.2rem;">🔥</span>
+                    <span onclick="addEmoji('✅')" style="cursor:pointer; font-size:1.2rem;">✅</span>
+                    <span onclick="addEmoji('📊')" style="cursor:pointer; font-size:1.2rem;">📊</span>
+                    <span onclick="addEmoji('✨')" style="cursor:pointer; font-size:1.2rem;">✨</span>
+                    <span onclick="addEmoji('🙌')" style="cursor:pointer; font-size:1.2rem;">🙌</span>
+                    <span onclick="addEmoji('💡')" style="cursor:pointer; font-size:1.2rem;">💡</span>
+                    <span onclick="addEmoji('🎯')" style="cursor:pointer; font-size:1.2rem;">🎯</span>
+                </div>
                 <div style="display:flex; gap:10px; margin-top:10px;">
-                    <button class="btn-icon" onclick="addEmoji('🚀')" style="font-size:1rem;">🚀</button>
-                    <button class="btn-icon" onclick="addEmoji('🤝')" style="font-size:1rem;">🤝</button>
-                    <button class="btn-icon" onclick="addEmoji('💎')" style="font-size:1rem;">💎</button>
-                    <button class="btn-icon" onclick="addEmoji('🔥')" style="font-size:1rem;">🔥</button>
+                    <button class="btn-icon" onclick="toggleEmojiPicker()" style="font-size:1rem; border-color:transparent;"><i class="fa-regular fa-face-smile"></i></button>
                 </div>
             </div>
         </div>
